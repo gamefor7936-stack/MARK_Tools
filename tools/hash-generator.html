@@ -230,5 +230,42 @@
             alert("Copied to clipboard!");
         }
     </script>
+
+<!-- SEO CONTENT AREA -->
+<section class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+        
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is File Integrity Checker?</h2>
+        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+            File Integrity Checker calculates cryptographic hashes (MD5, SHA-1, SHA-256, SHA-512) to verify file authenticity and detect corruption. Compare checksums locally in your browser without uploading files to external servers.
+        </p>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
+        <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
+            <li><strong>Upload File:</strong> Select or drag a file to calculate its hash.</li>
+            <li><strong>Choose Algorithm:</strong> Select MD5, SHA-1, SHA-256, or SHA-512.</li>
+            <li><strong>Compare Hash:</strong> Paste expected checksum to verify integrity.</li>
+            <li><strong>Copy Results:</strong> Click any hash to copy to clipboard.</li>
+        </ol>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
+        <div class="space-y-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">Which hash algorithm should I use?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">SHA-256 is recommended for security. MD5 and SHA-1 are faster but less secure. Use the algorithm specified by the source you're verifying against.</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">Why is local processing important?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">Local processing ensures privacy - your files never leave your device. No upload required, keeping sensitive data secure.</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">How do I verify downloaded files?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">Download the file and its checksum from the same source. Calculate the hash and compare it with the provided checksum - they should match exactly.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 </body>
 </html>
