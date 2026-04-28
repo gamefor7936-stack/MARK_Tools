@@ -4,164 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pro Image Compressor - MARK_Tools</title>
-    <meta name="description" content="Compress JPG, PNG, and WebP images securely in your browser. View real-time before/after quality comparisons and save storage space.">
     <link rel="icon" type="image/png" href="../favicon.png">
     
-    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/browser-image-compression@2.0.1/dist/browser-image-compression.js"></script>
     <script src="../js/main.js"></script>
     <script src="../js/history.js"></script>
 
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } }
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } 
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
     </script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
         
-        /* BEFORE/AFTER SLIDER STYLES */
-        .compare-wrapper { position: relative; width: 100%; max-width: 100%; height: 400px; overflow: hidden; border-radius: 1rem; background-color: #020617; background-image: radial-gradient(rgba(255,255,255,0.1) 1px, transparent 1px); background-size: 20px 20px; }
-        .compare-img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: contain; }
-        .compare-overlay { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; border-right: 2px solid white; }
+        .compare-wrapper { position: relative; width: 100%; border-radius: 1.5rem; background-color: #020617; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 20px 20px; overflow: hidden; }
+        .compare-overlay { position: absolute; top: 0; left: 0; width: 50%; height: 100%; overflow: hidden; border-right: 2px solid white; z-index: 10; }
         .slider-handle { position: absolute; top: 0; left: 50%; bottom: 0; width: 4px; background: transparent; cursor: ew-resize; z-index: 20; transform: translateX(-50%); touch-action: none; }
-        .slider-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 36px; height: 36px; background: white; border-radius: 50%; box-shadow: 0 0 15px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; pointer-events: none; }
+        .slider-btn { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 40px; height: 40px; background: white; border-radius: 50%; box-shadow: 0 0 20px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; pointer-events: none; border: 4px solid #f97316; }
         
-        /* Loading Animation */
         @keyframes scan { 0% { top: 0; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
-        .scanning-line { position: absolute; left: 0; right: 0; height: 4px; background: #f97316; box-shadow: 0 0 10px #f97316; animation: scan 1.5s linear infinite; z-index: 30; }
+        .scanning-line { position: absolute; left: 0; right: 0; height: 4px; background: #f97316; box-shadow: 0 0 15px #f97316; animation: scan 2s linear infinite; z-index: 30; }
     </style>
 </head>
-<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300 min-h-screen flex flex-col">
+<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300 min-h-screen">
 
     <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
-        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-6xl">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-7xl">
             <a href="../index.html" class="flex items-center gap-2 group">
                 <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center shadow-md">
                     <span class="text-white font-black text-sm">M</span>
                 </div>
-                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK_Tools <span class="text-orange-500 font-medium text-sm hidden md:inline">| Image</span></h1>
+                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK_Tools <span class="text-orange-500 font-medium text-sm">| Image</span></h1>
             </a>
-            <a class="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-orange-500 transition" href="../index.html">← BACK TO HOME</a>
+            <a class="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-orange-500" href="../index.html">← BACK</a>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-12 max-w-6xl flex-grow flex flex-col lg:flex-row gap-8">
+    <main class="container mx-auto px-4 py-8 max-w-7xl flex flex-col lg:flex-row gap-8">
         
-        <!-- KOLOM KIRI: SETTINGS & ACTION -->
-        <div class="w-full lg:w-1/3 flex flex-col gap-6">
-            
+        <!-- SIDEBAR -->
+        <div class="w-full lg:w-80 flex flex-col gap-6 shrink-0">
             <div class="bg-white dark:bg-darkCard p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder">
-                <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-2">Image Compressor</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-8 uppercase tracking-widest font-bold">Smart Quality Engine</p>
+                <h2 class="text-xl font-black mb-6 uppercase tracking-tight">Compressor</h2>
 
-                <!-- File Input -->
-                <label id="uploadBox" class="w-full h-32 border-2 border-dashed border-orange-300 dark:border-orange-500/50 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 dark:hover:bg-orange-500/20 transition-all mb-6 group">
-                    <span class="text-3xl mb-2 group-hover:scale-110 transition-transform">🖼️</span>
-                    <span class="text-xs font-bold text-orange-600 dark:text-orange-400">Choose Image File</span>
+                <label id="uploadBox" class="w-full h-32 border-2 border-dashed border-orange-300 dark:border-orange-500/50 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 transition-all mb-6">
+                    <span class="text-2xl mb-1">🖼️</span>
+                    <span class="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase">Select Image</span>
                     <input accept="image/*" class="hidden" id="imageInput" type="file" onchange="handleImageUpload(this)"/>
                 </label>
 
-                <!-- Settings (Muncul setelah upload) -->
                 <div id="controlsArea" class="hidden space-y-6 animate-fade-in">
-                    <div>
-                        <div class="flex justify-between items-end mb-2">
-                            <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Compression Level</label>
-                            <span id="qualityLabel" class="text-orange-500 font-bold font-mono">Strong (70%)</span>
-                        </div>
-                        <!-- Catatan: Gunakan onchange agar kompresi jalan SETELAH slider dilepas (anti-lag) -->
-                        <input type="range" id="qualitySlider" min="0.1" max="1.0" step="0.1" value="0.7" class="w-full h-2 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500" onchange="processCompression()">
-                        <div class="flex justify-between mt-1 text-[9px] text-slate-400 font-bold uppercase">
-                            <span>Max Compression</span>
-                            <span>High Quality</span>
-                        </div>
+                    <!-- Warning Box (Default Hidden) -->
+                    <div id="sizeWarning" class="hidden p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-500 text-[10px] font-bold leading-relaxed">
+                        ⚠️ WARNING: Compressed size is larger than original. The image is already highly optimized.
                     </div>
 
-                    <button onclick="downloadResult()" id="btnDownload" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition shadow-lg shadow-orange-900/30 flex justify-center items-center gap-2">
+                    <div>
+                        <div class="flex justify-between items-end mb-2">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Quality</label>
+                            <span id="qualityLabel" class="text-orange-500 font-bold text-xs font-mono">Balanced (70%)</span>
+                        </div>
+                        <input type="range" id="qualitySlider" min="0.1" max="1.0" step="0.1" value="0.7" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded-lg appearance-none cursor-pointer accent-orange-500" onchange="processCompression()">
+                    </div>
+
+                    <button onclick="downloadResult()" id="btnDownload" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-orange-900/30">
                         Save & Download
                     </button>
                     
-                    <button onclick="resetApp()" class="w-full text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-widest mt-2">
-                        Discard & Upload New
+                    <button onclick="resetApp()" class="w-full text-[9px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-[0.2em] mt-2 transition-colors">
+                        Discard Image
                     </button>
                 </div>
             </div>
 
-            <!-- History -->
             <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-darkBorder shadow-sm">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Recent Compressions</h4>
-                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto"></div>
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest">History</h4>
+                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto"></div>
             </div>
         </div>
 
-        <!-- KOLOM KANAN: PREVIEW & STATS -->
-        <div class="w-full lg:w-2/3 flex flex-col gap-6">
+        <!-- MAIN WORKSPACE (WIDE) -->
+        <div class="flex-grow flex flex-col gap-6 min-w-0">
             
-            <!-- Empty State -->
-            <div id="emptyState" class="bg-white dark:bg-darkCard rounded-3xl p-12 border border-slate-200 dark:border-darkBorder shadow-sm h-full min-h-[400px] flex flex-col items-center justify-center text-center opacity-50">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 text-slate-400 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                <p class="font-mono text-sm uppercase tracking-widest text-slate-500">Visual Comparison Area</p>
+            <div id="emptyState" class="bg-white dark:bg-darkCard rounded-3xl p-20 border border-slate-200 dark:border-darkBorder shadow-sm h-full flex flex-col items-center justify-center text-center opacity-30 italic">
+                <p class="font-mono text-sm tracking-widest uppercase">Waiting for Image...</p>
             </div>
 
-            <!-- Workspace Area -->
-            <div id="workspaceArea" class="hidden flex-col gap-6 animate-fade-in w-full">
+            <div id="workspaceArea" class="hidden flex-col gap-6 animate-fade-in">
                 
-                <!-- 3 Kotak Statistik (Diperbaiki agar menyamping rapi) -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full">
-                    <div class="bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder text-center shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Original Size</p>
+                <!-- PARAMETERS (Row 1) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200 dark:border-darkBorder text-center">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Original</p>
                         <p id="statOriginal" class="text-xl font-mono font-bold text-slate-800 dark:text-white">---</p>
                     </div>
-                    <div class="bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder text-center relative overflow-hidden shadow-sm">
-                        <div class="absolute inset-0 bg-emerald-500/10"></div>
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 relative z-10">Saved Space</p>
-                        <p id="statSaved" class="text-2xl font-mono font-black text-emerald-500 relative z-10">---</p>
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border-2 border-emerald-500/20 dark:border-emerald-500/20 text-center relative overflow-hidden">
+                        <div class="absolute inset-0 bg-emerald-500/5"></div>
+                        <p class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1 relative z-10">Space Saved</p>
+                        <p id="statSaved" class="text-3xl font-mono font-black text-emerald-500 relative z-10">---</p>
                     </div>
-                    <div class="bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder text-center shadow-sm">
-                        <p class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Compressed Size</p>
+                    <div class="bg-white dark:bg-darkCard p-6 rounded-2xl border border-slate-200 dark:border-darkBorder text-center">
+                        <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">New Size</p>
                         <p id="statNew" class="text-xl font-mono font-bold text-orange-500">---</p>
                     </div>
                 </div>
 
-                <!-- Area Slider Before/After -->
-                <div class="bg-white dark:bg-darkCard p-2 rounded-[1.25rem] border border-slate-200 dark:border-darkBorder shadow-xl relative w-full">
-                    
-                    <!-- Indikator Badge Kiri & Kanan -->
-                    <div class="absolute top-4 left-4 z-30 bg-black/70 text-white px-3 py-1 rounded backdrop-blur-sm text-[10px] font-bold uppercase tracking-widest pointer-events-none">Compressed (After)</div>
-                    <div class="absolute top-4 right-4 z-30 bg-black/70 text-white px-3 py-1 rounded backdrop-blur-sm text-[10px] font-bold uppercase tracking-widest pointer-events-none">Original (Before)</div>
+                <!-- WIDE PREVIEW (Row 2) -->
+                <div class="bg-white dark:bg-darkCard p-3 rounded-[2rem] border border-slate-200 dark:border-darkBorder shadow-2xl relative">
+                    <div class="absolute top-6 left-6 z-30 bg-black/60 text-white px-3 py-1 rounded-full backdrop-blur-md text-[9px] font-black uppercase tracking-widest">Compressed (After)</div>
+                    <div class="absolute top-6 right-6 z-30 bg-black/60 text-white px-3 py-1 rounded-full backdrop-blur-md text-[9px] font-black uppercase tracking-widest">Original (Before)</div>
 
-                    <!-- Scanning Overlay (Muncul saat kompresi jalan) -->
-                    <div id="scanOverlay" class="absolute inset-0 z-40 bg-slate-900/80 backdrop-blur-sm rounded-[1rem] hidden flex-col items-center justify-center">
+                    <div id="scanOverlay" class="absolute inset-0 z-40 bg-slate-900/90 backdrop-blur-sm rounded-[1.8rem] hidden flex-col items-center justify-center">
                         <div class="scanning-line"></div>
-                        <p class="text-orange-500 font-mono font-bold tracking-widest animate-pulse">COMPRESSING...</p>
+                        <p class="text-orange-500 font-mono text-xs font-bold tracking-[0.3em] animate-pulse">OPTIMIZING PIXELS...</p>
                     </div>
 
-                    <!-- Container The Slider -->
-                    <!-- Diberi min-h agar tidak gepeng -->
-                    <div class="compare-wrapper min-h-[300px] md:min-h-[450px] bg-slate-900 rounded-[1rem] relative overflow-hidden" id="compareContainer">
-                        
-                        <!-- Gambar Original (Layer Bawah) -->
-                        <img id="imgBefore" class="absolute inset-0 w-full h-full object-contain" src="" alt="Before">
-                        
-                        <!-- Layer Compressed (Layer Atas, terpotong setengah di awal) -->
-                        <div class="absolute inset-y-0 left-0 w-1/2 overflow-hidden border-r-2 border-white z-10" id="compareOverlay">
-                            <!-- object-contain agar rasio gambar asli tidak rusak -->
-                            <!-- width 100vw untuk memaksa gambar ini ukurannya sama persis dengan layar bawahnya -->
-                            <img id="imgAfter" class="absolute inset-y-0 left-0 h-full object-contain" style="max-width: none;" src="" alt="After">
+                    <div class="compare-wrapper min-h-[400px] md:min-h-[550px]" id="compareContainer">
+                        <img id="imgBefore" class="compare-img" src="" alt="Before">
+                        <div class="compare-overlay" id="compareOverlay">
+                            <img id="imgAfter" class="compare-img" style="max-width: none;" src="" alt="After">
                         </div>
-                        
-                        <!-- Garis & Lingkaran Tarik -->
-                        <div class="absolute inset-y-0 left-1/2 w-1 -ml-[2px] cursor-ew-resize z-20 touch-none" id="sliderHandle">
-                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white border-2 border-slate-300 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.5)] flex items-center justify-center pointer-events-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h8M8 12h8M8 17h8" /></svg>
+                        <div class="slider-handle" id="sliderHandle">
+                            <div class="slider-btn">
+                                <svg class="w-5 h-5 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M8 7h8M8 12h8M8 17h8" /></svg>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -176,7 +155,6 @@
             initCompareSlider();
         };
 
-        // 1. Tampilkan Gambar Asli
         function handleImageUpload(input) {
             if (!input.files[0]) return;
             originalFile = input.files[0];
@@ -184,54 +162,31 @@
             document.getElementById('uploadBox').classList.add('hidden');
             document.getElementById('emptyState').classList.add('hidden');
             document.getElementById('controlsArea').classList.remove('hidden');
-            document.getElementById('workspaceArea').classList.remove('hidden', 'flex-col');
-            document.getElementById('workspaceArea').classList.add('flex');
+            document.getElementById('workspaceArea').classList.replace('hidden', 'flex');
 
             const objUrl = URL.createObjectURL(originalFile);
             document.getElementById('imgBefore').src = objUrl;
-            document.getElementById('imgAfter').src = objUrl; // Sementara disamakan
-            
+            document.getElementById('imgAfter').src = objUrl;
             document.getElementById('statOriginal').innerText = formatBytes(originalFile.size);
             
-            // Langsung proses kompresi awal
             processCompression();
         }
 
-        function resetApp() {
-            originalFile = null;
-            compressedBlob = null;
-            document.getElementById('imageInput').value = "";
-            document.getElementById('uploadBox').classList.remove('hidden');
-            document.getElementById('controlsArea').classList.add('hidden');
-            document.getElementById('workspaceArea').classList.add('hidden');
-            document.getElementById('workspaceArea').classList.remove('flex');
-            document.getElementById('emptyState').classList.remove('hidden');
-        }
-
-        // 2. Logika Kompresi (browser-image-compression)
         async function processCompression() {
             if (!originalFile) return;
 
             const slider = document.getElementById('qualitySlider');
             const val = parseFloat(slider.value);
-            const btn = document.getElementById('btnDownload');
             const scanOverlay = document.getElementById('scanOverlay');
+            const warningBox = document.getElementById('sizeWarning');
 
-            // Update Label Slider
-            let label = "Medium (50%)";
-            if(val <= 0.3) label = `Max Compression (${Math.round(val*100)}%)`;
-            else if(val > 0.7) label = `High Quality (${Math.round(val*100)}%)`;
-            else label = `Balanced (${Math.round(val*100)}%)`;
-            document.getElementById('qualityLabel').innerText = label;
+            document.getElementById('qualityLabel').innerText = `${Math.round(val*100)}% Quality`;
 
-            // Kunci UI
-            btn.disabled = true;
-            scanOverlay.classList.remove('hidden');
-            scanOverlay.classList.add('flex');
+            scanOverlay.classList.replace('hidden', 'flex');
 
             const options = {
-                maxSizeMB: val, // Paksa ukuran file
-                maxWidthOrHeight: 2048,
+                maxSizeMB: val * 2, // Estimasi target MB
+                maxWidthOrHeight: 2560,
                 useWebWorker: true,
                 initialQuality: val
             };
@@ -239,121 +194,81 @@
             try {
                 compressedBlob = await imageCompression(originalFile, options);
                 
-                // Update Statistik
-                document.getElementById('statNew').innerText = formatBytes(compressedBlob.size);
+                // Update Stats
+                const newSize = compressedBlob.size;
+                document.getElementById('statNew').innerText = formatBytes(newSize);
                 
-                let savedBytes = originalFile.size - compressedBlob.size;
-                if (savedBytes < 0) savedBytes = 0; // Jaga-jaga kalau file makin besar
-                const savedPercent = Math.round((savedBytes / originalFile.size) * 100);
-                
-                document.getElementById('statSaved').innerText = `${savedPercent}% ↓`;
+                let diff = originalFile.size - newSize;
+                let percent = Math.round((diff / originalFile.size) * 100);
+                document.getElementById('statSaved').innerText = (percent > 0 ? percent : 0) + "% ↓";
 
-                // Update Gambar "After" untuk slider perbandingan
+                // WARNING MECHANISM
+                if (newSize >= originalFile.size) {
+                    warningBox.classList.remove('hidden');
+                } else {
+                    warningBox.classList.add('hidden');
+                }
+
                 document.getElementById('imgAfter').src = URL.createObjectURL(compressedBlob);
+                syncImageSize();
 
             } catch (error) {
                 console.error(error);
-                alert("Gagal mengompres gambar.");
+                alert("Compression error.");
             } finally {
-                btn.disabled = false;
-                scanOverlay.classList.add('hidden');
-                scanOverlay.classList.remove('flex');
+                scanOverlay.classList.replace('flex', 'hidden');
             }
         }
 
-        // 3. Logika Drag Sebelum/Sesudah (Compare Slider)
         function initCompareSlider() {
             const wrapper = document.getElementById('compareContainer');
             const overlay = document.getElementById('compareOverlay');
             const handle = document.getElementById('sliderHandle');
-            const imgAfter = document.getElementById('imgAfter');
-            let isDragging = false;
-
-            // KUNCI PERBAIKAN: Paksa gambar 'After' ukurannya sama persis dengan Wrapper
-            function syncImageSize() {
-                if(wrapper && imgAfter) {
-                    imgAfter.style.width = wrapper.offsetWidth + 'px';
-                }
-            }
-
-            // Panggil saat awal dan saat ukuran jendela browser berubah
-            syncImageSize();
-            window.addEventListener('resize', syncImageSize);
-
-            const startDrag = (e) => { 
-                isDragging = true; 
-                e.preventDefault(); // Mencegah highlight teks gak sengaja
-            };
-            const stopDrag = () => { isDragging = false; };
             
             const moveDrag = (e) => {
-                if (!isDragging) return;
-                
+                if (e.buttons !== 1 && e.type !== 'touchmove') return;
                 let rect = wrapper.getBoundingClientRect();
-                // Ambil koordinat X dari mouse atau layar sentuh
                 let clientX = e.touches ? e.touches[0].clientX : e.clientX;
-                let x = clientX - rect.left;
-                
-                // Jangan sampai bablas keluar kotak
-                if (x < 0) x = 0;
-                if (x > rect.width) x = rect.width;
-
+                let x = Math.max(0, Math.min(clientX - rect.left, rect.width));
                 let percent = (x / rect.width) * 100;
                 overlay.style.width = percent + '%';
                 handle.style.left = percent + '%';
             };
 
-            // Event Listeners (Mendukung Mouse di PC dan Jari di HP)
-            handle.addEventListener('mousedown', startDrag);
-            handle.addEventListener('touchstart', startDrag, {passive: false});
-            window.addEventListener('mouseup', stopDrag);
-            window.addEventListener('touchend', stopDrag);
-            window.addEventListener('mousemove', moveDrag);
-            window.addEventListener('touchmove', moveDrag, {passive: false});
+            wrapper.addEventListener('mousemove', moveDrag);
+            wrapper.addEventListener('touchmove', moveDrag, {passive: false});
         }
 
-        // 4. Download & Monetisasi
+        function syncImageSize() {
+            const wrapper = document.getElementById('compareContainer');
+            const imgAfter = document.getElementById('imgAfter');
+            if(wrapper && imgAfter) imgAfter.style.width = wrapper.offsetWidth + 'px';
+        }
+
+        window.addEventListener('resize', syncImageSize);
+
         async function downloadResult() {
-            if (!compressedBlob) return alert("Please compress the image first.");
+            if (!compressedBlob) return;
+            const cleanName = originalFile.name.split('.')[0].replace(/\s+/g, '_');
+            const ext = originalFile.name.split('.').pop();
+            const fileName = `Compressed_${cleanName}.${ext}`;
 
-            // --- PROSES PENCUCIAN GAMBAR (Canvas Washing) ---
-            const img = new Image();
-            const url = URL.createObjectURL(compressedBlob);
-            img.src = url;
+            // Tetap izinkan download hasil kompresi (walaupun lebih besar)
+            // Tapi user sudah melihat peringatan di UI
+            if (typeof processRedirect === 'function') {
+                await processRedirect('Image Compressor', fileName, compressedBlob);
+            }
+        }
 
-            img.onload = async () => {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.width;
-                canvas.height = img.height;
-                const ctx = canvas.getContext('2d');
-                
-                // Gambar ulang di canvas
-                ctx.drawImage(img, 0, 0);
-
-                // Ekstrak menjadi Blob baru yang 100% Standar Windows
-                // Kita gunakan quality 0.9 agar tidak menurunkan kualitas lagi
-                canvas.toBlob(async (finalBlob) => {
-                    const extension = compressedBlob.type.split('/')[1] || 'jpg';
-                    
-                    // Nama file dibersihkan total
-                    const cleanName = originalFile.name.split('.')[0].replace(/\s+/g, '_');
-                    const finalFileName = `Compressed_${cleanName}.${extension}`;
-
-                    // Kirim ke redirect engine
-                    await processRedirect('Image Compressor', finalFileName, finalBlob);
-                    
-                    // Bersihkan memori
-                    URL.revokeObjectURL(url);
-                }, compressedBlob.type, 0.9);
-            };
+        function resetApp() {
+            location.reload();
         }
 
         function formatBytes(bytes) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const sizes = ['Bytes', 'KB', 'MB'];
+            if (bytes === 0) return '0 B';
+            const k = 1024, dm = 2, sizes = ['B', 'KB', 'MB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
         }
     </script>
     <!-- SEO CONTENT AREA -->
