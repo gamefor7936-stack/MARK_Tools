@@ -184,18 +184,37 @@
         }
 
         function triggerDownload() {
-            if (!fileData) return;
-            hasDownloaded = true;
-            try {
-                const url = URL.createObjectURL(fileData.data);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileData.name;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            } catch (e) { console.error(e); }
+        if (!fileData || !fileData.data) {
+            alert("File data is missing.");
+            return;
         }
+        
+        hasDownloaded = true;
+        
+        try {
+            // fileData.data adalah Blob asli dari database
+            const blob = fileData.data;
+            const url = window.URL.createObjectURL(blob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileData.name;
+            
+            // Tambahkan ke dokumen sebentar agar trigger klik bekerja di semua browser
+            document.body.appendChild(link);
+            link.click();
+            
+            // Bersihkan
+            setTimeout(() => {
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            }, 100);
+            
+        } catch (e) {
+            console.error("Download Error:", e);
+            alert("Download failed. Your browser might have cleared the temporary memory.");
+        }
+    }
 
         window.onload = loadFileData;
     </script>

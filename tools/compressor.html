@@ -314,15 +314,15 @@
 
         // 4. Download & Monetisasi
         async function downloadResult() {
-            if (!compressedBlob) return;
+            if (!compressedBlob) return alert("Please compress the image first.");
+            
+            // Ambil ekstensi asli (jpg/png/webp)
             const ext = originalFile.name.split('.').pop();
-            const cleanName = originalFile.name.replace(`.${ext}`, '');
-            const finalFileName = `${cleanName}_compressed.${ext}`;
+            const finalFileName = `Compressed_${originalFile.name}`;
 
-            // Panggil fungsi ajaib dari history.js
-            if (typeof processRedirect === 'function') {
-                await processRedirect('Image Compressor', finalFileName, compressedBlob);
-            }
+            // Gunakan fungsi ajaib kita dari history.js
+            // compressedBlob di sini adalah hasil dari library imageCompression
+            await processRedirect('Image Compressor', finalFileName, compressedBlob);
         }
 
         function formatBytes(bytes) {
