@@ -184,37 +184,44 @@
         }
 
         function triggerDownload() {
-        if (!fileData || !fileData.data) {
-            alert("File data is missing.");
-            return;
+            if (!fileData || !fileData.data) {
+                alert("File data is missing. Please try again.");
+                return;
+            }
+            
+            hasDownloaded = true;
+            
+            try {
+                // AMBIL DATA ASLI
+                let blob = fileData.data;
+
+                // PROTEKSI: Jika data bukan merupakan objek Blob (terjadi di beberapa browser lama)
+                // Kita bungkus ulang menjadi biner murni
+                if (!(blob instanceof Blob)) {
+                    blob = new Blob([fileData.data], { type: 'application/octet-stream' });
+                }
+
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                
+                link.href = url;
+                link.download = fileData.name;
+                
+                // WAJIB: Tambahkan ke DOM agar Windows mengenali perintah download
+                document.body.appendChild(link);
+                link.click();
+                
+                // Beri jeda lama sebelum hapus URL agar download selesai di-handshake oleh OS
+                setTimeout(() => {
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                }, 500);
+                
+            } catch (e) {
+                console.error("Critical Download Error:", e);
+                alert("Failed to reconstruct file. Please check your browser storage.");
+            }
         }
-        
-        hasDownloaded = true;
-        
-        try {
-            // fileData.data adalah Blob asli dari database
-            const blob = fileData.data;
-            const url = window.URL.createObjectURL(blob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = fileData.name;
-            
-            // Tambahkan ke dokumen sebentar agar trigger klik bekerja di semua browser
-            document.body.appendChild(link);
-            link.click();
-            
-            // Bersihkan
-            setTimeout(() => {
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-            }, 100);
-            
-        } catch (e) {
-            console.error("Download Error:", e);
-            alert("Download failed. Your browser might have cleared the temporary memory.");
-        }
-    }
 
         window.onload = loadFileData;
     </script>

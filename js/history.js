@@ -140,16 +140,17 @@ async function downloadFromHistory(id) {
 // --- MAGIC REDIRECT FUNCTION ---
 // This function replaces all complicated logic in each file
 async function processRedirect(toolName, fileName, fileBlob) {
+    // 1. Bersihkan Nama File agar Windows tidak bingung
+    // Menghapus karakter yang dilarang Windows: \ / : * ? " < > |
+    let cleanName = fileName.replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_");
+
     if (typeof addToHistory === 'function') {
-        // 1. Add to history
-        const historyId = await addToHistory(toolName, fileName, fileBlob);
-        // 2. Send to go.html
+        // 2. Pastikan fileBlob adalah Blob dengan type yang jelas
+        const historyId = await addToHistory(toolName, cleanName, fileBlob);
         window.location.href = `../go.html?id=${historyId}`;
     } else {
-        // Fallback if history error
         const url = URL.createObjectURL(fileBlob);
         const link = document.createElement('a');
-        link.href = url; link.download = fileName; link.click();
-        alert("Done!");
+        link.href = url; link.download = cleanName; link.click();
     }
 }
