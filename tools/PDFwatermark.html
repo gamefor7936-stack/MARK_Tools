@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>PDF Watermark Pro - MARK_Tools</title>
-    <meta name="description" content="Add custom text or logo watermarks to your PDF documents. Features live preview, mosaic tiling patterns, and precise positioning. 100% secure.">
+    <meta name="description" content="Add professional text or logo watermarks to PDF files. Features live preview, mosaic tiling patterns, and custom transparency. Secure and private.">
     <link rel="icon" type="image/png" href="../favicon.png">
     
     <!-- Framework & Libraries -->
@@ -22,15 +22,15 @@
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
         .term-input { background: #0f172a; border: 1px solid #334155; color: #2dd4bf; outline: none; transition: all 0.3s; }
-        .term-input:focus { border-color: #2dd4bf; box-shadow: 0 0 10px rgba(45, 212, 191, 0.2); }
     </style>
 </head>
 <body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300 min-h-screen flex flex-col">
 
+    <!-- Navbar -->
     <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
         <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-7xl">
             <a href="../index.html" class="flex items-center gap-2 group">
@@ -48,90 +48,119 @@
         <!-- KOLOM KIRI: SETTINGS -->
         <div class="w-full lg:w-1/3 flex flex-col gap-6">
             
-            <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder">
-                <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-2">Watermark Pro</h2>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 uppercase tracking-widest font-bold">Document Protection</p>
-
-                <!-- 1. Upload PDF -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder">
+                <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-2 tracking-tight">Watermark Pro</h2>
+                
+                <!-- Step 1: Upload -->
                 <label id="uploadBox" class="w-full border-2 border-dashed border-teal-300 dark:border-teal-500/50 rounded-2xl p-6 flex flex-col items-center justify-center cursor-pointer bg-teal-50 dark:bg-teal-500/10 hover:bg-teal-100 dark:hover:bg-teal-500/20 transition-all mb-6">
-                    <span class="text-3xl mb-2">📄</span>
-                    <span class="text-teal-600 dark:text-teal-400 font-bold text-sm">Choose PDF File</span>
+                    <span class="text-2xl mb-1">📄</span>
+                    <span class="text-teal-600 dark:text-teal-400 font-bold text-xs">Import PDF Document</span>
                     <input accept="application/pdf" class="hidden" id="watermarkInput" onchange="initWatermarkPreview()" type="file"/>
                 </label>
 
                 <!-- Tools Panel (Hidden at start) -->
-                <div id="editorControls" class="opacity-50 pointer-events-none transition-all space-y-6">
+                <div id="editorControls" class="opacity-50 pointer-events-none transition-all space-y-5">
                     
                     <div class="flex gap-2">
-                        <button onclick="setMasterType('text')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 py-3 rounded-xl text-xs font-bold hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 dark:hover:text-teal-400 transition shadow-sm border border-slate-200 dark:border-slate-700">✍️ Add Text</button>
+                        <button onclick="setMasterType('text')" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition shadow-sm border border-slate-200 dark:border-slate-700">✍️ Add Text</button>
                         <input accept="image/png, image/jpeg" class="hidden" id="imgWMInput" onchange="setMasterType('image', this)" type="file"/>
-                        <button onclick="document.getElementById('imgWMInput').click()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 py-3 rounded-xl text-xs font-bold hover:bg-teal-50 dark:hover:bg-teal-900/30 hover:text-teal-600 dark:hover:text-teal-400 transition shadow-sm border border-slate-200 dark:border-slate-700">🖼️ Add Logo</button>
+                        <button onclick="document.getElementById('imgWMInput').click()" class="flex-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-teal-600 hover:text-white transition shadow-sm border border-slate-200 dark:border-slate-700">🖼️ Add Logo</button>
                     </div>
 
-                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-4">
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-darkBorder space-y-4">
                         <div id="textInputArea">
-                            <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Text Content</label>
+                            <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Watermark Text</label>
                             <input class="w-full p-3 rounded-xl term-input text-sm font-bold" id="wmText" oninput="updateMaster()" type="text" value="CONFIDENTIAL"/>
                         </div>
                         
                         <div class="grid grid-cols-2 gap-4">
                             <div id="colorInputArea">
-                                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Color</label>
+                                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Color</label>
                                 <input class="w-full h-10 p-1 border border-slate-600 rounded-lg cursor-pointer bg-transparent" id="wmColor" oninput="updateMaster()" type="color" value="#ff0000"/>
                             </div>
                             <div>
-                                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Opacity</label>
+                                <label class="block text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1">Opacity</label>
                                 <input class="w-full h-2 bg-slate-300 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer accent-teal-500 mt-3" id="wmOpacity" max="1" min="0.1" oninput="updateMaster()" step="0.1" type="range" value="0.3"/>
                             </div>
                         </div>
                     </div>
 
-                    <!-- THE MAGIC: MOSAIC TOGGLE -->
+                    <!-- MOSAIC SETTINGS -->
                     <div class="bg-[#020617] p-5 rounded-2xl border border-teal-500/30 shadow-lg shadow-teal-900/20">
-                        <label class="flex items-center gap-3 cursor-pointer group mb-2">
+                        <label class="flex items-center gap-3 cursor-pointer group mb-4">
                             <input type="checkbox" id="mosaicToggle" class="w-5 h-5 text-teal-500 rounded border-slate-600 bg-slate-800 focus:ring-teal-500" onchange="triggerMosaicRender()">
                             <span class="text-sm font-black text-teal-400 uppercase tracking-widest">Mosaic Pattern (Tile)</span>
                         </label>
-                        <p class="text-[9px] text-slate-500 mb-3">Repeat watermark across the entire page for maximum security.</p>
                         
-                        <div id="mosaicSettings" class="hidden animate-fade-in mt-4 pt-4 border-t border-slate-800">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Density / Spacing</label>
-                            <input type="range" id="mosaicGap" min="0" max="300" value="50" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-teal-500" onchange="triggerMosaicRender()">
+                        <div id="mosaicSettings" class="hidden animate-fade-in space-y-4">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Style</label>
+                                    <select id="mosaicStyle" onchange="applyMosaicPreset()" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-xs outline-none text-teal-400 font-bold">
+                                        <option value="diagonal">Diagonal Brick</option>
+                                        <option value="brick" selected>Horizontal Brick</option>
+                                        <option value="grid">Straight Grid</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-[9px] font-bold text-slate-400 uppercase mb-1 tracking-widest">Size</label>
+                                    <select id="mosaicScale" onchange="applyMosaicPreset()" class="w-full p-2 bg-slate-800 border border-slate-700 rounded-lg text-xs outline-none text-teal-400 font-bold">
+                                        <option value="0.6">Small</option>
+                                        <option value="1" selected>Medium</option>
+                                        <option value="1.8">Large</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-widest">Density (Spacing)</label>
+                                <input type="range" id="mosaicGap" min="20" max="400" value="120" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-teal-500" onchange="triggerMosaicRender()">
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <button class="w-full mt-6 bg-teal-600 hover:bg-teal-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition shadow-lg shadow-teal-900/50 flex items-center justify-center gap-2 disabled:opacity-50" id="watermarkBtn" onclick="saveWatermarkedPDF()" disabled>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-                    Apply & Download
+                <button class="w-full mt-6 bg-teal-600 hover:bg-teal-500 text-white py-4 rounded-2xl font-black uppercase tracking-widest transition shadow-lg shadow-teal-900/50 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" id="watermarkBtn" onclick="saveWatermarkedPDF()" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                    Apply & Download PDF
                 </button>
             </div>
-
-            <!-- History Area -->
-            <div class="bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder shadow-sm">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Recent History</h4>
+            
+            <!-- History -->
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-darkBorder shadow-sm">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Recent Security Audits</h4>
                 <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto"></div>
             </div>
         </div>
 
-        <!-- KOLOM KANAN: PREVIEW -->
-        <div class="w-full lg:w-2/3 bg-slate-200 dark:bg-[#020617] rounded-3xl p-4 md:p-8 flex flex-col items-center justify-center relative overflow-hidden border-4 border-white dark:border-slate-800 shadow-inner min-h-[600px]">
+        <!-- KOLOM KANAN: PREVIEW WORKSPACE -->
+        <div class="w-full lg:w-2/3 bg-slate-200 dark:bg-[#020617] rounded-3xl p-4 md:p-10 flex flex-col items-center justify-center relative overflow-hidden border-4 border-white dark:border-slate-800 shadow-inner min-h-[650px]">
             
+            <!-- Floating Indicator -->
+            <div id="helperText" class="hidden absolute top-6 z-20 bg-black/60 backdrop-blur-md px-6 py-2 rounded-full border border-white/10 flex items-center gap-3">
+                <div class="w-2 h-2 bg-teal-500 rounded-full animate-pulse"></div>
+                <span class="text-[10px] font-bold text-white uppercase tracking-[0.2em]">Live Preview Editor</span>
+            </div>
+
             <div id="previewLoading" class="absolute inset-0 flex flex-col items-center justify-center text-slate-400 opacity-50 z-0">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
-                <span class="text-sm font-bold uppercase tracking-widest font-mono" id="statusText">Awaiting PDF...</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                <span class="text-sm font-bold uppercase tracking-widest font-mono" id="statusText">Awaiting PDF Data...</span>
             </div>
             
-            <div class="relative hidden shadow-2xl transition-all z-10 bg-white" id="canvasWrapper">
+            <!-- The Canvas -->
+            <div class="relative hidden shadow-[0_35px_60px_-15px_rgba(0,0,0,0.6)] transition-all z-10 bg-white" id="canvasWrapper">
                 <canvas id="watermarkCanvas"></canvas>
             </div>
-            
-            <p id="helperText" class="hidden absolute bottom-4 text-[10px] font-bold text-slate-500 uppercase tracking-widest bg-black/50 text-white px-4 py-1 rounded-full backdrop-blur-sm z-20">
-                Click and drag the watermark to edit.
-            </p>
         </div>
 
     </main>
+
+    <!-- FAQ & SEO -->
+    <section class="py-20 bg-slate-50 dark:bg-darkBg border-t border-slate-200 dark:border-darkBorder">
+        <div class="container mx-auto px-6 max-w-4xl text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+            <h2 class="text-3xl font-black text-slate-800 dark:text-white mb-6 tracking-tight">Why use PDF Watermark Mosaic?</h2>
+            <p class="mb-6">Standard watermarks placed in the center of a page are easily removed by automated AI tools or cropping. A <strong>Mosaic (Tiling) Watermark</strong> covers the entire area of the document, making unauthorized removal significantly harder. MARK_Tools provides this enterprise-level security feature completely free of charge, processed 100% in your browser for absolute privacy.</p>
+        </div>
+    </section>
 
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -151,24 +180,20 @@
 
             if (!input.files[0]) return;
             
-            loadingStatus.innerHTML = "<span class='animate-pulse text-teal-500'>Rendering Document...</span>";
+            loadingStatus.innerHTML = "<span class='animate-pulse text-teal-500'>Rendering Engine Ready...</span>";
             wrapper.classList.add('hidden');
-            document.getElementById('helperText').classList.add('hidden');
             
             try {
                 const file = input.files[0];
                 const arrayBuffer = await file.arrayBuffer();
-                
                 originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 const page = await pdf.getPage(1);
                 
-                const viewport = page.getViewport({ scale: 1.0 }); // 1:1 Scale
+                const viewport = page.getViewport({ scale: 1.0 });
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                
+                canvas.width = viewport.width; canvas.height = viewport.height;
                 await page.render({ canvasContext: context, viewport: viewport }).promise;
 
                 document.getElementById('previewLoading').classList.add('hidden');
@@ -178,68 +203,52 @@
                 btn.disabled = false;
 
                 if (fbCanvas) fbCanvas.dispose();
-                
                 fbCanvas = new fabric.Canvas('watermarkCanvas', {
-                    width: viewport.width,
-                    height: viewport.height,
+                    width: viewport.width, height: viewport.height,
                     backgroundImage: new fabric.Image(canvas)
                 });
 
-                // Set Default Master Object (Text)
                 setMasterType('text');
-
-                // Events for Mosaic live update
                 fbCanvas.on('object:modified', triggerMosaicRender);
 
             } catch (e) {
-                console.error(e);
-                alert("Failed to load PDF. It might be encrypted.");
-                loadingStatus.innerHTML = "Awaiting PDF...";
+                alert("Encrypted PDF detected. Please unlock the file first.");
+                loadingStatus.innerHTML = "Awaiting PDF Data...";
             }
         }
 
-        // --- MASTER OBJECT LOGIC ---
         function setMasterType(type, inputElem = null) {
             if (!fbCanvas) return;
-
-            // Bersihkan canvas dari objek lama
-            fbCanvas.clear();
-            fbCanvas.setBackgroundImage(fbCanvas.backgroundImage, fbCanvas.renderAll.bind(fbCanvas));
+            fbCanvas.getObjects().forEach(obj => fbCanvas.remove(obj));
 
             if (type === 'text') {
                 document.getElementById('textInputArea').classList.remove('hidden');
                 document.getElementById('colorInputArea').classList.remove('hidden');
-                
                 masterObj = new fabric.IText(document.getElementById('wmText').value, {
                     left: fbCanvas.width / 2, top: fbCanvas.height / 2,
-                    fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: 60,
+                    fontFamily: 'Helvetica', fontWeight: 'bold', fontSize: 50,
                     fill: document.getElementById('wmColor').value,
                     opacity: parseFloat(document.getElementById('wmOpacity').value),
                     originX: 'center', originY: 'center',
-                    transparentCorners: false, cornerColor: '#0d9488', cornerSize: 12
+                    transparentCorners: false, cornerColor: '#0d9488', cornerSize: 10
                 });
-                masterObj.isMaster = true;
                 fbCanvas.add(masterObj);
                 fbCanvas.setActiveObject(masterObj);
                 triggerMosaicRender();
-            } 
-            else if (type === 'image' && inputElem.files[0]) {
+            } else if (type === 'image' && inputElem.files[0]) {
                 document.getElementById('textInputArea').classList.add('hidden');
                 document.getElementById('colorInputArea').classList.add('hidden');
-
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     fabric.Image.fromURL(e.target.result, (img) => {
-                        img.scaleToWidth(200);
+                        img.scaleToWidth(150);
                         img.set({
                             left: fbCanvas.width / 2, top: fbCanvas.height / 2,
                             originX: 'center', originY: 'center',
                             opacity: parseFloat(document.getElementById('wmOpacity').value),
-                            transparentCorners: false, cornerColor: '#0d9488', cornerSize: 12
+                            transparentCorners: false, cornerColor: '#0d9488', cornerSize: 10
                         });
-                        img.isMaster = true;
-                        img.customDataUrl = e.target.result; // Untuk PDF-Lib
-                        
+                        img.customDataUrl = e.target.result;
                         masterObj = img;
                         fbCanvas.add(masterObj);
                         fbCanvas.setActiveObject(masterObj);
@@ -250,159 +259,123 @@
             }
         }
 
-        function updateMaster() {
+        function applyMosaicPreset() {
             if (!masterObj) return;
-            if (masterObj.type === 'i-text' || masterObj.type === 'text') {
-                masterObj.set({
-                    text: document.getElementById('wmText').value,
-                    fill: document.getElementById('wmColor').value,
-                });
-            }
-            masterObj.set('opacity', parseFloat(document.getElementById('wmOpacity').value));
+            const style = document.getElementById('mosaicStyle').value;
+            const scale = parseFloat(document.getElementById('mosaicScale').value);
+            masterObj.set('angle', style === 'diagonal' ? -45 : 0);
+            masterObj.scale(scale);
             fbCanvas.renderAll();
             triggerMosaicRender();
         }
 
-        // --- MOSAIC LOGIC ---
         function triggerMosaicRender() {
             clearTimeout(mosaicTimeout);
-            // Debounce agar browser tidak nge-hang saat slider digeser
-            mosaicTimeout = setTimeout(renderMosaic, 300); 
+            mosaicTimeout = setTimeout(renderMosaic, 300);
         }
 
         function renderMosaic() {
             if (!fbCanvas || !masterObj) return;
-
-            // Hapus semua clone lama
-            const objects = fbCanvas.getObjects();
-            objects.forEach(obj => {
-                if (obj.isClone) fbCanvas.remove(obj);
-            });
+            fbCanvas.getObjects().forEach(obj => { if (obj.isClone) fbCanvas.remove(obj); });
 
             const isMosaic = document.getElementById('mosaicToggle').checked;
             document.getElementById('mosaicSettings').style.display = isMosaic ? 'block' : 'none';
 
             if (!isMosaic) {
-                fbCanvas.renderAll();
-                return;
+                masterObj.set('opacity', parseFloat(document.getElementById('wmOpacity').value));
+                fbCanvas.renderAll(); return;
             }
 
-            // Hitung Pola Grid (Brick Pattern)
             const gap = parseInt(document.getElementById('mosaicGap').value);
-            const w = (masterObj.width * masterObj.scaleX) + gap;
-            const h = (masterObj.height * masterObj.scaleY) + gap;
+            const br = masterObj.getBoundingRect();
+            const w = br.width + gap; const h = br.height + gap;
+            const style = document.getElementById('mosaicStyle').value;
 
-            if (w < 20 || h < 20) return; // Mencegah crash jika terlalu kecil
-
-            let isRowOffset = false;
-            
-            // Render Clones di Latar Belakang (Preview Only)
+            let row = 0;
             for (let y = -h; y < fbCanvas.height + h; y += h) {
-                let startX = isRowOffset ? (-w / 2) : -w;
-                for (let x = startX; x < fbCanvas.width + w; x += w) {
-                    
-                    masterObj.clone(function(cloned) {
-                        cloned.set({
-                            left: x, top: y,
-                            selectable: false, evented: false,
-                            isClone: true, opacity: masterObj.opacity * 0.5 // Clone dibikin lebih transparan dikit buat visual
-                        });
-                        if (masterObj.customDataUrl) cloned.customDataUrl = masterObj.customDataUrl;
-                        
-                        fbCanvas.add(cloned);
-                        fbCanvas.sendToBack(cloned);
+                let offsetX = ((style === 'brick' || style === 'diagonal') && row % 2 !== 0) ? w/2 : 0;
+                for (let x = -w; x < fbCanvas.width + w; x += w) {
+                    masterObj.clone(cloned => {
+                        cloned.set({ left: x + offsetX, top: y, selectable: false, evented: false, isClone: true, opacity: masterObj.opacity * 0.6 });
+                        fbCanvas.add(cloned); fbCanvas.sendToBack(cloned);
                     });
                 }
-                isRowOffset = !isRowOffset;
+                row++;
             }
-            // Pastikan masterObj selalu di atas
             fbCanvas.bringToFront(masterObj);
+            fbCanvas.renderAll();
         }
 
-        // --- PDF GENERATION ---
+        function updateMaster() {
+            if (!masterObj) return;
+            if (masterObj.type.includes('text')) {
+                masterObj.set({ text: document.getElementById('wmText').value, fill: document.getElementById('wmColor').value });
+            }
+            masterObj.set('opacity', parseFloat(document.getElementById('wmOpacity').value));
+            fbCanvas.renderAll(); triggerMosaicRender();
+        }
+
         async function saveWatermarkedPDF() {
-            if (!originalPdfDoc || !fbCanvas) return;
             const btn = document.getElementById('watermarkBtn');
-            btn.innerText = "PACKING PDF...";
-            btn.disabled = true;
+            btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             try {
                 const pages = originalPdfDoc.getPages();
                 const font = await originalPdfDoc.embedFont(PDFLib.StandardFonts.HelveticaBold);
+                const isMosaic = document.getElementById('mosaicToggle').checked;
                 
-                // Ambil SEMUA objek (Master + Clones)
-                const fabricObjects = fbCanvas.getObjects();
-                const canvasHeight = fbCanvas.height;
+                const mText = masterObj.type.includes('text') ? masterObj.text : null;
+                const mColor = hexToPdfRgb(masterObj.fill);
+                const mOpacity = parseFloat(document.getElementById('wmOpacity').value);
+                const mAngle = PDFLib.degrees(-masterObj.angle);
+                const mScale = masterObj.scaleX || 1;
 
-                // Pre-Embed Images
-                const embeddedImages = {};
-                for (const obj of fabricObjects) {
-                    if (obj.type === 'image' && obj.customDataUrl && !embeddedImages[obj.customDataUrl]) {
-                        const dataUrl = obj.customDataUrl;
-                        let pdfImg = dataUrl.startsWith('data:image/png') ? 
-                            await originalPdfDoc.embedPng(dataUrl) : 
-                            await originalPdfDoc.embedJpg(dataUrl);
-                        embeddedImages[dataUrl] = pdfImg;
-                    }
+                let embeddedImg = null;
+                if (masterObj.type === 'image' && masterObj.customDataUrl) {
+                    embeddedImg = masterObj.customDataUrl.startsWith('data:image/png') ? 
+                        await originalPdfDoc.embedPng(masterObj.customDataUrl) : await originalPdfDoc.embedJpg(masterObj.customDataUrl);
                 }
 
-                // Gambar ke setiap halaman PDF
                 for (const page of pages) {
                     const { width: pW, height: pH } = page.getSize();
-                    const ratioX = pW / fbCanvas.width;
-                    const ratioY = pH / fbCanvas.height;
+                    const ratioX = pW / fbCanvas.width; const ratioY = pH / fbCanvas.height;
 
-                    for (const obj of fabricObjects) {
-                        let br = obj.getBoundingRect();
-                        let x = br.left * ratioX;
-                        let y = pH - (br.top * ratioY) - (br.height * ratioY);
-                        
-                        // Opacity dikembalikan ke nilai master saat print PDF
-                        let finalOpacity = obj.isClone ? masterObj.opacity : obj.opacity;
+                    if (isMosaic) {
+                        const style = document.getElementById('mosaicStyle').value;
+                        const gap = parseInt(document.getElementById('mosaicGap').value) * ratioX;
+                        const br = masterObj.getBoundingRect();
+                        const tW = (br.width * ratioX) + gap; const tH = (br.height * ratioY) + gap;
 
-                        if (obj.type === 'i-text' || obj.type === 'text') {
-                            page.drawText(obj.text, {
-                                x: x, y: y + (br.height * ratioY * 0.2), 
-                                size: (obj.fontSize * obj.scaleX) * ratioX,
-                                font: font,
-                                color: PDFLib.rgb(...hexToPdfRgb(obj.fill)),
-                                opacity: finalOpacity,
-                                rotate: PDFLib.degrees(-obj.angle),
-                            });
-                        }
-                        else if (obj.type === 'image') {
-                            const pdfImg = embeddedImages[obj.customDataUrl];
-                            if (pdfImg) {
-                                page.drawImage(pdfImg, {
-                                    x: x, y: y,
-                                    width: br.width * ratioX, height: br.height * ratioY,
-                                    opacity: finalOpacity,
-                                    rotate: PDFLib.degrees(-obj.angle),
-                                });
+                        let row = 0;
+                        for (let y = -tH; y < pH + tH; y += tH) {
+                            let off = ((style === 'brick' || style === 'diagonal') && row % 2 !== 0) ? tW/2 : 0;
+                            for (let x = -tW; x < pW + tW; x += tW) {
+                                const opt = { x: x + off, y: pH - y, opacity: mOpacity, rotate: mAngle };
+                                if (mText) page.drawText(mText, { ...opt, size: (masterObj.fontSize * mScale) * ratioX, font, color: PDFLib.rgb(...mColor) });
+                                else if (embeddedImg) page.drawImage(embeddedImg, { ...opt, width: (masterObj.width * mScale) * ratioX, height: (masterObj.height * mScale) * ratioY });
                             }
+                            row++;
                         }
+                    } else {
+                        let br = masterObj.getBoundingRect();
+                        let x = br.left * ratioX; let y = pH - (br.top * ratioY) - (br.height * ratioY);
+                        const opt = { x, y, opacity: mOpacity, rotate: mAngle };
+                        if (mText) page.drawText(mText, { ...opt, size: (masterObj.fontSize * mScale) * ratioX, font, color: PDFLib.rgb(...mColor) });
+                        else if (embeddedImg) page.drawImage(embeddedImg, { ...opt, width: br.width * ratioX, height: br.height * ratioY });
                     }
                 }
 
                 const pdfBytes = await originalPdfDoc.save();
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                const fileName = `Watermarked_${document.getElementById('watermarkInput').files[0].name}`;
-                
-                // Panggil fungsi ajaib kita
-                await processRedirect('Watermark Pro', fileName, blob);
-                return;
+                await processRedirect('Watermark Pro', `Watermarked_${Date.now()}.pdf`, blob);
 
-            } catch (e) {
-                console.error(e);
-                alert("Error saving PDF.");
-                btn.innerText = "Apply & Download";
-                btn.disabled = false;
-            }
+            } catch (e) { console.error(e); alert("Failed."); }
+            finally { btn.innerText = "Apply & Download"; btn.disabled = false; }
         }
 
         function hexToPdfRgb(hex) {
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? [ parseInt(result[1], 16)/255, parseInt(result[2], 16)/255, parseInt(result[3], 16)/255 ] :[0,0,0];
+            const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return r ? [parseInt(r[1],16)/255, parseInt(r[2],16)/255, parseInt(r[3],16)/255] : [0,0,0];
         }
     </script>
 <!-- SEO CONTENT AREA -->
