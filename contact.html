@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Contact Us - Report Bugs & Request Tools | MARK_Tools</title>
+    <meta name="description" content="Contact the developer of MARK_Tools to report a bug, request a new tool, or send general feedback. We are constantly improving our utility suite.">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 100%); }
+    </style>
+</head>
+<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300">
+
+    <!-- Navbar -->
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-4xl">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
+                    <span class="text-white font-black text-sm">M</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK<span class="text-blue-600 dark:text-blue-400">_Tools</span></h1>
+            </a>
+            <a class="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition" href="index.html">← Back to Home</a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-16 max-w-4xl">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-black mb-4 tracking-tight text-slate-800 dark:text-white">Get in <span class="text-blue-600 dark:text-blue-400">Touch</span></h2>
+            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">Help us build the perfect utility suite. Whether you found a bug or have a brilliant idea for a new tool, we want to hear from you!</p>
+        </div>
+
+        <div class="bg-white dark:bg-darkCard p-8 md:p-12 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder relative overflow-hidden">
+            
+            <!-- Ornamen Estetika -->
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+            
+            <!-- Form -->
+            <!-- GANTI 'YOUR_FORMSPREE_ENDPOINT' DENGAN LINK DARI FORMSPREE NANTI -->
+            <form action="https://formspree.io/f/mkoklbel" method="POST" class="relative z-10 space-y-6">
+                
+                <div class="grid md:grid-cols-2 gap-6">
+                    <!-- Nama -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Your Name</label>
+                        <input type="text" name="name" required class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="John Doe">
+                    </div>
+                    <!-- Email -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Your Email</label>
+                        <input type="email" name="email" required class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="john@example.com">
+                    </div>
+                </div>
+
+                <!-- Kategori / Subjek -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">What is this about?</label>
+                    <select name="subject" required class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Bug Report">🐛 Report a Bug / Error</option>
+                        <option value="Feature Request">💡 Request a New Tool / Feature</option>
+                        <option value="General Feedback">💬 General Feedback or Business</option>
+                    </select>
+                </div>
+
+                <!-- Pesan -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Your Message</label>
+                    <textarea name="message" required rows="5" class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none" placeholder="Please describe the bug or explain the tool you want us to build..."></textarea>
+                </div>
+
+                <!-- Tombol Submit -->
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" /></svg>
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-10 mt-auto text-center">
+        <p class="text-[10px] opacity-40 font-mono">MARK_Tools Utility Suite &copy; 2024-2026.</p>
+    </footer>
+</body>
+</html>
