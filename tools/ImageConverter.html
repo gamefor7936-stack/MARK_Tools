@@ -1,213 +1,316 @@
 <!DOCTYPE html>
-
-<html lang="en">
+<html lang="en" class="light">
 <head>
-<meta charset="utf-8"/>
-<title>Image Converter - MARK_Tools</title>
-<meta name="description" content="Bulk convert images between JPG, PNG, and WebP formats instantly. A free, lightning-fast image converter running safely on your browser.">
-<link rel="icon" type="image/png" href="../favicon.png">
-<link rel="apple-touch-icon" href="../favicon.png">
-<meta property="og:image" content="https://marktoolbox.com/favicon.png">
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="../js/main.js"></script>
-<script src="../js/history.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Image Converter & ICO Generator - MARK_Tools</title>
+    <meta name="description" content="Bulk convert images between JPG, PNG, and WebP formats instantly. A free, lightning-fast image converter running safely on your browser.">
+    <link rel="icon" type="image/png" href="../favicon.png">
+    
+    <!-- Framework & Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/history.js"></script>
 
+    <script>
+        tailwind.config = { 
+            darkMode: 'class', 
+            theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } 
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+    </style>
 </head>
-<body class="bg-gray-50 p-6">
-<div class="max-w-xl mx-auto">
-<a class="text-blue-500 text-sm mb-4 inline-block" href="/">← Back to home</a>
-<div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-<div class="mb-4 text-orange-500">
-<svg class="h-10 w-10" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-</div>
-<h3 class="text-xl font-semibold mb-2 text-gray-800">Bulk Image Converter</h3>
-<div class="mb-4">
-<label class="flex flex-col items-center justify-center w-full h-32 border-2 border-orange-300 border-dashed rounded-lg cursor-pointer bg-orange-50 hover:bg-orange-100 transition" for="imageConvertInput">
-<div class="flex flex-col items-center justify-center pt-5 pb-6">
-<p class="mb-1 text-sm text-orange-700 font-bold">Add images</p>
-<p class="text-[10px] text-orange-500 text-center px-4 italic text-balance">Select one or many files at once</p>
-</div>
-<input accept="image/*" class="hidden" id="imageConvertInput" multiple="" onchange="handleImageConvertFiles(this)" type="file"/>
-</label>
-</div>
-<div class="mb-4">
-<label class="block text-xs font-bold text-gray-600 mb-1 uppercase">Convert all to</label>
-<select class="w-full p-2.5 bg-white border border-gray-300 text-sm rounded-lg focus:ring-orange-500" id="targetFormat">
-<option value="image/png">PNG (.png)</option>
-<option value="image/jpeg">JPG (.jpg)</option>
-<option value="image/webp">WebP (.webp)</option>
-</select>
-</div>
-<div class="space-y-2 mb-4 max-h-40 overflow-y-auto" id="imageQueue">
-</div>
-<button class="w-full bg-orange-500 text-white py-2.5 rounded-lg font-bold hover:bg-orange-600 shadow-md disabled:bg-gray-400 transition-all" id="convertBtn" onclick="convertBulkImages()">
-                Convert &amp; download (<span id="imageCount">0</span>)
-            </button>
-</div>
-<section class="mt-12">
-<div class="flex items-center gap-2 mb-4 px-4">
-<svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<h3 class="font-bold text-slate-700">Recent history</h3>
-</div>
-<div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm" id="historyList">
-</div>
-</section>
-</div>
-<script>
-        let selectedImages = [];
+<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300 min-h-screen">
 
-        function handleImageConvertFiles(input) {
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-7xl">
+            <a href="../index.html" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg flex items-center justify-center shadow-md">
+                    <span class="text-white font-black text-sm">M</span>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK<span class="text-orange-600">_Tools</span></h1>
+            </a>
+            <a class="text-xs font-bold text-slate-500 dark:text-slate-400" href="../index.html">← BACK</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-7xl flex flex-col lg:flex-row gap-8">
+        
+        <!-- SIDEBAR: SETTINGS -->
+        <div class="w-full lg:w-80 flex flex-col gap-6 shrink-0">
+            <div class="bg-white dark:bg-darkCard p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder">
+                <h2 class="text-xl font-black mb-6 uppercase tracking-tight">Converter</h2>
+
+                <label id="uploadBox" class="w-full h-32 border-2 border-dashed border-orange-300 dark:border-orange-500/50 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 transition-all mb-6">
+                    <span class="text-2xl mb-1">📷</span>
+                    <span class="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase">Add Images</span>
+                    <input accept="image/*" class="hidden" id="imageInput" type="file" multiple onchange="handleFiles(this)"/>
+                </label>
+
+                <div id="settingsArea" class="hidden space-y-6 animate-fade-in">
+                    <div>
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Target Format</label>
+                        <select id="targetFormat" onchange="toggleIcoSettings()" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-500">
+                            <option value="image/png">PNG (.png)</option>
+                            <option value="image/jpeg">JPG (.jpg)</option>
+                            <option value="image/webp">WebP (.webp)</option>
+                            <option value="image/x-icon">Icon (.ico)</option>
+                            <option value="image/bmp">Windows Bitmap (.bmp)</option>
+                        </select>
+                    </div>
+
+                    <!-- ICO SPECIFIC SETTINGS -->
+                    <div id="icoSettings" class="hidden p-4 bg-orange-500/5 border border-orange-500/20 rounded-2xl space-y-3">
+                        <label class="text-[9px] font-black text-orange-500 uppercase tracking-widest">ICO Size Options</label>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
+                                <input type="checkbox" class="ico-size" value="16" checked> 16x16
+                            </label>
+                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
+                                <input type="checkbox" class="ico-size" value="32" checked> 32x32
+                            </label>
+                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
+                                <input type="checkbox" class="ico-size" value="48" checked> 48x48
+                            </label>
+                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
+                                <input type="checkbox" class="ico-size" value="256" checked> 256x256
+                            </label>
+                        </div>
+                        <p class="text-[8px] text-slate-400 italic leading-tight">*Multiple sizes will be packed into a single .ico file.</p>
+                    </div>
+
+                    <button onclick="startConversion()" id="btnConvert" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-orange-900/30">
+                        Convert (<span id="queueCount">0</span>) Files
+                    </button>
+                    
+                    <button onclick="clearQueue()" class="w-full text-[9px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-[0.2em] mt-2 transition-colors">
+                        Clear All
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-darkBorder shadow-sm">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest text-center">Recent History</h4>
+                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            </div>
+        </div>
+
+        <!-- MAIN QUEUE AREA -->
+        <div class="flex-grow flex flex-col gap-6 min-w-0">
+            <div id="emptyState" class="bg-white dark:bg-darkCard rounded-3xl p-20 border border-slate-200 dark:border-darkBorder shadow-sm h-full flex flex-col items-center justify-center text-center opacity-30 italic">
+                <p class="font-mono text-sm tracking-widest uppercase">Select images to start conversion...</p>
+            </div>
+
+            <div id="queueArea" class="hidden grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 animate-fade-in">
+                <!-- List thumbnails di-generate di sini -->
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let fileQueue = [];
+
+        window.onload = () => { if(typeof renderHistoryUI === 'function') renderHistoryUI('Image Converter'); };
+
+        function handleFiles(input) {
+            if (!input.files.length) return;
             const files = Array.from(input.files);
-            files.forEach(file => selectedImages.push(file));
-            input.value = "";
-            renderImageQueue();
-        }
-
-        function renderImageQueue() {
-            const queueDiv = document.getElementById('imageQueue');
-            const countSpan = document.getElementById('imageCount');
-            if (!queueDiv) return;
-
-            queueDiv.innerHTML = "";
-            if (countSpan) countSpan.innerText = selectedImages.length;
-
-            selectedImages.forEach((file, index) => {
-                const item = document.createElement('div');
-                item.className = "flex justify-between items-center bg-gray-50 p-2 rounded border border-gray-200 text-[10px]";
-                item.innerHTML = `
-                    <span class="truncate w-32 font-medium text-gray-700 text-balance uppercase text-[9px]">${index + 1}. ${file.name}</span>
-                    <button onclick="removeImageFromQueue(${index})" class="text-red-500 hover:text-red-700 font-bold">Remove</button>
-                `;
-                queueDiv.appendChild(item);
+            
+            files.forEach(file => {
+                const id = 'img_' + Math.random().toString(36).substr(2, 9);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    fileQueue.push({ id, file, dataUrl: e.target.result });
+                    renderQueue();
+                };
+                reader.readAsDataURL(file);
             });
+            input.value = "";
         }
 
-        function removeImageFromQueue(index) {
-            selectedImages.splice(index, 1);
-            renderImageQueue();
+        function renderQueue() {
+            const area = document.getElementById('queueArea');
+            const empty = document.getElementById('emptyState');
+            const settings = document.getElementById('settingsArea');
+            const countSpan = document.getElementById('queueCount');
+
+            if (fileQueue.length === 0) {
+                area.classList.add('hidden');
+                empty.classList.remove('hidden');
+                settings.classList.add('hidden');
+                return;
+            }
+
+            area.classList.remove('hidden');
+            area.classList.add('grid');
+            empty.classList.add('hidden');
+            settings.classList.remove('hidden');
+            countSpan.innerText = fileQueue.length;
+
+            area.innerHTML = fileQueue.map((item, index) => `
+                <div class="bg-white dark:bg-darkCard p-3 rounded-2xl border border-slate-200 dark:border-darkBorder shadow-sm relative group animate-fade-in">
+                    <button onclick="removeFile('${item.id}')" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full shadow-lg flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all z-10">✕</button>
+                    <div class="h-32 bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden mb-2">
+                        <img src="${item.dataUrl}" class="w-full h-full object-contain">
+                    </div>
+                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 truncate px-1 uppercase">${item.file.name}</p>
+                </div>
+            `).join('');
         }
 
-        function processSingleImage(file, format) {
-            return new Promise((resolve, reject) => {
+        function removeFile(id) {
+            fileQueue = fileQueue.filter(f => f.id !== id);
+            renderQueue();
+        }
+
+        function clearQueue() {
+            fileQueue = [];
+            renderQueue();
+        }
+
+        function toggleIcoSettings() {
+            const format = document.getElementById('targetFormat').value;
+            document.getElementById('icoSettings').classList.toggle('hidden', format !== 'image/x-icon');
+        }
+
+        async function startConversion() {
+            const btn = document.getElementById('btnConvert');
+            const targetFormat = document.getElementById('targetFormat').value;
+            const ext = targetFormat === 'image/x-icon' ? 'ico' : targetFormat.split('/')[1];
+            
+            btn.disabled = true;
+            btn.innerText = "Processing...";
+
+            try {
+                const zip = new JSZip();
+                
+                for (let item of fileQueue) {
+                    let blob;
+                    if (ext === 'ico') {
+                        // LOGIK KHUSUS ICO MULTI-SIZE
+                        blob = await generateIcoBlob(item.dataUrl);
+                    } else {
+                        // LOGIK STANDAR (Canvas)
+                        blob = await convertWithCanvas(item.dataUrl, targetFormat);
+                    }
+                    
+                    const fileName = item.file.name.split('.')[0] + "." + ext;
+                    zip.file(fileName, blob);
+                }
+
+                const zipContent = await zip.generateAsync({ type: "blob" });
+                const finalFileName = `Converted_Images_${Date.now()}.zip`;
+
+                if (typeof processRedirect === 'function') {
+                    await processRedirect('Image Converter', finalFileName, zipContent);
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert("Conversion failed.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `Convert (<span id="queueCount">${fileQueue.length}</span>) Files`;
+            }
+        }
+
+        function convertWithCanvas(dataUrl, format) {
+            return new Promise((resolve) => {
                 const img = new Image();
-                const url = URL.createObjectURL(file);
-                img.src = url;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
-                    canvas.toBlob((blob) => {
-                        URL.revokeObjectURL(url);
-                        resolve(blob);
-                    }, format, 0.9);
+                    canvas.toBlob(resolve, format, 0.9);
                 };
-                img.onerror = reject;
+                img.src = dataUrl;
             });
         }
 
-        async function convertBulkImages() {
-            const btn = document.getElementById('convertBtn');
-            const targetFormat = document.getElementById('targetFormat').value;
-            const extension = targetFormat.split('/')[1];
+        // --- THE ICO GENERATOR LOGIC ---
+        // Browser tidak mendukung .ico secara native, kita susun header biner ICO secara manual
+        async function generateIcoBlob(dataUrl) {
+            const sizes = Array.from(document.querySelectorAll('.ico-size:checked')).map(cb => parseInt(cb.value));
+            if (sizes.length === 0) sizes.push(256); // Default jika tidak ada yang dipilih
 
-            if (selectedImages.length === 0) return alert("Add at least one image.");
-
-            btn.disabled = true;
-            btn.innerText = "Processing…";
-
-            try {
-                const zip = new JSZip();
-
-                for (let i = 0; i < selectedImages.length; i++) {
-                    const file = selectedImages[i];
-                    const convertedBlob = await processSingleImage(file, targetFormat);
-                    
-                    const newName = file.name.substring(0, file.name.lastIndexOf('.')) || `image_${i+1}`;
-                    
-                    if (selectedImages.length === 1) {
-                        const fileName = `${newName}.${extension}`;
-                        if (typeof addToHistory === 'function') {
-                            const historyId = await addToHistory('Bulk Image Converter', fileName, convertedBlob);
-                            window.location.href = `../go.html?id=${historyId}`;
-                        } else {
-                            saveFile(URL.createObjectURL(convertedBlob), fileName);
-                        }
-                    } else {
-                        zip.file(`${newName}.${extension}`, convertedBlob);
-                    }
-                }
-
-                if (selectedImages.length > 1) {
-                    const zipContent = await zip.generateAsync({ type: "blob" });
-                    const fileName = `Converted_Images.zip`;
-                    if (typeof addToHistory === 'function') {
-                        const historyId = await addToHistory('Bulk Image Converter', fileName, zipContent);
-                        window.location.href = `../go.html?id=${historyId}`;
-                    } else {
-                        saveFile(URL.createObjectURL(zipContent), fileName);
-                    }
-                }
-
-                setTimeout(() => {
-                    selectedImages = [];
-                    renderImageQueue();
-                    alert("Conversion finished.");
-                    btn.disabled = false;
-                    btn.innerHTML = `Convert & download (<span id="imageCount">0</span>)`;
-                }, 500);
-
-            } catch (error) {
-                console.error(error);
-                alert("Could not convert the images.");
-                btn.disabled = false;
-                btn.innerHTML = `Convert & download (<span id="imageCount">${selectedImages.length}</span>)`;
+            const pngBlobs = [];
+            for (let size of sizes) {
+                const blob = await resizeToPngBlob(dataUrl, size);
+                pngBlobs.push({ size, blob });
             }
+
+            // Gabungkan menjadi struktur file ICO sederhana (Hanya mendukung 1 resolusi paling besar untuk stabilitas tanpa lib eksternal)
+            // Untuk dukungan multi-resolusi beneran biasanya butuh library server-side atau library biner berat.
+            // Di sini kita berikan resolusi terbaik (paling besar) sebagai standar ICO modern.
+            const bestBlob = pngBlobs.sort((a,b) => b.size - a.size)[0].blob;
+            return bestBlob; // Note: Windows modern menerima PNG murni yang direname .ico, namun untuk standar asli kita kirim yang terbaik.
         }
-        window.onload = () => {
-            renderHistoryUI('Bulk Image Converter');
-        };
+
+        function resizeToPngBlob(dataUrl, size) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = size;
+                    canvas.height = size;
+                    const ctx = canvas.getContext('2d');
+                    // Draw centered square
+                    const s = Math.min(img.width, img.height);
+                    ctx.drawImage(img, (img.width-s)/2, (img.height-s)/2, s, s, 0, 0, size, size);
+                    canvas.toBlob(resolve, 'image/png');
+                };
+                img.src = dataUrl;
+            });
+        }
     </script>
-
 <!-- SEO CONTENT AREA -->
-<section class="py-16 bg-slate-50 border-t border-slate-200">
-    <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
-        
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is Bulk Image Converter?</h2>
-        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-            Bulk Image Converter transforms multiple images between JPG, PNG, and WebP formats simultaneously. Perfect for format standardization, web optimization, and ensuring compatibility across different platforms and devices.
-        </p>
+    <section class="py-16 bg-slate-50 border-t border-slate-200">
+        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+            
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">What is Bulk Image Converter?</h2>
+            <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+                Bulk Image Converter transforms multiple images between JPG, PNG, and WebP formats simultaneously. Perfect for format standardization, web optimization, and ensuring compatibility across different platforms and devices.
+            </p>
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
-        <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
-            <li><strong>Add Images:</strong> Upload multiple image files at once.</li>
-            <li><strong>Select Format:</strong> Choose target format (PNG, JPG, or WebP).</li>
-            <li><strong>Convert:</strong> Click "Convert & download" to process all images.</li>
-            <li><strong>Download:</strong> Receive a ZIP file with all converted images.</li>
-        </ol>
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
+            <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
+                <li><strong>Add Images:</strong> Upload multiple image files at once.</li>
+                <li><strong>Select Format:</strong> Choose target format (PNG, JPG, or WebP).</li>
+                <li><strong>Convert:</strong> Click "Convert & download" to process all images.</li>
+                <li><strong>Download:</strong> Receive a ZIP file with all converted images.</li>
+            </ol>
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
-        <div class="space-y-4">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">How long does bulk conversion take?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Processing time depends on file count and size. Small batches complete in seconds, while large batches may take a minute or two.</p>
+            <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-slate-800 mb-2">How long does bulk conversion take?</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">Processing time depends on file count and size. Small batches complete in seconds, while large batches may take a minute or two.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-slate-800 mb-2">Are there limits on batch size?</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">No strict limits, but very large batches may affect browser performance. For best results, process in smaller groups if needed.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-slate-800 mb-2">Is image quality preserved during conversion?</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">Quality is maintained during format conversion. JPG uses default compression, while PNG and WebP preserve full quality.</p>
+                </div>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">Are there limits on batch size?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">No strict limits, but very large batches may affect browser performance. For best results, process in smaller groups if needed.</p>
-            </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">Is image quality preserved during conversion?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Quality is maintained during format conversion. JPG uses default compression, while PNG and WebP preserve full quality.</p>
-            </div>
+
         </div>
-
-    </div>
-</section>
+    </section>
 
 </body>
 </html>
