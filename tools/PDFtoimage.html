@@ -1,114 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
-    <title>PDF to Image - Convert PDF pages to high-quality JPG or PNG images instantly</title>
-    <meta name="description" content="Convert PDF pages to high-quality JPG or PNG images instantly. Download as a ZIP file. Fast, free, and secure client-side PDF converter.">
+    <title>Secure PDF to Image Extractor - Convert PDF pages to high-quality JPG or PNG images instantly</title>
+    <meta name="description" content="Convert PDF pages to high-quality JPG or PNG images instantly. Download as a ZIP file. Fast, free, and secure client-side PDF converter. No data uploaded.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
+    
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-
-    <!-- Scripts Internal -->
     <script src="../js/main.js"></script>
     <script src="../js/history.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700&display=swap');
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+        
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .glass-blue { background: rgba(30, 58, 138, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .input-dark { background: #0f172a; border: 1px solid #334155; color: #60a5fa; transition: all 0.3s; }
+        .input-dark:focus { border-color: #3b82f6; box-shadow: 0 0 10px rgba(59, 130, 246, 0.2); outline: none; }
+    </style>
 </head>
 
-<body class="bg-gray-50 p-6">
-    <div class="max-w-xl mx-auto">
-        <a class="text-blue-500 text-sm mb-4 inline-block hover:underline font-medium" href="../index.html">← Back to
-            home</a>
+<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
 
-        <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-            <div class="mb-4 text-blue-400">
-                <svg class="h-10 w-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-                </svg>
+    <!-- Navbar -->
+    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-blue-400 font-black text-xl tracking-tighter hover:opacity-80">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Document / Media</span>
             </div>
-
-            <h3 class="text-xl font-semibold mb-2 text-slate-800">PDF to Image</h3>
-            <p class="text-gray-500 text-xs mb-6">Export every page of a PDF as a separate image file packed in a ZIP.
-            </p>
-
-            <input accept="application/pdf"
-                class="block w-full text-sm mb-4 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer text-slate-500"
-                id="pdfToImageInput" type="file" />
-
-            <div class="mb-6">
-                <label class="block text-[10px] font-bold text-gray-400 mb-2 uppercase tracking-widest">Output
-                    format</label>
-                <select
-                    class="w-full p-3 border border-slate-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-400"
-                    id="imgOutputFormat">
-                    <option value="image/jpeg">JPG (Smaller size)</option>
-                    <option value="image/png">PNG (High Quality)</option>
-                </select>
-            </div>
-
-            <button
-                class="w-full bg-blue-600 text-white py-3.5 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-500/30 disabled:opacity-50"
-                id="pdfToImgBtn" onclick="convertPdfToImage()">Convert to images</button>
-
-            <p class="text-xs text-center mt-4 text-blue-600 font-bold uppercase tracking-widest hidden animate-pulse"
-                id="pdfToImgProgress"></p>
+            <a href="/" class="text-xs font-bold text-slate-400 hover:text-blue-400 transition">BACK TO HOME</a>
         </div>
+    </nav>
 
-        <!-- History Section -->
-        <section class="mt-12">
-            <div class="flex items-center gap-2 mb-4 px-4">
-                <svg class="h-5 w-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"
-                        stroke-width="2"></path>
-                </svg>
-                <h3 class="font-bold text-slate-700 uppercase tracking-widest text-[10px]">Recent history</h3>
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row justify-center gap-6">
+        
+        <!-- MAIN TOOL PANEL -->
+        <div class="w-full max-w-2xl flex flex-col gap-6">
+            
+            <div class="glass-dark p-6 md:p-8 rounded-3xl shadow-2xl relative border-t-4 border-t-blue-500">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="w-14 h-14 bg-blue-500/20 text-blue-400 rounded-2xl flex items-center justify-center">
+                        <svg class="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-white">PDF to Image Extractor</h1>
+                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-1">Render PDF pages to High-Res JPG/PNG</p>
+                    </div>
+                </div>
+
+                <!-- Step 1: Upload -->
+                <div class="mb-6">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Step 1: Select PDF File</label>
+                    <div class="relative border-2 border-dashed border-slate-600 rounded-2xl p-6 text-center hover:border-blue-400 transition hover:bg-blue-900/10 group cursor-pointer" onclick="document.getElementById('pdfToImageInput').click()">
+                        <input type="file" id="pdfToImageInput" accept="application/pdf" class="hidden" onchange="handleFileSelect()">
+                        <svg class="mx-auto h-10 w-10 text-slate-500 group-hover:text-blue-400 mb-3 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                        <p class="text-sm text-slate-300 font-bold" id="uploadText">Click here or drag a PDF file to upload</p>
+                        <p class="text-[10px] text-slate-500 mt-1">Files are rendered directly in your browser.</p>
+                    </div>
+                </div>
+
+                <!-- Document Info -->
+                <div id="docInfoPanel" class="hidden glass-blue p-4 rounded-xl mb-6 flex justify-between items-center">
+                    <div>
+                        <p class="text-sm text-blue-200 font-bold truncate max-w-[200px] md:max-w-[300px]" id="docName">filename.pdf</p>
+                        <p class="text-xs text-blue-400/80 font-mono mt-1" id="docSize">Loading...</p>
+                    </div>
+                    <button onclick="clearFile()" class="text-xs bg-blue-900/50 hover:bg-blue-900 text-blue-200 px-3 py-1.5 rounded-lg transition">Remove</button>
+                </div>
+
+                <!-- Step 2: Format Selection -->
+                <div class="mb-8 opacity-50 pointer-events-none transition-all duration-300" id="configPanel">
+                    <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Step 2: Output Format</label>
+                    <select id="imgOutputFormat" class="w-full p-4 rounded-xl input-dark text-sm appearance-none font-bold text-center">
+                        <option value="image/jpeg">JPEG / JPG (Smaller file size, good for web)</option>
+                        <option value="image/png">PNG (Lossless Quality, transparent background support)</option>
+                    </select>
+                    <p class="text-[10px] text-slate-500 mt-3 text-center">Images will be rendered at 2.0x scale (High Definition).</p>
+                </div>
+
+                <!-- Action Button -->
+                <button id="pdfToImgBtn" onclick="convertPdfToImage()" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-4 rounded-xl font-black uppercase text-sm tracking-widest transition shadow-lg shadow-blue-900/50 disabled:opacity-50 disabled:cursor-not-allowed">
+                    Extract & Download ZIP
+                </button>
+                
+                <!-- Progress Indicator -->
+                <div id="progressContainer" class="hidden mt-5">
+                    <div class="flex justify-between text-[10px] text-blue-400 font-mono font-bold mb-2">
+                        <span id="progressText">Initializing render engine...</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-2">
+                        <div id="progressBar" class="bg-blue-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm" id="historyList"></div>
-        </section>
-    </div>
 
+            <!-- Area Histori Lokal -->
+            <div class="glass-dark p-5 rounded-2xl">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Extraction History
+                </h4>
+                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Script Logic -->
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Drag and drop setup
+        const dropZone = document.querySelector('.border-dashed');
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-400', 'bg-blue-900/20'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-blue-400', 'bg-blue-900/20'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-400', 'bg-blue-900/20');
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                document.getElementById('pdfToImageInput').files = e.dataTransfer.files;
+                handleFileSelect();
+            }
+        });
+
+        function handleFileSelect() {
+            const file = document.getElementById('pdfToImageInput').files[0];
+            if (!file) return;
+
+            if(file.type !== "application/pdf") {
+                alert("Please select a valid PDF file.");
+                clearFile();
+                return;
+            }
+
+            document.getElementById('uploadText').innerText = "File selected successfully!";
+            document.getElementById('docInfoPanel').classList.remove('hidden');
+            document.getElementById('docName').innerText = file.name;
+            document.getElementById('docSize').innerText = `Size: ${(file.size / 1024 / 1024).toFixed(2)} MB`;
+            
+            document.getElementById('configPanel').classList.remove('opacity-50', 'pointer-events-none');
+        }
+
+        function clearFile() {
+            document.getElementById('pdfToImageInput').value = "";
+            document.getElementById('uploadText').innerText = "Click here or drag a PDF file to upload";
+            document.getElementById('docInfoPanel').classList.add('hidden');
+            document.getElementById('configPanel').classList.add('opacity-50', 'pointer-events-none');
+        }
 
         async function convertPdfToImage() {
             const input = document.getElementById('pdfToImageInput');
             const btn = document.getElementById('pdfToImgBtn');
-            const progressText = document.getElementById('pdfToImgProgress');
             const format = document.getElementById('imgOutputFormat').value;
             const ext = format === 'image/jpeg' ? 'jpg' : 'png';
+            
+            const progContainer = document.getElementById('progressContainer');
+            const progText = document.getElementById('progressText');
+            const progBar = document.getElementById('progressBar');
+            const progPercent = document.getElementById('progressPercent');
 
-            if (input.files.length === 0) return alert("Choose a PDF file first.");
+            if (input.files.length === 0) return alert("Please upload a PDF file first.");
 
             btn.disabled = true;
-            btn.innerText = "READING PDF...";
-            progressText.classList.remove('hidden');
+            btn.innerText = "RENDERING IMAGES...";
+            progContainer.classList.remove('hidden');
+            progBar.style.width = "2%";
+            progPercent.innerText = "0%";
 
             try {
                 const file = input.files[0];
                 const arrayBuffer = await file.arrayBuffer();
 
+                progText.innerText = "Parsing PDF Document...";
                 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
                 const pageCount = pdf.numPages;
                 const zip = new JSZip();
 
                 for (let i = 1; i <= pageCount; i++) {
-                    progressText.innerText = `RENDERING PAGE ${i} OF ${pageCount}...`;
+                    let progressPercentage = Math.round((i / pageCount) * 85); // Reserve 15% for ZIP
+                    progText.innerText = `Rendering Page ${i} of ${pageCount}...`;
+                    progBar.style.width = `${progressPercentage}%`;
+                    progPercent.innerText = `${progressPercentage}%`;
 
                     const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({ scale: 2.0 }); // Skala 2x agar gambar tajam
+                    // Gunakan skala 2.0 agar gambar tajam / HD
+                    const viewport = page.getViewport({ scale: 2.0 }); 
 
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
+
+                    // Beri background putih untuk JPG (karena JPG tidak punya transparency)
+                    if (format === 'image/jpeg') {
+                        context.fillStyle = "#ffffff";
+                        context.fillRect(0, 0, canvas.width, canvas.height);
+                    }
 
                     await page.render({ canvasContext: context, viewport: viewport }).promise;
 
@@ -116,40 +213,42 @@
                         canvas.toBlob(blob => resolve(blob), format, 0.9);
                     });
 
-                    // Format ZIP file name for neatness (Page_01, Page_02, etc.)
+                    // Penamaan file yang rapi (Page_001, Page_002)
                     const pageNumber = i.toString().padStart(3, '0');
                     zip.file(`Page_${pageNumber}.${ext}`, imageBlob);
 
-                    // Delay so browser doesn't hang
-                    await new Promise(resolve => setTimeout(resolve, 10));
+                    // Delay mikro agar browser UI tidak freeze
+                    await new Promise(resolve => setTimeout(resolve, 5));
                 }
 
-                progressText.innerText = "PACKING TO ZIP...";
+                progText.innerText = "Compressing to ZIP Archive...";
+                progBar.style.width = "95%";
+                progPercent.innerText = "95%";
+
                 const zipContent = await zip.generateAsync({ type: "blob" });
 
-                // Prevent file name result from becoming "document.pdf.zip"
-                const cleanFileName = file.name.replace('.pdf', '');
+                progBar.style.width = "100%";
+                progPercent.innerText = "100%";
+                progText.innerText = "Done! Downloading...";
+
+                const cleanFileName = file.name.replace(/\.[^/.]+$/, "");
                 const finalFileName = `Images_${cleanFileName}.zip`;
 
-                // --- LOGIKA REDIRECT YANG BENAR ---
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('PDF to Image', finalFileName, zipContent);
                     window.location.href = `../go.html?id=${historyId}`;
-                    return; // STOP SCRIPT HERE SO IT DOESN'T GO FURTHER
                 } else {
-                    // Fallback if history.js fails to load
                     saveFile(URL.createObjectURL(zipContent), finalFileName);
-                    alert("Done! Files downloaded.");
                 }
 
             } catch (error) {
                 console.error(error);
-                alert("Conversion failed. The file may be corrupt or encrypted.");
+                alert("Conversion failed. The file may be heavily encrypted or damaged.");
+                progContainer.classList.add('hidden');
             } finally {
-                // Finally block akan dijalankan sebelum redirect benar-benar berpindah halaman
                 btn.disabled = false;
-                btn.innerText = "Convert to images";
-                progressText.classList.add('hidden');
+                btn.innerText = "Extract & Download ZIP";
+                setTimeout(() => progContainer.classList.add('hidden'), 3000);
             }
         }
 
@@ -158,42 +257,48 @@
         };
     </script>
 
-<!-- SEO CONTENT AREA -->
-<section class="py-16 bg-slate-50 border-t border-slate-200">
-    <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
-        
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is PDF to Image Converter?</h2>
-        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-            PDF to Image converter extracts every page of a PDF document as a separate high-quality image file. Choose between JPG for smaller file sizes or PNG for maximum quality. All images are packaged in a convenient ZIP file for easy download and organization.
-        </p>
+    <!-- SEO CONTENT AREA -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800">
+        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+            
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Client-Side PDF to Image Extractor</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+                Sometimes you don't need a full document—you just need a picture of it. Whether you are embedding a document snippet into a PowerPoint presentation, uploading a visual preview to a website, or converting a design mockup, the <strong>MARK_Tools PDF to Image Converter</strong> handles it securely. By parsing the PDF directly inside your browser using JavaScript and HTML5 Canvas, we guarantee your files are never uploaded to any remote server.
+            </p>
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
-        <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
-            <li><strong>Upload PDF:</strong> Select your PDF file using the file input.</li>
-            <li><strong>Choose Format:</strong> Select JPG for compression or PNG for high quality.</li>
-            <li><strong>Convert:</strong> Click "Convert to images" to process all pages.</li>
-            <li><strong>Download:</strong> Receive a ZIP file containing all page images.</li>
-        </ol>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Why Use JPEG (JPG)?</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        JPEG applies "lossy" compression, making it the perfect format if your PDF contains mostly photographs or if you need to dramatically reduce the file size. However, because JPEG does not support transparency, we automatically generate a solid white background for your pages to ensure nothing looks distorted.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">Why Use PNG?</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        PNG uses "lossless" compression. If your PDF contains crisp text, line art, charts, or vector illustrations, PNG will keep the edges extremely sharp without compression artifacts. It also preserves transparent backgrounds if your original PDF was exported without a solid background layer.
+                    </p>
+                </div>
+            </div>
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
-        <div class="space-y-4">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">What image quality should I choose?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">JPG produces smaller files but with some quality loss. PNG maintains full quality but creates larger files. Choose based on your needs.</p>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Are my images going to be blurry?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">No. Our rendering engine automatically applies a <strong>2.0x scale factor</strong> to the viewport. This essentially doubles the resolution (similar to a Retina display), ensuring that fine text and details remain completely legible.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Why does my device get warm during processing?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Because this is a 100% client-side tool, your browser's processor (CPU/GPU) is doing all the heavy lifting to "draw" the PDF pages onto an invisible canvas. For PDFs with hundreds of pages, this intensive task requires computing power, completely bypassing the need for cloud servers.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">How do I extract only specific pages?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Currently, this tool renders the entire document. If you only need a few pages, we recommend using our <strong>PDF Splitter</strong> tool first to isolate the pages you need, and then uploading that smaller PDF here.</p>
+                </div>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">How long does bulk processing take?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Processing speed depends on PDF size and page count. Large documents may take several minutes, but progress is shown in real-time.</p>
-            </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">How are the image files named?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Images are named sequentially as Page_001.jpg, Page_002.jpg, etc., making them easy to organize and reference.</p>
-            </div>
+
         </div>
-
-    </div>
-</section>
+    </section>
 
 </body>
-
 </html>

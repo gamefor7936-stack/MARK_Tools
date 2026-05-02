@@ -2,10 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Merge PDF - Combine multiple PDF files into one</title>
+    <title>PDF Merger - Combine and reorder multiple PDF files into a single document</title>
+    <meta name="description" content="Combine and reorder multiple PDF files into a single document instantly. Drag and drop to sort. 100% free, secure, and client-side processing.">
     <link rel="icon" type="image/png" href="../favicon.png">
-    <meta name="description" content="Combine multiple PDF files into one. Drag and drop to reorder files easily before merging.">
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <meta property="og:image" content="https://marktoolbox.com/favicon.png">
     
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -14,216 +17,305 @@
     <script src="../js/history.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .sortable-ghost { opacity: 0.2; background-color: #e0e7ff; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-sans { font-family: 'Inter', sans-serif; }
+
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Sortable JS Styles */
+        .sortable-ghost { opacity: 0.3; background-color: rgba(168, 85, 247, 0.2); border: 1px dashed #a855f7; }
         .drag-handle { cursor: grab; }
         .drag-handle:active { cursor: grabbing; }
     </style>
 </head>
-<body class="bg-slate-50 p-4 md:p-6 text-slate-800">
+<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
 
-<div class="max-w-4xl mx-auto">
-    <a class="text-blue-600 font-bold text-sm mb-6 flex items-center gap-2 hover:underline" href="../index.html">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
-        Back to Home
-    </a>
-
-    <div class="bg-white p-6 md:p-10 rounded-3xl shadow-xl border border-slate-100">
-        <div class="text-center mb-8">
-            <div class="w-16 h-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+    <!-- Navbar -->
+    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-blue-400 font-black text-xl tracking-tighter hover:opacity-80">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Document / PDF</span>
             </div>
-            <h1 class="text-3xl font-black text-slate-800 mb-2">Merge PDF</h1>
-            <p class="text-slate-500 text-sm">Combine PDFs in the exact order you want. Easy drag and drop.</p>
+            <a href="/" class="text-xs font-bold text-slate-400 hover:text-blue-400 transition">BACK TO HOME</a>
         </div>
+    </nav>
 
-        <label class="w-full border-2 border-dashed border-purple-300 rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer bg-purple-50 hover:bg-purple-100 transition text-center mb-8">
-            <span class="text-4xl mb-2 text-purple-400">+</span>
-            <span class="text-purple-700 font-bold">Select PDF Files</span>
-            <input accept="application/pdf" class="hidden" id="mergeInput" type="file" multiple onchange="handleFiles(this)"/>
-        </label>
-
-        <!-- Area List File -->
-        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 min-h-[150px]">
-            <div class="flex justify-between items-center mb-4 px-2">
-                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Document Order</span>
-                <button onclick="clearAll()" class="text-xs font-bold text-red-500 hover:underline">Clear All</button>
-            </div>
-            
-            <div id="emptyState" class="text-center py-4 text-slate-400 text-sm italic">
-                No files added yet.
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col max-w-4xl gap-6">
+        
+        <div class="glass-dark p-6 md:p-10 rounded-3xl shadow-2xl relative border-t-4 border-t-purple-500">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-purple-500/20 text-purple-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2"></path></svg>
+                </div>
+                <h1 class="text-3xl font-black text-white mb-2 tracking-tight">Merge Multiple PDFs</h1>
+                <p class="text-slate-400 text-sm">Drag and drop to rearrange files. Processed instantly in your browser.</p>
             </div>
 
-            <!-- List Sortable -->
-            <div id="fileList" class="space-y-2"></div>
+            <!-- Upload Area -->
+            <label class="w-full border-2 border-dashed border-slate-600 rounded-2xl p-10 flex flex-col items-center justify-center cursor-pointer bg-[#0f172a]/50 hover:bg-purple-900/20 hover:border-purple-500 transition text-center mb-8 group">
+                <span class="text-4xl mb-2 text-slate-500 group-hover:text-purple-400 transition">+</span>
+                <span class="text-slate-300 font-bold group-hover:text-white transition">Select PDF Files</span>
+                <span class="text-[10px] text-slate-500 mt-2 uppercase tracking-widest">You can select multiple files at once</span>
+                <input accept="application/pdf" class="hidden" id="mergeInput" type="file" multiple onchange="handleFiles(this)"/>
+            </label>
+
+            <!-- File List Area -->
+            <div class="bg-[#0f172a] rounded-2xl p-4 md:p-6 border border-slate-700 min-h-[150px] relative shadow-inner">
+                <div class="flex justify-between items-center mb-4 px-2 border-b border-slate-800 pb-3">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        Document Order
+                    </span>
+                    <button onclick="clearAll()" class="text-xs font-bold text-red-400 hover:text-red-300 transition px-2 py-1 bg-red-900/20 rounded-lg">Clear Queue</button>
+                </div>
+                
+                <div id="emptyState" class="text-center py-8 text-slate-500 text-sm italic font-mono">
+                    Queue is empty. Add files to begin.
+                </div>
+
+                <!-- List Sortable -->
+                <div id="fileList" class="space-y-3"></div>
+            </div>
+
+            <!-- Action Button -->
+            <button class="w-full bg-purple-600 text-white py-4 rounded-xl font-black uppercase tracking-widest mt-8 hover:bg-purple-500 transition shadow-lg shadow-purple-900/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2" id="mergeBtn" onclick="executeMerge()" disabled>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                Merge PDFs (<span id="btnCount">0</span>)
+            </button>
+            <p id="mergeStatus" class="text-center mt-3 text-xs text-purple-400 font-mono hidden animate-pulse">Processing document structure...</p>
+
         </div>
-
-        <button class="w-full bg-purple-600 text-white py-4 rounded-2xl font-black uppercase tracking-widest mt-8 hover:bg-purple-700 transition shadow-lg shadow-purple-500/30 disabled:opacity-50" id="mergeBtn" onclick="executeMerge()" disabled>
-            Merge PDFs (<span id="btnCount">0</span>)
-        </button>
-
-    </div>
-    
-    <section class="mt-12">
-        <h3 class="font-bold text-slate-700 mb-4 px-4 uppercase tracking-widest text-[10px]">Recent history</h3>
-        <div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm" id="historyList"></div>
-    </section>
-</div>
-
-<script>
-    let pdfFiles =[];
-    let sortableInstance = null;
-
-    window.onload = () => { 
-        if(typeof renderHistoryUI === 'function') renderHistoryUI('Merge PDF'); 
         
-        const list = document.getElementById('fileList');
-        sortableInstance = new Sortable(list, {
-            animation: 150,
-            handle: '.drag-handle', // Hanya bisa didrag di area icon garis 3
-            ghostClass: 'sortable-ghost'
-        });
-    };
+        <!-- History -->
+        <div class="glass-dark p-6 rounded-2xl mb-8">
+            <h3 class="font-bold text-slate-400 uppercase tracking-widest text-[10px] mb-4 flex items-center gap-2">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Recent Merges
+            </h3>
+            <div id="historyList" class="space-y-2"></div>
+        </div>
+    </main>
 
-    function handleFiles(input) {
-        if (!input.files.length) return;
-        
-        for (let file of input.files) {
-            const id = 'pdf_' + Date.now() + Math.random().toString(36).substr(2, 5);
-            pdfFiles.push({ id: id, file: file });
+    <script>
+        let pdfFiles =[];
+        let sortableInstance = null;
+
+        window.onload = () => { 
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('Merge PDF'); 
+            
+            const list = document.getElementById('fileList');
+            sortableInstance = new Sortable(list, {
+                animation: 200,
+                handle: '.drag-handle', // Drag area
+                ghostClass: 'sortable-ghost',
+                easing: "cubic-bezier(1, 0, 0, 1)"
+            });
+
+            // Drag and drop file to body
+            const dropZone = document.querySelector('label');
+            dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-purple-400', 'bg-purple-900/20'); });
+            dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('border-purple-400', 'bg-purple-900/20'); });
+            dropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('border-purple-400', 'bg-purple-900/20');
+                if (e.dataTransfer.files) {
+                    handleFiles({ files: e.dataTransfer.files });
+                }
+            });
+        };
+
+        async function handleFiles(input) {
+            if (!input.files.length) return;
+            
+            for (let file of input.files) {
+                if (file.type !== "application/pdf") continue; // Abaikan non-pdf
+                const id = 'pdf_' + Date.now() + Math.random().toString(36).substr(2, 5);
+                
+                // Masukkan dengan status loading page count
+                pdfFiles.push({ id: id, file: file, pages: "..." });
+            }
+            if(input.value) input.value = ""; 
+            
+            renderList();
+            
+            // Asynchronously fetch page counts for UX Premium feel
+            for (let item of pdfFiles) {
+                if(item.pages === "...") {
+                    try {
+                        const arrayBuffer = await item.file.arrayBuffer();
+                        const pdf = await PDFLib.PDFDocument.load(arrayBuffer, { ignoreEncryption: true });
+                        item.pages = pdf.getPageCount();
+                    } catch (e) {
+                        item.pages = "Encrypted/Err";
+                    }
+                    renderList(); // Re-render to update the specific item
+                }
+            }
         }
-        input.value = ""; 
-        renderList();
-    }
 
-    function renderList() {
-        const list = document.getElementById('fileList');
-        const empty = document.getElementById('emptyState');
-        const btn = document.getElementById('mergeBtn');
+        function renderList() {
+            const list = document.getElementById('fileList');
+            const empty = document.getElementById('emptyState');
+            const btn = document.getElementById('mergeBtn');
 
-        if (pdfFiles.length === 0) {
-            list.innerHTML = "";
-            empty.style.display = "block";
-            btn.disabled = true;
-            document.getElementById('btnCount').innerText = "0";
-            return;
-        }
-
-        empty.style.display = "none";
-        btn.disabled = false;
-        document.getElementById('btnCount').innerText = pdfFiles.length;
-
-        list.innerHTML = ""; 
-        pdfFiles.forEach((item, index) => {
-            const div = document.createElement('div');
-            div.className = "flex items-center gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-sm";
-            div.setAttribute('data-id', item.id);
-            
-            // Format ukuran file
-            const sizeKB = (item.file.size / 1024).toFixed(1);
-            
-            div.innerHTML = `
-                <div class="drag-handle text-slate-300 hover:text-slate-500 px-2 flex flex-col gap-1">
-                    <div class="w-4 h-0.5 bg-current rounded"></div>
-                    <div class="w-4 h-0.5 bg-current rounded"></div>
-                    <div class="w-4 h-0.5 bg-current rounded"></div>
-                </div>
-                <div class="w-8 h-8 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0">
-                    PDF
-                </div>
-                <div class="flex-grow min-w-0">
-                    <p class="text-sm font-bold text-slate-700 truncate">${item.file.name}</p>
-                    <p class="text-[10px] text-slate-400">${sizeKB} KB</p>
-                </div>
-                <button onclick="removePdf('${item.id}')" class="w-8 h-8 flex items-center justify-center text-red-400 hover:bg-red-50 hover:text-red-600 rounded-lg transition flex-shrink-0">✕</button>
-            `;
-            list.appendChild(div);
-        });
-    }
-
-    function removePdf(id) {
-        pdfFiles = pdfFiles.filter(pdf => pdf.id !== id);
-        renderList();
-    }
-
-    function clearAll() {
-        pdfFiles =[];
-        renderList();
-    }
-
-    async function executeMerge() {
-        const btn = document.getElementById('mergeBtn');
-        if (pdfFiles.length < 2) return alert("Pilih minimal 2 file PDF untuk digabungkan!");
-
-        btn.disabled = true;
-        btn.innerText = "MERGING...";
-
-        try {
-            const mergedPdf = await PDFLib.PDFDocument.create();
-            
-            // Ambil urutan file dari DOM (Setelah user drag & drop)
-            const listItems = document.getElementById('fileList').children;
-            const sortedIds = Array.from(listItems).map(item => item.getAttribute('data-id'));
-
-            for (let id of sortedIds) {
-                const pdfData = pdfFiles.find(p => p.id === id);
-                if (!pdfData) continue;
-
-                const arrayBuffer = await pdfData.file.arrayBuffer();
-                const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
-                const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-                copiedPages.forEach((page) => mergedPdf.addPage(page));
+            if (pdfFiles.length === 0) {
+                list.innerHTML = "";
+                empty.style.display = "block";
+                btn.disabled = true;
+                document.getElementById('btnCount').innerText = "0";
+                return;
             }
 
-            const pdfBytes = await mergedPdf.save();
-            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-            
-            await processRedirect('Merge PDF', 'Merged_Document.pdf', blob);
-            return;
+            empty.style.display = "none";
+            btn.disabled = (pdfFiles.length < 2); // Butuh min 2 file untuk merge
+            document.getElementById('btnCount').innerText = pdfFiles.length;
 
-        } catch (error) {
-            console.error(error);
-            alert("Gagal menggabungkan PDF. File mungkin rusak atau diproteksi password.");
-        } finally {
-            btn.disabled = false;
-            btn.innerHTML = `Merge PDFs (<span id="btnCount">${pdfFiles.length}</span>)`;
+            list.innerHTML = ""; 
+            pdfFiles.forEach((item) => {
+                const div = document.createElement('div');
+                div.className = "flex items-center gap-4 bg-[#1e293b] p-3 md:p-4 rounded-xl border border-slate-700 shadow-sm transition hover:border-purple-500/50";
+                div.setAttribute('data-id', item.id);
+                
+                const sizeMB = (item.file.size / 1024 / 1024).toFixed(2);
+                
+                div.innerHTML = `
+                    <div class="drag-handle text-slate-500 hover:text-purple-400 p-2 flex flex-col gap-1 transition">
+                        <div class="w-5 h-0.5 bg-current rounded"></div>
+                        <div class="w-5 h-0.5 bg-current rounded"></div>
+                        <div class="w-5 h-0.5 bg-current rounded"></div>
+                    </div>
+                    <div class="w-10 h-10 bg-purple-500/10 border border-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center font-bold text-[10px] flex-shrink-0">
+                        PDF
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <p class="text-sm font-bold text-slate-200 truncate">${item.file.name}</p>
+                        <div class="flex items-center gap-3 mt-1">
+                            <p class="text-[10px] text-slate-400 font-mono">${sizeMB} MB</p>
+                            <span class="w-1 h-1 bg-slate-600 rounded-full"></span>
+                            <p class="text-[10px] text-purple-400 font-mono">${item.pages} Pages</p>
+                        </div>
+                    </div>
+                    <button onclick="removePdf('${item.id}')" class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-red-900/30 hover:text-red-400 rounded-lg transition flex-shrink-0" title="Remove File">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                `;
+                list.appendChild(div);
+            });
         }
-    }
-</script>
-<!-- SEO CONTENT AREA -->
-<section class="py-16 bg-slate-50 border-t border-slate-200">
-    <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
-        
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is PDF Merger?</h2>
-        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-            PDF Merger combines multiple PDF files into a single document while preserving the original page order. This secure, client-side tool processes your files directly in your browser, ensuring complete privacy with no uploads to external servers.
-        </p>
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
-        <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
-            <li><strong>Add PDF Files:</strong> Click to upload or select multiple PDF files at once.</li>
-            <li><strong>Arrange Order:</strong> Files are added in sequence; use the queue to remove if needed.</li>
-            <li><strong>Merge:</strong> Click "Merge PDFs" to combine all files into one document.</li>
-        </ol>
+        function removePdf(id) {
+            pdfFiles = pdfFiles.filter(pdf => pdf.id !== id);
+            renderList();
+        }
 
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
-        <div class="space-y-4">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">Are there file size limits?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Since processing happens in your browser, very large files may cause performance issues. For best results, keep individual files under 50MB.</p>
+        function clearAll() {
+            pdfFiles =[];
+            renderList();
+        }
+
+        async function executeMerge() {
+            const btn = document.getElementById('mergeBtn');
+            const status = document.getElementById('mergeStatus');
+            if (pdfFiles.length < 2) return alert("Select at least 2 PDF files to merge.");
+
+            btn.disabled = true;
+            btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Merging Files...`;
+            status.classList.remove('hidden');
+
+            try {
+                const mergedPdf = await PDFLib.PDFDocument.create();
+                
+                // Get physical DOM order due to drag-and-drop
+                const listItems = document.getElementById('fileList').children;
+                const sortedIds = Array.from(listItems).map(item => item.getAttribute('data-id'));
+
+                let totalProcessed = 0;
+                for (let id of sortedIds) {
+                    const pdfData = pdfFiles.find(p => p.id === id);
+                    if (!pdfData) continue;
+
+                    status.innerText = `Merging: ${pdfData.file.name}...`;
+
+                    const arrayBuffer = await pdfData.file.arrayBuffer();
+                    const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+                    const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+                    copiedPages.forEach((page) => mergedPdf.addPage(page));
+                    
+                    totalProcessed++;
+                }
+
+                status.innerText = "Finalizing PDF architecture...";
+                const pdfBytes = await mergedPdf.save();
+                const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+                
+                const finalFileName = `Merged_${totalProcessed}_Files_${Date.now().toString().slice(-4)}.pdf`;
+
+                if (typeof addToHistory === 'function') {
+                    const historyId = await addToHistory('Merge PDF', finalFileName, blob);
+                    window.location.href = `../go.html?id=${historyId}`;
+                } else {
+                    saveFile(URL.createObjectURL(blob), finalFileName);
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert("Failed to merge PDFs. Ensure files are valid and not password protected.");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg> Merge PDFs (<span id="btnCount">${pdfFiles.length}</span>)`;
+                status.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <!-- SEO CONTENT AREA -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800 -mx-4 px-4 md:mx-0 md:px-0 md:rounded-3xl md:mb-12">
+        <div class="container mx-auto max-w-4xl prose prose-slate">
+            
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">How to Merge PDFs Securely</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+                Combining multiple PDF files shouldn't require installing bulky desktop software or trusting a random server with your highly sensitive documents. The <strong>MARK_Tools PDF Merger</strong> empowers you to combine reports, invoices, and portfolios directly in your browser. With our intuitive drag-and-drop interface, reordering files takes less than a second. 
+            </p>
+
+            <div class="bg-purple-50 p-6 rounded-2xl border border-purple-100 shadow-sm mb-12">
+                <h3 class="text-xl font-bold text-purple-900 mb-3 flex items-center gap-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    Zero-Trust Privacy Standard
+                </h3>
+                <p class="text-sm text-purple-800/80 leading-relaxed">
+                    Unlike traditional cloud converters, we operate on a <strong>Zero-Trust architecture</strong>. When you click merge, the WebAssembly and JavaScript engines inside your browser instantly read, parse, and stitch your PDFs together locally using your device's RAM. Your financial records, legal contracts, and personal data <strong>never touch our servers</strong>.
+                </p>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">How is page order controlled?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Pages are merged in the order you add the PDF files. All pages from the first file come first, followed by all pages from the second file, and so on.</p>
+
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Ideal Use Cases</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                <div class="border p-5 rounded-xl border-slate-200 bg-white shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-slate-800 text-lg mb-2">Freelancer Portfolios</h4>
+                    <p class="text-sm text-slate-600">Got your resume, cover letter, and design samples scattered across different files? Add them all into the queue, drag the resume to the top, and merge them into one professional application package.</p>
+                </div>
+                <div class="border p-5 rounded-xl border-slate-200 bg-white shadow-sm hover:shadow-md transition">
+                    <h4 class="font-bold text-slate-800 text-lg mb-2">Accounting & Invoicing</h4>
+                    <p class="text-sm text-slate-600">Accounting departments often need to compile a month's worth of individual receipt PDFs and vendor invoices into a single comprehensive tax report document before submitting it.</p>
+                </div>
             </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">Does merging compress the PDF?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">The tool preserves original quality. If compression is needed, consider using our PDF compressor tool after merging.</p>
+
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-slate-800 mb-2">Is there a limit to how many files I can merge?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Technically, there is no hard limit. However, because processing happens on your local device, trying to merge 100+ large files simultaneously might consume too much of your computer's RAM. We recommend doing it in batches of 20-30 files for optimal speed.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h4 class="font-bold text-slate-800 mb-2">Does merging compress or reduce PDF quality?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">No. Our engine performs a "binary stitch", copying the exact pages from the source files into the new file. There is zero loss in quality, images remain sharp, and text remains vector-based and selectable.</p>
+                </div>
             </div>
+
         </div>
+    </section>
 
-    </div>
-</section>
 </body>
 </html>
