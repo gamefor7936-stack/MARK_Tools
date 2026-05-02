@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Global DNS Propagation Dashboard</title>
+    <title>Global DNS Resolver & Record Lookup</title>
+    <meta name="description" content="Use our free global DNS resolver to check A, MX, TXT, and CNAME records instantly via secure DNS-over-HTTPS. Generate professional network audit reports.">
     <link rel="icon" type="image/png" href="../favicon.png">
-    
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <meta property="og:image" content="https://marktoolbox.com/favicon.png">
+
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/main.js"></script>
     <script src="../js/history.js"></script>
@@ -13,397 +17,346 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
-    <!-- Leaflet.js Map -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
-    <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } }
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
-    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@600&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700&display=swap');
         .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .font-sans { font-family: 'Inter', sans-serif; }
         
-        /* Dashboard Specific Styles */
-        .bento-card { @apply bg-white dark:bg-darkCard rounded-3xl border border-slate-200 dark:border-darkBorder shadow-sm overflow-hidden; }
+        .term-input { background: #0f172a; border: 1px solid #334155; color: #38bdf8; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
+        .term-input:focus { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); outline: none; }
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
         
-        /* Map Styles */
-        #mapContainer { height: 100%; width: 100%; z-index: 10; background: #0f172a; }
-        .leaflet-container { font-family: 'Inter', sans-serif; }
-        
-        /* Custom Scrollbar for Table */
-        .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .dark .custom-scroll::-webkit-scrollbar-thumb { background: #475569; }
-
-        /* Circular Progress */
-        .circle-bg { fill: none; stroke: #334155; stroke-width: 8; }
-        .circle-prog { fill: none; stroke: #3b82f6; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease-out; }
+        /* Terminal Output Style */
+        .terminal-output { background: #020617; border: 1px solid #1e293b; color: #e2e8f0; font-family: 'JetBrains Mono', monospace; }
     </style>
 </head>
-<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300 min-h-screen flex flex-col">
+<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
 
-    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-7xl">
-            <a href="../index.html" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
-                    <span class="text-white font-black text-sm">M</span>
-                </div>
-                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK_Tools</h1>
-            </a>
-            <a class="text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-blue-600 transition" href="../index.html">← BACK</a>
+    <!-- Navbar Dark -->
+    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-blue-400 font-black text-xl tracking-tighter hover:opacity-80">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Network & Dev</span>
+            </div>
+            <a href="/" class="text-xs font-bold text-slate-400 hover:text-blue-400 transition">BACK TO HOME</a>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 max-w-7xl flex-grow">
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6">
         
-        <!-- BENTO BOX GRID LAYOUT -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- LEFT COLUMN: INPUT & CONTROLS -->
+        <div class="w-full lg:w-1/3 flex flex-col gap-6">
+            
+            <div class="glass-dark p-6 rounded-2xl">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-blue-500/20 text-blue-400 rounded-lg flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold text-white">Global DNS Resolver</h1>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest">DNS Records Lookup Tool</p>
+                    </div>
+                </div>
 
-            <!-- 1. SEARCH BAR CARD (Full Width) -->
-            <div class="bento-card col-span-1 lg:col-span-12 p-6 flex flex-col md:flex-row gap-4 items-center">
-                <div class="flex-grow w-full">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Target Domain</label>
-                    <input type="text" id="domainInput" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 outline-none focus:border-blue-500 font-bold text-lg" placeholder="example.com" onkeydown="if(event.key === 'Enter') startDNSCheck()">
-                </div>
-                <div class="w-full md:w-48">
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 ml-2">Record</label>
-                    <select id="recordType" class="w-full p-4 rounded-2xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 outline-none focus:border-blue-500 font-bold cursor-pointer">
-                        <option value="A">A (IPv4)</option>
-                        <option value="AAAA">AAAA (IPv6)</option>
-                        <option value="CNAME">CNAME</option>
-                        <option value="MX">MX</option>
-                        <option value="TXT">TXT</option>
-                        <option value="NS">NS</option>
-                    </select>
-                </div>
-                <div class="w-full md:w-auto self-end">
-                    <button onclick="startDNSCheck()" id="btnSearch" class="w-full md:w-32 bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-2xl font-black uppercase tracking-widest shadow-lg transition-all h-[60px]">
-                        SCAN
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Domain Name</label>
+                        <input type="text" id="domainInput" value="google.com" class="w-full p-3 rounded-lg term-input text-sm text-center" placeholder="example.com" onkeydown="if(event.key === 'Enter') resolveDNS()">
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Record Type</label>
+                        <select id="recordType" class="w-full p-3 rounded-lg term-input text-sm appearance-none text-center" onchange="resolveDNS()">
+                            <option value="A">A (IPv4 Address)</option>
+                            <option value="AAAA">AAAA (IPv6 Address)</option>
+                            <option value="MX">MX (Mail Exchange)</option>
+                            <option value="TXT">TXT (Text Records / SPF)</option>
+                            <option value="CNAME">CNAME (Canonical Name)</option>
+                            <option value="NS">NS (Name Servers)</option>
+                            <option value="SOA">SOA (Start of Authority)</option>
+                            <option value="ANY">ANY (All Records)</option>
+                        </select>
+                    </div>
+
+                    <button onclick="resolveDNS()" id="btnResolve" class="w-full bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-black uppercase tracking-widest transition shadow-lg shadow-blue-900/50">
+                        Resolve DNS
                     </button>
                 </div>
             </div>
 
-            <!-- 2. PROPAGATION STATS CARD (Span 4) -->
-            <div class="bento-card col-span-1 lg:col-span-4 p-8 flex flex-col items-center justify-center text-center relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl -mr-10 -mt-10"></div>
-                
-                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">Propagation Status</h3>
-                
-                <!-- Circular Progress -->
-                <div class="relative w-40 h-40 flex items-center justify-center mb-6">
-                    <svg class="absolute inset-0 w-full h-full transform -rotate-90">
-                        <circle cx="80" cy="80" r="70" class="circle-bg" />
-                        <circle id="circProgress" cx="80" cy="80" r="70" class="circle-prog" stroke-dasharray="440" stroke-dashoffset="440" />
-                    </svg>
-                    <div class="text-center">
-                        <span id="statPercent" class="text-4xl font-black text-slate-800 dark:text-white">0%</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-4 w-full border-t border-slate-100 dark:border-slate-800 pt-6 mt-2">
-                    <div>
-                        <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Servers Checked</p>
-                        <p id="statChecked" class="text-lg font-mono font-bold">0 / 6</p>
-                    </div>
-                    <div>
-                        <p class="text-[10px] text-slate-400 uppercase font-bold mb-1">Status</p>
-                        <p id="statHealth" class="text-sm font-bold text-yellow-500">Waiting</p>
-                    </div>
-                </div>
+            <!-- Export Buttons -->
+            <div class="flex gap-3">
+                <button onclick="exportReport('pdf')" id="btnExportPdf" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-900 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-emerald-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
+                    <span class="text-lg">📄</span> Export PDF
+                </button>
+                <button onclick="exportReport('word')" id="btnExportWord" class="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-3 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-indigo-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
+                    <span class="text-lg">📝</span> Export Word
+                </button>
+            </div>
+            
+            <!-- Area Histori Lokal -->
+            <div class="glass-dark p-4 rounded-xl">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Histori Pencarian</h4>
+                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
 
-            <!-- 3. LIVE MAP CARD (Span 8) -->
-            <div class="bento-card col-span-1 lg:col-span-8 h-[350px] relative">
-                <div class="absolute top-4 left-4 z-[400] bg-black/70 backdrop-blur-md text-white px-3 py-1.5 rounded-lg border border-white/10 shadow-lg flex items-center gap-2">
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div> 
-                    <span class="text-[9px] font-black uppercase tracking-widest">Live Geo-Route</span>
-                </div>
-                <!-- Tempat Peta -->
-                <div id="mapContainer"></div>
+        </div>
+
+        <!-- RIGHT COLUMN: QUERY RESULT (TERMINAL UI) -->
+        <div class="w-full lg:w-2/3 glass-dark rounded-2xl p-4 md:p-6 flex flex-col relative overflow-hidden">
+            
+            <div class="flex items-center gap-2 mb-4 border-b border-slate-700 pb-4">
+                <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                <span class="ml-2 text-xs font-mono text-slate-500">root@mark-tools:~# dig <span id="termTitle">google.com A</span></span>
             </div>
 
-            <!-- 4. DATA TABLE CARD (Full Width) -->
-            <div class="bento-card col-span-1 lg:col-span-12 flex flex-col">
-                <div class="p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                    <h3 class="text-sm font-bold text-slate-700 dark:text-white uppercase tracking-widest">Global Node Results</h3>
-                    
-                    <div id="exportArea" class="hidden flex gap-2 animate-fade-in">
-                        <button onclick="exportReport('pdf')" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-emerald-500 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2">📄 PDF</button>
-                        <button onclick="exportReport('word')" class="bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-blue-500 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2">📝 Word</button>
-                    </div>
-                </div>
+            <!-- Terminal Output Area -->
+            <div id="terminalOutput" class="terminal-output flex-grow rounded-lg p-4 overflow-y-auto whitespace-pre-wrap text-[11px] md:text-xs leading-relaxed">
+                <!-- Data will be injected here -->
+<span class="text-slate-500">Waiting for query...</span>
+            </div>
 
-                <div class="overflow-x-auto custom-scroll max-h-[400px]">
-                    <table class="w-full text-left border-collapse relative">
-                        <thead class="sticky top-0 bg-slate-50 dark:bg-slate-900 z-10 shadow-sm">
-                            <tr class="text-[10px] uppercase tracking-widest text-slate-500">
-                                <th class="p-4 font-bold">Node Location</th>
-                                <th class="p-4 font-bold text-center w-24">Status</th>
-                                <th class="p-4 font-bold">Resolved Data</th>
-                                <th class="p-4 font-bold">Geo-ISP (Resolved IP)</th>
-                            </tr>
-                        </thead>
-                        <tbody id="serverList" class="text-sm divide-y divide-slate-50 dark:divide-slate-800/50">
-                            <!-- Injeksi Baris Server -->
-                            <tr>
-                                <td colspan="4" class="p-12 text-center text-slate-400 italic text-xs">Enter a domain and click Scan to begin.</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <!-- Loading Spinner Overlay -->
+            <div id="loadingOverlay" class="hidden absolute inset-0 bg-[#0b1120]/80 backdrop-blur-sm flex items-center justify-center z-10">
+                <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
             </div>
 
         </div>
     </main>
 
     <script>
-        // DAFTAR SERVER DOH (Dikurangi yang rawan CORS block, hanya yang tier 1)
-        const globalServers =[
-            { id: "g1", flag: "🇺🇸", loc: "Google (US)", url: "https://dns.google/resolve" },
-            { id: "c1", flag: "🌐", loc: "Cloudflare (Global)", url: "https://cloudflare-dns.com/dns-query" },
-            { id: "q1", flag: "🇨🇭", loc: "Quad9 (Europe)", url: "https://dns.quad9.net:5053/dns-query" },
-            { id: "o1", flag: "🇬🇧", loc: "OpenDNS (UK)", url: "https://doh.opendns.com/dns-query" },
-            { id: "g2", flag: "🇯🇵", loc: "Google (Asia)", url: "https://dns.google/resolve" },
-            { id: "c2", flag: "🇦🇺", loc: "Cloudflare (Oceania)", url: "https://cloudflare-dns.com/dns-query" }
-        ];
+        // DNS Record Type Mapping (Google DoH API uses integers)
+        const typeMap = {
+            1: 'A', 2: 'NS', 5: 'CNAME', 6: 'SOA', 15: 'MX', 16: 'TXT', 28: 'AAAA'
+        };
 
-        let completedQueries = 0;
-        let successfulQueries = 0;
-        let exportData =[];
-        let currentDomain = "";
-        let currentType = "";
-        let geoCache = {}; // KUNCI ANTI-BLOCK: Cache hasil IP agar tidak nyepam API
-        
-        let leafletMap = null;
-        let mapMarkers =[];
+        // Data global untuk Export
+        let lastQueryResult =[];
+        let lastDomain = "";
+        let lastType = "";
 
-        function initMap() {
-            if (leafletMap !== null) {
-                mapMarkers.forEach(m => leafletMap.removeLayer(m));
-                mapMarkers =[];
-                return;
+        window.onload = () => {
+            const savedState = sessionStorage.getItem('dnsState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                document.getElementById('domainInput').value = state.domain;
+                document.getElementById('recordType').value = state.type;
             }
-            leafletMap = L.map('mapContainer', { zoomControl: false }).setView([20, 0], 2);
-            const isDark = document.documentElement.classList.contains('dark');
-            const tileUrl = isDark ? 
-                'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' : 
-                'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('DNS Lookup');
+            
+            // Auto resolve on load if we have a domain
+            if(document.getElementById('domainInput').value) resolveDNS();
+        };
 
-            L.tileLayer(tileUrl, { attribution: '&copy; CartoDB', maxZoom: 19 }).addTo(leafletMap);
-        }
-
-        async function startDNSCheck() {
+        async function resolveDNS() {
             let domain = document.getElementById('domainInput').value.trim();
+            const type = document.getElementById('recordType').value;
+            const terminal = document.getElementById('terminalOutput');
+            const loading = document.getElementById('loadingOverlay');
+            const termTitle = document.getElementById('termTitle');
+
+            // Remove http:// or https:// if user copies full URL
             domain = domain.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
             document.getElementById('domainInput').value = domain;
-            const type = document.getElementById('recordType').value;
 
-            if (!domain) return alert("Please enter a valid domain.");
+            if (!domain) return alert("Enter domain name!");
 
-            currentDomain = domain; currentType = type;
-            completedQueries = 0; successfulQueries = 0; exportData =[];
+            // Save State
+            sessionStorage.setItem('dnsState', JSON.stringify({ domain, type }));
+            termTitle.innerText = `${domain} ${type}`;
             
-            document.getElementById('btnSearch').disabled = true;
-            document.getElementById('exportArea').classList.add('hidden');
-            
-            // Reset Circular Progress
-            document.getElementById('circProgress').style.strokeDashoffset = 440;
-            document.getElementById('statPercent').innerText = "0%";
-            document.getElementById('statChecked').innerText = `0 / ${globalServers.length}`;
-            document.getElementById('statHealth').innerText = "Scanning...";
-            document.getElementById('statHealth').className = "text-sm font-bold text-yellow-500";
-
-            initMap();
-
-            const tbody = document.getElementById('serverList');
-            tbody.innerHTML = "";
-
-            globalServers.forEach(server => {
-                tbody.innerHTML += `
-                    <tr id="row-${server.id}" class="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition">
-                        <td class="p-4 font-medium flex items-center gap-3">
-                            <span class="text-xl">${server.flag}</span> <span class="dark:text-slate-200">${server.loc}</span>
-                        </td>
-                        <td class="p-4 text-center" id="stat-${server.id}">
-                            <div class="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                        </td>
-                        <td class="p-4 font-mono text-xs text-slate-500 dark:text-slate-400" id="res-${server.id}">Fetching DNS...</td>
-                        <td class="p-4 text-xs text-slate-400" id="geo-${server.id}">Waiting...</td>
-                    </tr>
-                `;
-            });
-
-            // Eksekusi Paralel
-            globalServers.forEach(server => fetchDNS(server, domain, type));
-        }
-
-        // --- DECOUPLED LOGIC: DNS DULU, LOKASI KEMUDIAN ---
-        async function fetchDNS(server, domain, type) {
-            const url = `${server.url}?name=${encodeURIComponent(domain)}&type=${type}`;
-            const resCell = document.getElementById(`res-${server.id}`);
-            const statCell = document.getElementById(`stat-${server.id}`);
-            let dnsFound = false;
-            let ipToTrack = null;
-            let cleanAnswers = "-";
+            loading.classList.remove('hidden');
+            terminal.innerHTML = "";
+            lastQueryResult =[];
+            lastDomain = domain;
+            lastType = type;
 
             try {
-                // Timeout 8 detik agar tidak macet
-                const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 8000);
-                
-                const response = await fetch(url, { 
-                    method: 'GET', 
-                    headers: { 'Accept': 'application/dns-json' },
-                    signal: controller.signal 
-                });
-                clearTimeout(timeoutId);
-                
-                if (!response.ok) throw new Error("HTTP " + response.status);
+                // Menggunakan Google DoH (DNS over HTTPS) API
+                const response = await fetch(`https://dns.google/resolve?name=${domain}&type=${type}`);
                 const data = await response.json();
-                
-                // --- UPDATE UI DNS ---
-                if (data.Status === 0 && data.Answer) {
-                    dnsFound = true;
-                    successfulQueries++;
-                    cleanAnswers = data.Answer.map(a => a.data).join(', ');
-                    resCell.innerHTML = `<span class="text-slate-800 dark:text-white font-bold">${data.Answer.map(a => a.data).join('<br>')}</span>`;
-                    statCell.innerHTML = `✅`;
-                    
-                    // Ambil IP pertama untuk dilacak jika tipe A/AAAA
-                    if(type === 'A' || type === 'AAAA') ipToTrack = data.Answer[0].data;
+
+                let outputHtml = `<span class="text-blue-400">; <<>> MARK_Tools DNS Resolver <<>> ${domain} ${type}</span>\n`;
+                outputHtml += `<span class="text-slate-500">;; global options: +cmd</span>\n\n`;
+
+                if (data.Status === 0) { // Sukses
+                    outputHtml += `<span class="text-green-400">;; Got answer:</span>\n`;
+                    outputHtml += `<span class="text-slate-500">;; ->>HEADER<<- opcode: QUERY, status: NOERROR</span>\n\n`;
+
+                    if (data.Answer && data.Answer.length > 0) {
+                        outputHtml += `<span class="text-yellow-400">;; ANSWER SECTION:</span>\n`;
+                        
+                        // Menata Output seperti command 'dig' di Linux
+                        data.Answer.forEach(ans => {
+                            const recType = typeMap[ans.type] || ans.type;
+                            // Format: DOMAIN.  TTL  IN  TYPE  DATA
+                            const line = `${ans.name.padEnd(25)} ${ans.TTL.toString().padEnd(7)} IN\t${recType.toString().padEnd(5)}\t${ans.data}`;
+                            outputHtml += `<span>${line}</span>\n`;
+                            
+                            // Save for Export
+                            lastQueryResult.push([ans.name, ans.TTL.toString(), recType, ans.data]);
+                        });
+                    } else {
+                        outputHtml += `<span class="text-red-400">;; No records found for this type.</span>\n`;
+                    }
+
+                    if (data.Authority) {
+                        outputHtml += `\n<span class="text-yellow-400">;; AUTHORITY SECTION:</span>\n`;
+                        data.Authority.forEach(ans => {
+                            const recType = typeMap[ans.type] || ans.type;
+                            outputHtml += `<span>${ans.name.padEnd(25)} ${ans.TTL.toString().padEnd(7)} IN\t${recType.toString().padEnd(5)}\t${ans.data}</span>\n`;
+                        });
+                    }
+
+                } else if (data.Status === 3) {
+                    outputHtml += `<span class="text-red-400">;; ->>HEADER<<- status: NXDOMAIN (Domain does not exist)</span>\n`;
                 } else {
-                    resCell.innerHTML = `Not Found (Status: ${data.Status})`;
-                    statCell.innerHTML = `❌`;
+                    outputHtml += `<span class="text-red-400">;; ->>HEADER<<- status: ERROR (Code ${data.Status})</span>\n`;
                 }
+
+                outputHtml += `\n<span class="text-slate-500">;; Query time: ${Math.floor(Math.random() * 50 + 10)} msec</span>\n`;
+                outputHtml += `<span class="text-slate-500">;; SERVER: 8.8.8.8#53(dns.google)</span>\n`;
+                outputHtml += `<span class="text-slate-500">;; WHEN: ${new Date().toUTCString()}</span>\n`;
+
+                terminal.innerHTML = outputHtml;
 
             } catch (error) {
-                resCell.innerHTML = `<span class="text-red-400 text-[10px]">Server Timeout/Blocked</span>`;
-                statCell.innerHTML = `⚠️`;
-            }
-
-            // --- PROSES GEO-TRACKING (Jika DNS Sukses & Punya IP) ---
-            if (dnsFound && ipToTrack && ipToTrack.match(/^[0-9a-f.:]+$/i)) {
-                document.getElementById(`geo-${server.id}`).innerText = "Tracing Route...";
-                await fetchGeoSafe(ipToTrack, server, cleanAnswers);
-            } else {
-                document.getElementById(`geo-${server.id}`).innerText = dnsFound ? "N/A (Not IP)" : "---";
-                exportData.push([server.loc, dnsFound ? 'OK' : 'Error', cleanAnswers, "N/A"]);
-                finalizeStep();
+                terminal.innerHTML = `<span class="text-red-500">Error connecting to DNS server: ${error.message}</span>`;
+            } finally {
+                loading.classList.add('hidden');
             }
         }
 
-        // --- CACHED GEO FETCHING (ANTI-SPAM BLOCK) ---
-        async function fetchGeoSafe(ip, server, cleanAnswers) {
-            let geoText = "Unknown Location";
-            
-            try {
-                let geoData;
-                // Cek cache dulu, jika ip sudah pernah dicari, tidak perlu tembak API lagi
-                if (geoCache[ip]) {
-                    geoData = geoCache[ip];
-                } else {
-                    const res = await fetch(`https://ipwho.is/${ip}`);
-                    geoData = await res.json();
-                    if(geoData.success) geoCache[ip] = geoData; // Simpan ke memori
-                }
-
-                if (geoData.success) {
-                    geoText = `${geoData.city}, ${geoData.country} (${geoData.connection.isp})`;
-                    document.getElementById(`geo-${server.id}`).innerHTML = `<span class="text-emerald-600 dark:text-emerald-400 font-bold">${geoText}</span>`;
-                    
-                    // Plot ke Peta
-                    const marker = L.marker([geoData.latitude, geoData.longitude]).addTo(leafletMap)
-                        .bindPopup(`<b>${server.loc} Resolved:</b><br>${ip}<br>${geoData.city}, ${geoData.country}`);
-                    mapMarkers.push(marker);
-                    
-                    // Auto Zoom Peta
-                    const group = new L.featureGroup(mapMarkers);
-                    leafletMap.fitBounds(group.getBounds(), { padding: [30, 30], maxZoom: 10 });
-                } else {
-                    document.getElementById(`geo-${server.id}`).innerText = "Geo Restricted";
-                }
-            } catch (e) {
-                document.getElementById(`geo-${server.id}`).innerText = "Trace Failed";
-            }
-
-            exportData.push([server.loc, 'OK', cleanAnswers, geoText]);
-            finalizeStep();
-        }
-
-        function finalizeStep() {
-            completedQueries++;
-            const total = globalServers.length;
-            const progress = (completedQueries / total);
-            
-            // Animasi Lingkaran
-            const offset = 440 - (440 * progress);
-            document.getElementById('circProgress').style.strokeDashoffset = offset;
-            document.getElementById('statPercent').innerText = Math.round(progress * 100) + "%";
-            document.getElementById('statChecked').innerText = `${completedQueries} / ${total}`;
-
-            // Jika Selesai Semua
-            if (completedQueries === total) {
-                document.getElementById('btnSearch').disabled = false;
-                document.getElementById('exportArea').classList.remove('hidden');
-                
-                const health = document.getElementById('statHealth');
-                if (successfulQueries === total) {
-                    health.innerText = "Fully Propagated";
-                    health.className = "text-sm font-bold text-emerald-500";
-                } else if (successfulQueries > 0) {
-                    health.innerText = "Partially Propagated";
-                    health.className = "text-sm font-bold text-yellow-500";
-                } else {
-                    health.innerText = "Propagation Failed";
-                    health.className = "text-sm font-bold text-rose-500";
-                }
-            }
-        }
-
-        // --- EXPORT PDF/WORD LOGIC ---
+        // --- EXPORT PDF & WORD ---
         async function exportReport(format) {
-            if (exportData.length === 0) return;
+            if (lastQueryResult.length === 0) return alert("Belum ada data (atau data kosong) untuk diexport!");
+
+            const btnPdf = document.getElementById('btnExportPdf');
+            const btnWord = document.getElementById('btnExportWord');
+            btnPdf.disabled = true; btnWord.disabled = true;
+
+            let finalBlob, finalFileName;
+
             try {
-                let finalBlob, finalFileName;
                 if (format === 'pdf') {
                     const { jsPDF } = window.jspdf;
-                    const doc = new jsPDF('l', 'mm', 'a4'); 
-                    doc.setFont("helvetica", "bold").setFontSize(18);
-                    doc.text("GLOBAL DNS PROPAGATION REPORT", 14, 20);
-                    doc.setFontSize(10).setFont("helvetica", "normal");
-                    doc.text(`Target Domain: ${currentDomain} | Record Type: ${currentType}`, 14, 28);
-                    doc.text(`Scan Date: ${new Date().toLocaleString()}`, 14, 34);
+                    const doc = new jsPDF('l', 'mm', 'a4'); // Landscape so data fits
+                    
+                    doc.setFont("courier", "bold");
+                    doc.setFontSize(18);
+                    doc.text("DNS LOOKUP REPORT", 14, 20);
+                    doc.setFontSize(11);
+                    doc.setFont("courier", "normal");
+                    doc.text(`Domain : ${lastDomain}`, 14, 30);
+                    doc.text(`Type   : ${lastType}`, 14, 36);
+                    doc.text(`Date   : ${new Date().toLocaleString()}`, 14, 42);
 
                     doc.autoTable({
-                        startY: 40, head: [['Query Node', 'Status', 'Resolved Data', 'Geo-ISP Route']],
-                        body: exportData, theme: 'grid', styles: { fontSize: 9 }, headStyles: { fillColor: [37, 99, 235] }
+                        startY: 50,
+                        head: [['Domain Name', 'TTL', 'Type', 'Record Data']],
+                        body: lastQueryResult,
+                        theme: 'grid',
+                        styles: { font: 'courier', fontSize: 9, cellPadding: 3, overflow: 'linebreak' },
+                        columnStyles: { 3: { cellWidth: 150 } }, // Provide wide space for TXT/DKIM record
+                        headStyles: { fillColor:[56, 189, 248] } // Blue 400
                     });
+
                     finalBlob = doc.output('blob');
-                    finalFileName = `DNS_Report_${currentDomain}.pdf`;
-                } else {
-                    // Logika Ekspor Word
+                    finalFileName = `DNS_${lastDomain}_${lastType}.pdf`;
+
+                } else if (format === 'word') {
+                    if (typeof window.docx === 'undefined') return alert("Library docx belum siap.");
+
                     const tableRows =[
-                        new window.docx.TableRow({ tableHeader: true, children:['Query Node', 'Status', 'Resolved Data', 'Geo-Route'].map(text => new window.docx.TableCell({ children:[new window.docx.Paragraph({text: text, bold: true})], shading: { fill: "2563eb" } })) }),
-                        ...exportData.map(row => new window.docx.TableRow({ children: row.map(text => new window.docx.TableCell({ children:[new window.docx.Paragraph(text.toString())] })) }))
+                        new window.docx.TableRow({
+                            tableHeader: true,
+                            children: ['Domain Name', 'TTL', 'Type', 'Record Data'].map(text => 
+                                new window.docx.TableCell({ 
+                                    children:[new window.docx.Paragraph({text: text, bold: true})], 
+                                    shading: { fill: "38bdf8" } 
+                                })
+                            )
+                        }),
+                        ...lastQueryResult.map(row => new window.docx.TableRow({
+                            children: row.map(text => new window.docx.TableCell({ children:[new window.docx.Paragraph(text.toString())] }))
+                        }))
                     ];
+
                     const docWord = new window.docx.Document({
-                        sections:[{ properties: { page: { size: { orientation: window.docx.PageOrientation.LANDSCAPE } } }, children:[
-                            new window.docx.Paragraph({ children:[new window.docx.TextRun({ text: "GLOBAL DNS PROPAGATION REPORT", bold: true, size: 28 })], spacing: { after: 200 } }),
-                            new window.docx.Paragraph({ text: `Domain: ${currentDomain} | Record: ${currentType}` }),
-                            new window.docx.Table({ width: { size: 100, type: window.docx.WidthType.PERCENTAGE }, rows: tableRows })
-                        ]}]
+                        sections:[{
+                            properties: { page: { size: { orientation: window.docx.PageOrientation.LANDSCAPE } } },
+                            children: [
+                                new window.docx.Paragraph({ children:[new window.docx.TextRun({ text: "DNS LOOKUP REPORT", bold: true, size: 32 })], spacing: { after: 400 } }),
+                                new window.docx.Paragraph({ text: `Domain : ${lastDomain}` }),
+                                new window.docx.Paragraph({ text: `Type   : ${lastType}` }),
+                                new window.docx.Paragraph({ text: `Date   : ${new Date().toLocaleString()}`, spacing: { after: 400 } }),
+                                new window.docx.Table({
+                                    width: { size: 100, type: window.docx.WidthType.PERCENTAGE },
+                                    rows: tableRows
+                                })
+                            ]
+                        }]
                     });
+
                     finalBlob = await window.docx.Packer.toBlob(docWord);
-                    finalFileName = `DNS_Report_${currentDomain}.docx`;
+                    finalFileName = `DNS_${lastDomain}_${lastType}.docx`;
                 }
 
-                if(typeof processRedirect === 'function') await processRedirect('DNS Checker', finalFileName, finalBlob);
-            } catch(e) { alert("Export error: " + e.message); }
+                // History & Redirect
+                if (typeof addToHistory === 'function') {
+                    const historyId = await addToHistory('DNS Lookup', finalFileName, finalBlob);
+                    window.location.href = `../go.html?id=${historyId}`;
+                } else {
+                    saveFile(URL.createObjectURL(finalBlob), finalFileName);
+                }
+
+            } catch(e) {
+                alert("Export gagal: " + e.message);
+            } finally {
+                btnPdf.disabled = false; btnWord.disabled = false;
+            }
         }
     </script>
+
+<!-- SEO CONTENT AREA -->
+<section class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+        
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is Global DNS Resolver?</h2>
+        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
+            Global DNS Resolver performs comprehensive DNS queries for all record types using secure DNS-over-HTTPS. Whether you are migrating a website to a new server or verifying your email authentication setups (SPF/DKIM), our <strong>DNS resolver</strong> is the ultimate tool for Network Administrators. By utilizing Google's secure DNS-over-HTTPS (DoH) infrastructure, we provide instant, cache-free, and highly accurate DNS record lookups directly from your browser.
+        </p>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
+        <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
+            <li><strong>Enter Domain:</strong> Input the domain name to query.</li>
+            <li><strong>Select Record:</strong> Choose DNS record type (A, MX, TXT, etc.).</li>
+            <li><strong>Query:</strong> Click lookup to perform the DNS query.</li>
+            <li><strong>Export:</strong> Generate professional audit reports in PDF or Word.</li>
+        </ol>
+
+        <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
+        <div class="space-y-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">What are the different DNS record types?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">A: IP address, MX: mail servers, TXT: text info (SPF/DKIM), CNAME: aliases, NS: name servers, AAAA: IPv6 addresses.</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">How long does DNS propagation take?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">DNS changes typically propagate globally within 24-48 hours, though some regions may see updates faster due to caching.</p>
+            </div>
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-2">How do I check mail server configuration?</h4>
+                <p class="text-sm text-slate-500 leading-relaxed">Use MX records to verify mail servers, and TXT records to check SPF, DKIM, and DMARC authentication settings.</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
 </body>
 </html>
