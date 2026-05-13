@@ -395,41 +395,109 @@
         }
     </script>
 
-<!-- SEO CONTENT AREA -->
-<section class="py-16 bg-slate-50 border-t border-slate-200">
-    <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
-        
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">What is Advanced IP Subnet Calculator?</h2>
-        <p class="text-sm text-slate-600 mb-6 leading-relaxed">
-            Advanced IP Subnet Calculator performs comprehensive IPv4 subnet and CIDR calculations. Instantly calculate network addresses, broadcast addresses, wildcard masks, and usable host ranges to support network planning and administration.
-        </p>
-
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">How to Use This Tool</h2>
-        <ol class="list-decimal pl-5 text-sm text-slate-600 mb-8 space-y-2">
-            <li><strong>Enter IP:</strong> Input the host IP address.</li>
-            <li><strong>Set CIDR:</strong> Use the slider or dropdown to select CIDR prefix (1-32).</li>
-            <li><strong>Calculate:</strong> View network, broadcast, and host range calculations.</li>
-            <li><strong>Export:</strong> Generate PDF or Word reports of the calculations.</li>
-        </ol>
-
-        <h2 class="text-2xl font-bold text-slate-800 mb-4">Frequently Asked Questions (FAQ)</h2>
-        <div class="space-y-4">
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">What is CIDR notation?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">CIDR (Classless Inter-Domain Routing) uses /prefix notation (e.g., /24) to specify network size. Higher numbers mean smaller subnets with fewer hosts.</p>
-            </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">What is a wildcard mask?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">A wildcard mask is the inverse of a subnet mask, used in access control lists. It identifies which bits in an IP address should be ignored.</p>
-            </div>
-            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                <h4 class="font-bold text-slate-800 mb-2">How are usable hosts calculated?</h4>
-                <p class="text-sm text-slate-500 leading-relaxed">Usable hosts = 2^(32-CIDR) - 2. Subtract 2 for network and broadcast addresses (except for /31 and /32 subnets).</p>
-            </div>
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Developer Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="bandwidth-calc.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Bandwidth Calculator</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Convert Mbps to MB/s and estimate network transfer times.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="dns-lookup.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+                    DNS
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">DNS Lookup Resolver</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Dig domain records (A, MX, TXT) via secure DNS-over-HTTPS.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="JSONformatter.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-lg">
+                    { }
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">JSON Formatter</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Validate, beautify, and compress JSON payloads securely.</p>
+                </div>
+            </a>
+        </div>
+    </section>
 
-    </div>
-</section>
+    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
+    <!-- ========================================== -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
+        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+            
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Understanding IPv4 Subnetting & CIDR</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+                Network engineering is the backbone of modern cloud computing. Whether you are configuring an AWS Virtual Private Cloud (VPC), setting up a corporate firewall, or segmenting a local office network to improve security, you must understand IP Subnetting. The <strong>MARK_Tools IP Subnet Calculator</strong> eliminates the tedious binary mathematics required to determine Network Addresses, Broadcast IPs, and Usable Host Ranges.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
+                By simply inputting an IPv4 address and selecting a <strong>CIDR (Classless Inter-Domain Routing)</strong> mask, our client-side logic engine instantly maps out your entire network topology. Because we prioritize privacy, plotting your internal corporate IP structures on our site is completely safe—no data is logged or transmitted to external servers.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">What is CIDR Notation?</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        CIDR notation (e.g., <code>/24</code> or <code>/26</code>) dictates how many binary bits are "locked" for the network portion of an IP address. The remaining bits determine how many host devices (computers, servers) can connect to that network. For example, a <code>/24</code> mask allows for 254 usable hosts, which is the standard for most home and small office routers.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Wildcard Masks Explained</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        A Wildcard Mask is the exact mathematical inverse of a Subnet Mask. It is critically used by Network Administrators when configuring Access Control Lists (ACLs) on Cisco routers and firewalls to explicitly permit or deny traffic to specific groups of IP addresses within a subnet.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Why Segment Your Network?</h3>
+            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
+                <li class="flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">1.</span> 
+                    <span><strong>Security & Isolation:</strong> Putting IoT devices, guest Wi-Fi users, and corporate servers on the same subnet is a massive security risk. Subnetting isolates traffic, ensuring a compromised guest laptop cannot communicate with internal databases.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">2.</span> 
+                    <span><strong>Broadcast Storm Prevention:</strong> Every device occasionally shouts "broadcast" messages to the entire network. If 1000 devices are on a single <code>/16</code> subnet, the noise will cripple network speed. Subnetting breaks collision domains into smaller, manageable chunks.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">3.</span> 
+                    <span><strong>Organization:</strong> Allocating specific IP ranges to specific departments (e.g., <code>192.168.10.x</code> for HR, <code>192.168.20.x</code> for Engineering) makes firewall rule management infinitely easier.</span>
+                </li>
+            </ul>
+
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Why are there 2 IPs I cannot use for hosts?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">In any IPv4 subnet, the absolute first IP address is reserved as the <strong>Network ID</strong> (used by routing tables to identify the entire block), and the absolute last IP address is reserved as the <strong>Broadcast IP</strong> (used to send packets to every device in that subnet simultaneously). Therefore, a <code>/24</code> subnet has 256 total IPs, but only 254 are usable for computers.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Does this tool support IPv6?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Currently, this specific calculator is optimized for IPv4 (Internet Protocol version 4) infrastructure, which still powers 99% of internal corporate LANs and private cloud VPCs. We are actively developing a dedicated tool for IPv6 hexadecimal calculation.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Can I export my subnet configuration?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Yes! You can instantly click the <strong>Export PDF</strong> button to generate a clean, professional report of your IP configuration. This is highly useful for documenting network architecture changes for IT audit compliance.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
 
 </body>
 </html>

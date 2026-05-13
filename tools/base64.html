@@ -220,55 +220,84 @@
         };
     </script>
 
-    <!-- SEO CONTENT AREA (Detailed Developer Guide) -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800">
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Developer Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="JSONformatter.html">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-lg">
+                    { }
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">JSON Formatter</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Beautify and validate massive JSON payloads securely offline.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="hash-generator.html">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+                    DEV
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">File Hash Generator</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Generate MD5 and SHA-256 checksums to verify file integrity.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="ip-subnet-calc.html">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+                    NET
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">IP Subnet Calculator</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Calculate CIDR, network masks, and host ranges seamlessly.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA (YAPPING MAX) -->
+    <!-- ========================================== -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">What is a Base64 Converter?</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Understanding Base64 Encoding for Web Development</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                A <strong>Base64 Converter</strong> is a fundamental developer tool used to encode binary data (like images, audio, or complex character sets) into a safe, plain-text ASCII string format. Because MARK_Tools operates entirely on the client-side utilizing modern browser APIs, your sensitive data, API keys, and private files are encoded/decoded instantly <strong>without ever being sent to a remote server.</strong>
+                As a web developer or software engineer, transferring binary data across channels that only support text—such as JSON payloads, XML files, or URL parameters—can cause massive data corruption. The <strong>MARK_Tools Base64 Encoder & Decoder</strong> acts as a seamless translator, safely transforming unpredictable binary data (like images or compiled files) into a universal, 64-character ASCII alphabet.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
+                While there are thousands of encoding websites available, most pose a critical security risk by sending your inputted text to their backend servers. Because Base64 is frequently used to handle sensitive developer data—such as <em>JSON Web Tokens (JWTs)</em>, API Keys, and SSH Certificates—we built this tool with a 100% Client-Side architecture to ensure absolute Zero-Trust privacy.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-red-600">Encoding ≠ Encryption</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Encoding is NOT Encryption</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        A common misconception is that Base64 secures data. <strong>It does not.</strong> Base64 is merely an encoding scheme designed to prevent data corruption during transit across systems that expect text. Anyone who intercepts a Base64 string can easily decode it. Do not use Base64 to "hide" passwords.
+                        A dangerous misconception among junior developers is using Base64 to "hide" passwords or secure data in local storage. Base64 provides zero cryptographic security; it is merely a formatting scheme. Anyone who intercepts a Base64 string can decode it instantly. Always use proper hashing (like SHA-256) or AES encryption for security.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">What are Data URIs?</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Creating Image Data URIs</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        When you upload an image to our tool, it generates a Data URI (e.g., <code>data:image/png;base64,...</code>). Web developers paste these strings directly into HTML <code>&lt;img src=""&gt;</code> tags or CSS files to render graphics without needing an extra HTTP request to fetch the image file.
+                        By dragging and dropping an image into our tool, it instantly converts the file into a <code>data:image/png;base64,...</code> URI string. Front-end developers use these strings to embed small icons directly into CSS or HTML files. This eliminates extra HTTP requests, significantly speeding up the website's initial load time.
                     </p>
                 </div>
             </div>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Common Developer Use Cases</h2>
-            <div class="space-y-4 mb-12">
-                <div class="border-l-4 border-blue-500 pl-4 py-1">
-                    <h4 class="font-bold text-slate-800 text-lg">JSON Web Tokens (JWT)</h4>
-                    <p class="text-sm text-slate-600">The payload and header of every JWT are Base64Url encoded. You can paste a JWT segment here to quickly decode and inspect its JSON contents.</p>
-                </div>
-                <div class="border-l-4 border-emerald-500 pl-4 py-1">
-                    <h4 class="font-bold text-slate-800 text-lg">Basic Authentication Headers</h4>
-                    <p class="text-sm text-slate-600">HTTP Basic Auth requires credentials to be formatted as <code>username:password</code> and then Base64 encoded before being sent in the header.</p>
-                </div>
-                <div class="border-l-4 border-amber-500 pl-4 py-1">
-                    <h4 class="font-bold text-slate-800 text-lg">Email Attachments (MIME)</h4>
-                    <p class="text-sm text-slate-600">Email protocols (SMTP) cannot handle binary files natively. Attachments like PDFs and Images are automatically Base64 encoded under the hood before your email is sent.</p>
-                </div>
-            </div>
-
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 class="font-bold text-slate-800 mb-2">Why did my Base64 string size increase?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Base64 encoding uses 4 characters to represent every 3 bytes of raw data. This mathematical ratio means that your output string will always be approximately <strong>33% larger</strong> than the original file or text. Therefore, embedding massive images as Base64 in CSS can bloat your page size and harm performance.</p>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Why did my file size increase after encoding?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Base64 math uses 4 ASCII characters to represent every 3 bytes of raw binary data. This intrinsic 4:3 ratio means that converting any file or text to Base64 will universally increase its file size by approximately 33%. For this reason, embedding large images as Base64 is generally discouraged.</p>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 class="font-bold text-slate-800 mb-2">Can I decode Base64 into an image?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Yes! If you have a Base64 string that starts with a MIME type header like <code>data:image/jpeg;base64,</code>, you can simply paste that entire string into your browser's URL address bar and hit enter. The browser will render the image instantly.</p>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Can I decode JSON Web Tokens (JWT) here?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Yes. A standard JWT consists of three parts separated by dots. The first two parts (Header and Payload) are Base64Url encoded. You can copy the payload section of your token and paste it into our decoder to instantly reveal the hidden JSON data.</p>
                 </div>
             </div>
 

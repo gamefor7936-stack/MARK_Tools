@@ -245,39 +245,84 @@
     </script>
     <script src="../js/doc-scanner.js"></script>
 
-    <!-- SEO CONTENT AREA -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 relative z-50">
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our PDF & Security Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="PDFwatermark.html">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">PDF Watermark</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Stamp confidential logos on your newly scanned documents.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="Image to PDF.html">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image to PDF</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Quickly bundle plain images into a PDF without scanning filters.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="splitPDF.html">
+                <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758L5 19m0-14l4.121 4.121" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Split PDF Pages</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Extract specific pages from large multi-page PDF documents.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA (YAPPING MAX) -->
+    <!-- ========================================== -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Zero-Trust AI Document Scanner</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Turn Your Smartphone into a Professional AI Scanner</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Transform any smartphone photo into a perfectly flat, clean, and professional PDF document. Unlike commercial scanning apps that upload your sensitive ID cards, receipts, or legal contracts to the cloud, the <strong>MARK_Tools Doc Scanner</strong> runs complex <em>Computer Vision algorithms (OpenCV)</em> directly inside your browser. Your images never leave your device.
+                Gone are the days of relying on bulky hardware scanners to digitize receipts, identity cards, or signed legal contracts. Taking a photo with your smartphone is fast, but it often results in terrible angles, dark shadows, and unreadable text. The <strong>MARK_Tools Document Scanner</strong> utilizes advanced Computer Vision to magically flatten, crop, and enhance your photos, converting them into crisp, professional A4 PDFs.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
+                Most mobile scanner apps are infamous for locking basic features behind expensive subscriptions, watermarking your documents, or secretly harvesting your sensitive data. By running OpenCV (Open Source Computer Vision Library) compiled into WebAssembly directly inside your browser, we guarantee 100% data privacy.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Smart Deskew (Perspective Correction)</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Smart Perspective Deskew</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Took a photo of a document from a weird angle? No problem. By dragging the four blue anchor points to the corners of your paper, our engine uses a mathematical perspective transform matrix to flatten and straighten the image perfectly as if it was scanned flat.
+                        Took a photo of a document sitting on a table from an awkward, slanted angle? No problem. By dragging the four blue corner handles to match the edges of your paper, our engine uses a mathematical matrix called <em>Perspective Transformation</em> to warp and flatten the image, making it appear as if it was scanned perfectly from above.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">Adaptive Thresholding Filters</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Adaptive B&W Thresholding</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Remove unwanted shadows and uneven lighting. The <strong>B&W Document</strong> filter applies an adaptive block threshold to make text deep black and backgrounds pure white. Adjust the "Strength" slider to fine-tune the noise reduction algorithm.
+                        Lighting conditions are rarely perfect. The "B&W Document" filter applies an Adaptive Gaussian Threshold to your image. This algorithm analyzes small clusters of pixels to eliminate background shadows, turning the paper pure white and the text solid black. You can use the "Strength" slider to fine-tune the noise reduction.
                     </p>
                 </div>
             </div>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Can I scan multiple pages into one PDF?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Yes! Simply click "Add Page" on the sidebar to upload another photo. The system will create a queue. Once you've cropped and applied filters to all of them, clicking "Save PDF" will bind them all into a single, multi-page document.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Can I combine multiple scans into one PDF?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Absolutely! Just click "Add Page" on the sidebar to upload another photo. The system will hold them in a queue. Once you have deskewed and applied filters to all your pages, clicking "Save PDF" will compile them all into a single, multi-page document.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Why does the browser freeze slightly when applying a filter?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Applying advanced image processing (like grayscale conversion, Gaussian blur, and thresholding) to high-resolution smartphone photos requires significant CPU power. Because we prioritize your privacy by doing this locally, your browser is doing heavy mathematical lifting.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Why does the browser freeze for a second when applying a filter?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Running complex graphical matrix calculations (like grayscale conversion, blurring, and perspective warping) on high-resolution, multi-megapixel smartphone photos requires massive CPU power. Because we prioritize your privacy by doing this completely offline, your browser is doing all the heavy mathematical lifting locally.</p>
                 </div>
             </div>
 

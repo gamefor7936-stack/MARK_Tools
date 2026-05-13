@@ -176,39 +176,96 @@
     </script>
     <script src="../js/main.js"></script>
 
-    <!-- SEO CONTENT AREA -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Other Media Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-red-500 transition-all shadow-sm" href="social-resizer.html">
+                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Social Media Resizer</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Center-crop any image perfectly for Instagram and YouTube.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-red-500 transition-all shadow-sm" href="compressor.html">
+                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image Compressor</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Reduce massive thumbnail file sizes before re-uploading.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-red-500 transition-all shadow-sm" href="color-palette.html">
+                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Color Palette Extractor</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Find out what HEX colors a viral thumbnail is using.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
+    <!-- ========================================== -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Client-Side Thumbnail Extractor</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">The Strategy Behind YouTube Thumbnail Extraction</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                As a content creator, designer, or digital marketer, analyzing competitors' cover images is a crucial step in formulating a viral strategy. The <strong>YouTube Thumbnail Extractor</strong> allows you to bypass heavy API limits by fetching the raw thumbnail source images directly from YouTube's Content Delivery Network (CDN) to your browser.
+                In the highly competitive world of YouTube algorithm optimization, a video's success heavily depends on its <strong>Click-Through Rate (CTR)</strong>. No matter how incredible the video content is, if the thumbnail does not immediately grab the viewer's attention, the video will fail to gain traction. Analyzing the cover images of viral videos in your niche is a mandatory step for modern content creators and digital marketing agencies.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
+                However, YouTube intentionally makes it difficult to right-click and save a thumbnail from their platform. The <strong>MARK_Tools YT Thumbnail Extractor</strong> bypasses this limitation. By leveraging advanced Regular Expressions (Regex), our tool extracts the hidden 11-character Video ID from the URL you provide and queries YouTube's hidden Content Delivery Network (CDN) to fetch the raw, uncompressed image file.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-red-600">Zero Server Logs</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-red-600">MaxRes vs. High Quality</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Many thumbnail downloading sites log the URLs you search to build databases of trending videos. MARK_Tools operates entirely on your local machine using client-side JavaScript. Your search history remains strictly confidential and is never stored on our servers.
+                        YouTube automatically generates multiple resolutions for every uploaded image. Our tool primarily hunts for the <code>maxresdefault</code> parameter, which yields the <strong>1080p (HD) version</strong>. If the creator uploaded an older video or a low-resolution graphic, our engine features an automatic fallback that seamlessly fetches the <code>hqdefault</code> (High Quality) version instead, guaranteeing you always get a result.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Multiple Resolutions</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Privacy & Zero Logging</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        YouTube automatically generates multiple sizes for every uploaded cover. Our tool allows you to target specific resolutions, from the massive <strong>1080p Maximum Resolution (MaxRes)</strong> perfect for Photoshop compositing, down to the High-Quality (HQ) version ideal for lightweight reference.
+                        Many thumbnail extraction websites secretly log the URLs you search to build databases of trending videos for their own analytics. MARK_Tools operates on a Zero-Trust client-side architecture. The URL parsing and API fetching happen directly inside your web browser. We do not track, log, or record whose videos you are analyzing.
                     </p>
                 </div>
             </div>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Why Extract Thumbnails?</h3>
+            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
+                <li class="flex items-start gap-3">
+                    <span class="text-red-500 font-bold">1.</span> 
+                    <span><strong>Design Analysis:</strong> Graphic designers extract viral thumbnails to drop them into Photoshop or our <em>Color Palette Generator</em> to study the contrasting colors, font choices, and layout structures that drive high click-through rates.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-red-500 font-bold">2.</span> 
+                    <span><strong>Reaction & Commentary Videos:</strong> Creators producing "reaction" content or journalistic video essays often need the original thumbnail of the subject video to use as B-roll or as a visual reference in their own edits.</span>
+                </li>
+            </ul>
+
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Why does the HD version sometimes fail to load?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">If a video was uploaded in a lower resolution (e.g., 480p or 720p) or is very old, YouTube might not generate a 1080p <code>maxresdefault</code> image for it. In such rare cases, our tool will automatically detect the failure and fallback to the next highest available resolution.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Are downloaded YouTube thumbnails copyright-free?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Absolutely not. A thumbnail graphic is the intellectual property of the video creator. Downloading them is strictly intended for personal reference, design study, or fair-use editorial commentary. Do not re-upload someone else's thumbnail as your own to avoid copyright strikes.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Are downloaded thumbnails copyright-free?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">No. Thumbnail graphics are intellectually owned by the video creator or the respective broadcasting network. Downloading them is intended for personal reference, design study, or fair-use editorial commentary. Do not reuse them commercially without explicit permission.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Why does the "Download HD" button sometimes open a new tab?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Due to strict modern browser security policies (CORS - Cross-Origin Resource Sharing), fetching an image directly from Google's servers and forcing a download prompt is sometimes blocked. When our script detects this block, it safely falls back to opening the raw image in a new tab so you can simply Right-Click (or Long-Press) to "Save Image As".</p>
                 </div>
             </div>
 

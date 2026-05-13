@@ -296,46 +296,96 @@
         };
     </script>
 
-    <!-- SEO CONTENT AREA -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800">
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Other PDF Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-red-500 transition-all shadow-sm" href="mergePDF.html">
+                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Merge PDF Files</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Stitch multiple PDF documents together in your chosen order.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-red-500 transition-all shadow-sm" href="PDFtoimage.html">
+                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">PDF to Image Converter</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Turn PDF pages into shareable high-resolution JPGs.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-red-500 transition-all shadow-sm" href="PDFwatermark.html">
+                <div class="w-12 h-12 bg-red-500/10 text-red-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">PDF Watermark</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Protect your intellectual property by stamping text on pages.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
+    <!-- ========================================== -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Client-Side PDF Splitter & Extractor</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">The Secure Way to Split & Extract PDF Pages</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Working with massive PDF documents can be cumbersome, especially when you only need to send a specific section via email or upload a single page to a portal. The <strong>MARK_Tools PDF Splitter</strong> allows you to effortlessly extract individual pages or divide huge documents into fixed-size chunks. Best of all, it packages all your newly split files into a single, organized <code>.ZIP</code> archive for a seamless download experience.
+                Handling massive PDF documents is a logistical headache. Whether you are dealing with a 500-page corporate financial report, a dense academic textbook, or a consolidated human resources payroll document, sending the entire file is often impractical and unprofessional. You need a fast, reliable way to extract only the pages that matter. The <strong>MARK_Tools PDF Splitter</strong> is designed exactly for this purpose.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
+                Unlike commercial PDF editors that require expensive monthly licenses, our tool operates freely inside your web browser. By leveraging the <code>pdf-lib</code> JavaScript framework, it dynamically maps the metadata of your document, slices the binary code according to your instructions, and generates the new fragmented files directly in your computer's RAM. 
             </p>
 
-            <div class="bg-red-50 p-6 rounded-2xl border border-red-100 shadow-sm mb-12">
-                <h3 class="text-xl font-bold text-red-900 mb-3 flex items-center gap-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                    100% Secure & Privacy First
-                </h3>
-                <p class="text-sm text-red-800/80 leading-relaxed">
-                    Most online PDF tools force you to upload your sensitive documents (like invoices, legal contracts, or medical records) to their remote servers for processing. <strong>We don't.</strong> By utilizing modern WebAssembly and JavaScript algorithms, the entire splitting process happens locally inside your device's memory (RAM). Your files never touch the internet, guaranteeing zero risk of data leaks.
-                </p>
-            </div>
-
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Common Use Cases</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                <div class="border p-5 rounded-xl border-slate-200 shadow-sm">
-                    <h4 class="font-bold text-slate-800 text-lg mb-2">HR & Payroll Admin</h4>
-                    <p class="text-sm text-slate-600">Company software often generates a single massive PDF containing 100+ employee payslips. Use our <em>"Extract All (1 Page per file)"</em> mode to instantly separate them so they can be emailed individually.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-red-600">Privacy First: No Servers Involved</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        Most PDF splitting scenarios involve highly sensitive data—like cutting out a specific client's invoice from a master billing list. Uploading these documents to a "free" cloud converter essentially grants a third-party server access to your data. Because MARK_Tools is 100% Client-Side, your files never touch the internet, completely eliminating the risk of a data breach.
+                    </p>
                 </div>
-                <div class="border p-5 rounded-xl border-slate-200 shadow-sm">
-                    <h4 class="font-bold text-slate-800 text-lg mb-2">Bypassing Email Limits</h4>
-                    <p class="text-sm text-slate-600">Many email providers reject attachments larger than 25MB. Use the <em>"Fixed Chunks"</em> mode to safely divide a 100-page portfolio into five 20-page chunks that can fit into multiple emails.</p>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Automatic ZIP Compression</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        If you choose to split a 50-page document into individual single pages, downloading 50 PDFs one by one would freeze your browser and clutter your download folder. To prevent this, our engine automatically bundles all extracted pages into a single <code>.ZIP</code> archive file for a clean, one-click download.
+                    </p>
                 </div>
             </div>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Practical Use Cases for PDF Splitting</h3>
+            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
+                <li class="flex items-start gap-3">
+                    <span class="text-red-500 font-bold">1.</span> 
+                    <span><strong>Email Attachment Limits:</strong> Gmail and Outlook restrict attachments to 25MB. If you have a massive portfolio, splitting it into smaller, manageable "chunks" allows you to bypass these restrictions easily.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-red-500 font-bold">2.</span> 
+                    <span><strong>HR and Payroll:</strong> Software often generates all employee payslips into one massive PDF. Using our "1 Page per File" mode allows administrators to instantly separate them so they can be emailed to employees individually.</span>
+                </li>
+            </ul>
+
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-                    <h4 class="font-bold text-slate-800 mb-2">Why does the system output a ZIP file?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Browsers restrict websites from downloading dozens of files simultaneously to prevent spam and freezing. By dynamically compressing your split PDFs into a single ZIP archive, you get a much faster, one-click download.</p>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">What does "Fixed Chunks" mode do?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Instead of splitting every single page, "Fixed Chunks" divides the document evenly. For example, if you have a 100-page PDF and set the chunk size to 20, the tool will output 5 separate PDF files, each containing exactly 20 sequential pages.</p>
                 </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">Can I split a password-protected PDF?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Currently, browser-based PDF parsers cannot open heavily encrypted (password-protected) documents. You will need to remove the password using an unlocker tool before splitting the file.</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">No. Browser-based parsers cannot read the internal binary structure of an AES-256 encrypted PDF. You must first unlock or remove the password from the document before running it through our splitting engine.</p>
                 </div>
             </div>
 

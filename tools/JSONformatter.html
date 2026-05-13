@@ -260,39 +260,81 @@
         }
     </script>
 
-    <!-- SEO CONTENT AREA -->
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Developer Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="caseandwordcount.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Text Analyzer</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Count characters and format text cases locally.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="base64.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+                    B64
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Base64 Encoder/Decoder</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Safely decode JWT payloads and Base64 strings.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="hash-generator.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+                    DEV
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">File Integrity Checker</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Generate secure SHA-256 hashes to verify file structures.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA (YAPPING MAX) -->
+    <!-- ========================================== -->
     <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Advanced JSON Beautifier & Minifier</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Advanced JSON Beautifier & Validator</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Working with external APIs, managing webhooks, or modifying server configuration files often involves dealing with massive blocks of unreadable, minified JSON text. Our <strong>Client-Side JSON Formatter</strong> automatically parses, validates, and structurally formats your data with proper indentation, making debugging significantly easier. 
+                In modern web development, JavaScript Object Notation (JSON) is the universal language of the internet. Working with RESTful APIs, configuring cloud deployments, or managing webhook responses often involves dealing with massive blocks of compressed, unreadable JSON text. The <strong>MARK_Tools Client-Side JSON Formatter</strong> is designed to instantly parse, validate, and structure your data with proper indentation, turning a wall of code into a highly readable, tree-like structure.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">Zero-Trust Privacy</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">Zero-Trust Local Processing</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        JSON files frequently contain sensitive information, such as API Access Tokens, Database Credentials, or Customer PII (Personally Identifiable Information). Because MARK_Tools runs 100% in your browser using JavaScript, <strong>your code is never uploaded to any external server</strong>. You can safely paste production database dumps here.
+                        JSON files frequently contain highly sensitive information, such as API Access Tokens, Database Credentials, or Customer PII (Personally Identifiable Information). Because our formatter runs strictly using vanilla JavaScript inside your browser's local memory, <strong>your code is never uploaded to an external server.</strong> You can safely paste confidential production database dumps here.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Live Syntax Validation</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Missing a comma? Forgot to wrap a key in double quotes? Our engine performs strict standard validation. If your JSON structure is broken, the tool will intercept the error and display an exact diagnostic message, saving you hours of manual code hunting.
+                        Missing a trailing comma? Forgot to wrap a key in double-quotes? Our engine performs strict syntax validation. If your JSON structure is broken, the tool intercepts the error and displays a clear diagnostic message under the editor, saving you hours of manual code hunting and hair-pulling.
                     </p>
                 </div>
             </div>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">When should I Minify my JSON?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">While "Pretty Print" is for human reading, "Minify" strips all unnecessary whitespace, spaces, and line breaks from the code. You should minify JSON before deploying configuration files to production or sending data payloads via HTTP requests to save bandwidth and improve API latency.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">When should I "Minify" my JSON?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">While "Pretty Print" is designed for human readability, "Minify" strips all unnecessary whitespace, spaces, and line breaks from the code. You should strictly minify JSON payloads before sending them via HTTP API requests or deploying config files to production servers. This minimizes byte size, saves bandwidth, and improves network latency.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">Can I format nested stringified JSON?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Currently, the tool formats standard parent JSON objects. If a specific key contains a value that is a stringified JSON (wrapped in quotes with escaped characters like <code>\"</code>), it will remain stringified to prevent breaking your schema integrity.</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">Currently, the tool formats standard parent JSON objects. If a specific key inside your payload contains a value that is inherently stringified (wrapped in quotes with escaped characters like <code>\"</code>), it will remain stringified to prevent breaking your schema integrity.</p>
                 </div>
             </div>
 
