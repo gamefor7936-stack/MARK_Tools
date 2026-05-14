@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Easy IP Subnet Calculator</title>
-    <meta name="description" content="Advanced IPv4 Subnet and CIDR Calculator. Calculate network, broadcast, wildcard mask, and usable host range instantly. Export to PDF or Word.">
+    <title>Advanced IP Subnet & CIDR Calculator | MARK_Tools</title>
+    <meta name="description" content="Advanced IPv4 Subnet and CIDR Calculator. Calculate network, broadcast, wildcard mask, and usable host range instantly with binary visualizer.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
@@ -15,27 +15,25 @@
     <script src="../js/history.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <!-- Library untuk Export DOCX -->
     <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         .font-sans { font-family: 'Inter', sans-serif; }
         
         .term-input { background: #0f172a; border: 1px solid #334155; color: #10b981; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
-        .term-input:focus { border-color: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); outline: none; }
+        .term-input:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); outline: none; }
         .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
 </head>
 <body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
 
+    <!-- Navbar -->
     <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
         <div class="container mx-auto px-6 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <a href="/" class="text-emerald-400 font-black text-xl tracking-tighter hover:opacity-80">MARK_Tools</a>
+                <a href="/" class="text-emerald-400 font-black text-xl tracking-tighter hover:opacity-80 transition">MARK_Tools</a>
                 <span class="text-slate-600">|</span>
                 <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Network & Dev</span>
             </div>
@@ -43,129 +41,186 @@
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6">
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6 max-w-7xl">
         
-        <!-- KOLOM KIRI: INPUT & CONTROLS -->
-        <div class="w-full lg:w-1/3 flex flex-col gap-6">
+        <!-- LEFT COLUMN: INPUT & CONTROLS -->
+        <div class="w-full lg:w-1/3 flex flex-col gap-6 shrink-0">
             
-            <div class="glass-dark p-6 rounded-2xl">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" /></svg>
+            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-emerald-500 shadow-2xl">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-2xl flex items-center justify-center font-black">
+                        NET
                     </div>
                     <div>
-                        <h1 class="text-lg font-bold text-white">IPv4 Calculator</h1>
-                        <p class="text-[10px] text-slate-400 uppercase tracking-widest">Subnet & CIDR Tool</p>
+                        <h1 class="text-xl font-black text-white tracking-tight">IPv4 Calculator</h1>
+                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-1">Subnet & CIDR Tool</p>
                     </div>
                 </div>
 
-                <div class="space-y-5">
+                <div class="space-y-6">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Host IP Address</label>
-                        <input type="text" id="ipInput" value="192.168.1.10" class="w-full p-3 rounded-lg term-input text-lg text-center tracking-widest" placeholder="192.168.1.1" oninput="calculateSubnet()">
+                        <input type="text" id="ipInput" value="192.168.1.10" class="w-full p-4 rounded-xl term-input text-xl text-center tracking-widest font-bold shadow-inner" placeholder="192.168.1.1" oninput="calculateSubnet()">
                     </div>
 
-                    <div>
-                        <div class="flex justify-between items-end mb-2">
+                    <div class="bg-slate-800/30 p-4 rounded-xl border border-slate-700">
+                        <div class="flex justify-between items-end mb-3">
                             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Prefix / CIDR</label>
-                            <span id="cidrDisplay" class="text-emerald-400 font-mono font-bold text-lg">/24</span>
+                            <span id="cidrDisplay" class="text-emerald-400 font-mono font-black text-xl bg-emerald-900/30 px-2 py-0.5 rounded border border-emerald-500/30">/24</span>
                         </div>
-                        <input type="range" id="cidrSlider" min="1" max="32" value="24" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500" oninput="updateCidrAndCalc()">
+                        <input type="range" id="cidrSlider" min="1" max="32" value="24" class="w-full h-1.5 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-emerald-500" oninput="updateCidrAndCalc()">
                     </div>
 
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Subnet Mask</label>
-                        <select id="maskSelect" class="w-full p-3 rounded-lg term-input text-sm appearance-none text-center" onchange="updateMaskAndCalc()">
-                            <!-- Dibuat via JS -->
+                        <select id="maskSelect" class="w-full p-4 rounded-xl term-input text-sm appearance-none text-center font-bold shadow-inner" onchange="updateMaskAndCalc()">
+                            <!-- Generated via JS -->
                         </select>
                     </div>
                 </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-8">
+                    <button onclick="exportReport('pdf')" id="btnExportPdf" class="bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-emerald-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
+                        <span class="text-lg">📄</span> Export PDF
+                    </button>
+                    <button onclick="exportReport('word')" id="btnExportWord" class="bg-blue-600 hover:bg-blue-500 text-white py-3.5 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-blue-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
+                        <span class="text-lg">📝</span> Export Word
+                    </button>
+                </div>
             </div>
 
-            <!-- Export Buttons (PDF & WORD) -->
-            <div class="flex gap-3">
-                <button onclick="exportReport('pdf')" id="btnExportPdf" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-900 py-3 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-emerald-900/50 flex flex-col items-center justify-center gap-1">
-                    <span class="text-lg">📄</span>
-                    Export PDF
-                </button>
-                <button onclick="exportReport('word')" id="btnExportWord" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white py-3 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-blue-900/50 flex flex-col items-center justify-center gap-1">
-                    <span class="text-lg">📝</span>
-                    Export Word
-                </button>
-            </div>
-            <p class="text-center text-[10px] text-slate-500 italic mb-4">Laporan akan otomatis disimpan di Histori sebelum dialihkan.</p>
-            
-            <!-- Area Histori Lokal -->
-            <div class="glass-dark p-4 rounded-xl">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Histori Laporan</h4>
+            <!-- History Area -->
+            <div class="glass-dark p-6 rounded-3xl hidden lg:block border border-slate-800">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Calculation History
+                </h4>
                 <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
             </div>
 
         </div>
 
-        <!-- KOLOM KANAN: HASIL KALKULASI -->
-        <div class="w-full lg:w-2/3 glass-dark rounded-2xl p-6 md:p-8 flex flex-col justify-center">
+        <!-- RIGHT COLUMN: RESULTS & CHEAT SHEET -->
+        <div class="w-full lg:w-2/3 glass-dark rounded-3xl p-6 md:p-8 flex flex-col border border-slate-800 shadow-2xl">
             
-            <div id="errorBanner" class="hidden bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-lg text-sm mb-6 font-mono text-center">
-                Invalid IP Address format!
+            <div id="errorBanner" class="hidden bg-red-900/20 border border-red-500/50 text-red-400 p-4 rounded-xl text-sm mb-6 font-mono text-center font-bold flex items-center justify-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                Invalid IPv4 Address Format!
             </div>
 
-            <div id="resultArea" class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                <!-- Result Grid Items -->
-                <div class="border-b border-slate-700 pb-3">
+            <div id="resultArea" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-8">
+                <!-- Bento Grid Results -->
+                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
                     <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Network Address</p>
-                    <p id="resNetwork" class="text-2xl font-mono text-white font-bold">192.168.1.0</p>
+                    <p id="resNetwork" class="text-xl font-mono text-white font-bold">---</p>
                 </div>
-                <div class="border-b border-slate-700 pb-3">
+                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
                     <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Broadcast Address</p>
-                    <p id="resBroadcast" class="text-2xl font-mono text-white font-bold">192.168.1.255</p>
+                    <p id="resBroadcast" class="text-xl font-mono text-white font-bold">---</p>
                 </div>
-                <div class="md:col-span-2 border-b border-slate-700 pb-3 bg-slate-800/30 p-4 rounded-lg">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Usable Host IP Range</p>
-                    <p id="resRange" class="text-xl font-mono text-emerald-400 font-bold">192.168.1.1 - 192.168.1.254</p>
+                
+                <div class="md:col-span-2 bg-emerald-900/10 border border-emerald-500/30 p-5 rounded-2xl shadow-inner">
+                    <p class="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-2">Usable Host IP Range</p>
+                    <p id="resRange" class="text-xl md:text-2xl font-mono text-emerald-400 font-black">---</p>
                 </div>
-                <div class="border-b border-slate-700 pb-3">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Hosts</p>
-                    <p id="resTotal" class="text-xl font-mono text-white">256</p>
+                
+                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Hosts</p>
+                        <p id="resTotal" class="text-lg font-mono text-slate-300">---</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Usable Hosts</p>
+                        <p id="resUsable" class="text-lg font-mono text-emerald-400 font-bold">---</p>
+                    </div>
                 </div>
-                <div class="border-b border-slate-700 pb-3">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Usable Hosts</p>
-                    <p id="resUsable" class="text-xl font-mono text-emerald-400 font-bold">254</p>
+
+                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner flex justify-between items-center">
+                    <div>
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Class</p>
+                        <p id="resClass" class="text-sm font-mono text-slate-300">---</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Type</p>
+                        <p id="resType" class="text-sm font-mono text-blue-400 font-bold">---</p>
+                    </div>
                 </div>
-                <div class="border-b border-slate-700 pb-3">
+
+                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
                     <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Subnet Mask</p>
-                    <p id="resMask" class="text-lg font-mono text-slate-300">255.255.255.0</p>
+                    <p id="resMask" class="text-lg font-mono text-slate-300">---</p>
                 </div>
-                <div class="border-b border-slate-700 pb-3">
+                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
                     <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Wildcard Mask</p>
-                    <p id="resWildcard" class="text-lg font-mono text-slate-300">0.0.0.255</p>
-                </div>
-                <div class="border-b border-slate-700 pb-3">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Class</p>
-                    <p id="resClass" class="text-lg font-mono text-slate-300">Class C</p>
-                </div>
-                <div class="border-b border-slate-700 pb-3">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Type</p>
-                    <p id="resType" class="text-lg font-mono text-slate-300">Private</p>
+                    <p id="resWildcard" class="text-lg font-mono text-slate-300">---</p>
                 </div>
             </div>
 
-            <!-- Binary Breakdown -->
-            <div id="binaryArea" class="mt-8 bg-[#0f172a] p-4 rounded-xl border border-slate-700 overflow-x-auto">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Binary Representation</p>
-                <div class="space-y-2 text-xs font-mono">
-                    <div class="flex justify-between w-full min-w-[300px]">
-                        <span class="text-slate-400 w-16">IP:</span>
-                        <span id="binIp" class="text-emerald-400 tracking-widest"></span>
+            <!-- Advanced Binary Breakdown -->
+            <div id="binaryArea" class="bg-[#0f172a] p-5 rounded-2xl border border-slate-700 overflow-x-auto mb-8">
+                <div class="flex justify-between items-center mb-4 min-w-[300px]">
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Binary Breakdown</p>
+                    <div class="flex gap-3 text-[9px] font-bold uppercase tracking-widest">
+                        <span class="text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Network Bits</span>
+                        <span class="text-slate-500 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-500"></span> Host Bits</span>
                     </div>
-                    <div class="flex justify-between w-full min-w-[300px]">
-                        <span class="text-slate-400 w-16">Mask:</span>
-                        <span id="binMask" class="text-red-400 tracking-widest"></span>
+                </div>
+                <div class="space-y-3 text-xs md:text-sm font-mono">
+                    <div class="flex items-center w-full min-w-[400px]">
+                        <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">IP</span>
+                        <span id="binIp" class="tracking-[0.2em]"></span>
                     </div>
-                    <div class="flex justify-between w-full min-w-[300px]">
-                        <span class="text-slate-400 w-16">Net:</span>
-                        <span id="binNet" class="text-blue-400 tracking-widest"></span>
+                    <div class="flex items-center w-full min-w-[400px]">
+                        <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">Mask</span>
+                        <span id="binMask" class="tracking-[0.2em]"></span>
                     </div>
+                    <div class="flex items-center w-full min-w-[400px]">
+                        <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">Net</span>
+                        <span id="binNet" class="tracking-[0.2em]"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CIDR Quick Reference Cheat Sheet -->
+            <div>
+                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Common Subnets Cheat Sheet (Class C)
+                </h4>
+                <div class="overflow-x-auto rounded-xl border border-slate-800">
+                    <table class="w-full text-left text-xs text-slate-300 font-mono">
+                        <thead class="bg-[#020617] text-[10px] uppercase tracking-widest text-slate-500">
+                            <tr>
+                                <th class="px-4 py-3">CIDR</th>
+                                <th class="px-4 py-3">Subnet Mask</th>
+                                <th class="px-4 py-3">Wildcard</th>
+                                <th class="px-4 py-3">Usable Hosts</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-800 bg-[#0f172a]">
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/24</td><td class="px-4 py-2">255.255.255.0</td><td class="px-4 py-2">0.0.0.255</td><td class="px-4 py-2 text-white">254</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/25</td><td class="px-4 py-2">255.255.255.128</td><td class="px-4 py-2">0.0.0.127</td><td class="px-4 py-2 text-white">126</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/26</td><td class="px-4 py-2">255.255.255.192</td><td class="px-4 py-2">0.0.0.63</td><td class="px-4 py-2 text-white">62</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/27</td><td class="px-4 py-2">255.255.255.224</td><td class="px-4 py-2">0.0.0.31</td><td class="px-4 py-2 text-white">30</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/28</td><td class="px-4 py-2">255.255.255.240</td><td class="px-4 py-2">0.0.0.15</td><td class="px-4 py-2 text-white">14</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/29</td><td class="px-4 py-2">255.255.255.248</td><td class="px-4 py-2">0.0.0.7</td><td class="px-4 py-2 text-white">6</td>
+                            </tr>
+                            <tr class="hover:bg-slate-800/50 transition">
+                                <td class="px-4 py-2 font-bold text-emerald-400">/30</td><td class="px-4 py-2">255.255.255.252</td><td class="px-4 py-2">0.0.0.3</td><td class="px-4 py-2 text-white">2 <span class="text-[9px] text-slate-500">(Pt2Pt)</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
@@ -176,8 +231,6 @@
         // Init & STATE RESTORATION
         window.onload = () => {
             initMaskSelect();
-            
-            // 1. Cek apakah ada State (Angka terakhir) yang tersimpan di Memory Browser
             const savedState = sessionStorage.getItem('ipCalcState');
             if (savedState) {
                 const state = JSON.parse(savedState);
@@ -188,11 +241,7 @@
             } else {
                 document.getElementById('maskSelect').value = document.getElementById('cidrSlider').value;
             }
-
-            // 2. Lakukan kalkulasi secara otomatis saat kembali ke halaman
             calculateSubnet();
-            
-            // 3. Render histori jika ada
             if(typeof renderHistoryUI === 'function') renderHistoryUI('IP Calculator');
         };
 
@@ -221,6 +270,20 @@
             calculateSubnet();
         }
 
+        function getColoredBinaryHTML(int, cidr) {
+            let bin = (int >>> 0).toString(2).padStart(32, '0');
+            let html = '';
+            for(let i=0; i<32; i++) {
+                if(i > 0 && i % 8 === 0) html += '<span class="text-slate-600 font-black mx-1">.</span>';
+                if(i < cidr) {
+                    html += `<span class="text-emerald-400 font-bold">${bin[i]}</span>`;
+                } else {
+                    html += `<span class="text-slate-600">${bin[i]}</span>`;
+                }
+            }
+            return html;
+        }
+
         function calculateSubnet() {
             const ipStr = document.getElementById('ipInput').value.trim();
             const cidr = parseInt(document.getElementById('cidrSlider').value);
@@ -241,7 +304,6 @@
             resultArea.classList.remove('opacity-30', 'pointer-events-none');
             binArea.classList.remove('opacity-30');
 
-            // SIMPAN STATE TERAKHIR (Agar tidak keriset saat kembali dari go.html)
             sessionStorage.setItem('ipCalcState', JSON.stringify({ ip: ipStr, cidr: cidr }));
 
             const ipInt = ipToInt(ipStr);
@@ -269,10 +331,10 @@
 
             let ipType = "Public";
             if (octet1 === 10 || (octet1 === 172 && octet2 >= 16 && octet2 <= 31) || (octet1 === 192 && octet2 === 168)) ipType = "Private";
-            else if (octet1 === 127) ipType = "Loopback (Localhost)";
-            else if (octet1 === 169 && octet2 === 254) ipType = "APIPA (Link-Local)";
+            else if (octet1 === 127) ipType = "Loopback";
+            else if (octet1 === 169 && octet2 === 254) ipType = "APIPA";
 
-            // Update UI
+            // Update UI Data
             document.getElementById('resNetwork').innerText = intToIp(networkInt);
             document.getElementById('resBroadcast').innerText = intToIp(broadcastInt);
             document.getElementById('resMask').innerText = intToIp(maskInt);
@@ -283,22 +345,17 @@
             document.getElementById('resClass').innerText = ipClass;
             document.getElementById('resType').innerText = ipType;
 
-            document.getElementById('binIp').innerText = intToBinaryStr(ipInt);
-            document.getElementById('binMask').innerText = intToBinaryStr(maskInt);
-            document.getElementById('binNet').innerText = intToBinaryStr(networkInt);
+            // Render Colored Binary
+            document.getElementById('binIp').innerHTML = getColoredBinaryHTML(ipInt, cidr);
+            document.getElementById('binMask').innerHTML = getColoredBinaryHTML(maskInt, cidr);
+            document.getElementById('binNet').innerHTML = getColoredBinaryHTML(networkInt, cidr);
         }
 
-        // Helpers
         function ipToInt(ip) { return ip.split('.').reduce((int, oct) => (int << 8) + parseInt(oct, 10), 0) >>> 0; }
         function intToIp(int) { return[ (int >>> 24) & 255, (int >>> 16) & 255, (int >>> 8) & 255, int & 255 ].join('.'); }
-        function intToBinaryStr(int) {
-            let bin = (int >>> 0).toString(2).padStart(32, '0');
-            return `${bin.slice(0,8)}.${bin.slice(8,16)}.${bin.slice(16,24)}.${bin.slice(24,32)}`;
-        }
 
-        // --- EXPORT & REDIRECT LOGIC ---
         async function exportReport(type) {
-            if(!document.getElementById('errorBanner').classList.contains('hidden')) return alert("Perbaiki IP Address terlebih dahulu!");
+            if(!document.getElementById('errorBanner').classList.contains('hidden')) return alert("Please fix the IP Address first!");
             
             const btnPdf = document.getElementById('btnExportPdf');
             const btnWord = document.getElementById('btnExportWord');
@@ -316,23 +373,17 @@
 
             try {
                 if (type === 'pdf') {
-                    // EXPORT PDF
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF();
-                    
-                    doc.setFont("courier", "bold");
-                    doc.setFontSize(20);
+                    doc.setFont("courier", "bold").setFontSize(20);
                     doc.text("NETWORK ROUTING REPORT", 105, 20, { align: "center" });
-                    doc.setFontSize(12);
-                    doc.setFont("courier", "normal");
+                    doc.setFontSize(12).setFont("courier", "normal");
                     doc.text(`Target Host  : ${ip} /${cidr}`, 14, 40);
-                    doc.text(`Date         : ${new Date().toLocaleString()}`, 14, 47); // "Generated by" dihapus
+                    doc.text(`Date         : ${new Date().toLocaleString()}`, 14, 47);
 
                     doc.autoTable({
-                        startY: 55,
-                        head: [['Network Parameter', 'Value']],
-                        body: tableData,
-                        theme: 'grid',
+                        startY: 55, head: [['Network Parameter', 'Value']],
+                        body: tableData, theme: 'grid',
                         styles: { font: 'courier', fontSize: 10 },
                         headStyles: { fillColor:[16, 185, 129] } 
                     });
@@ -341,10 +392,8 @@
                     finalFileName = `IP_Report_${ip}_Subnet${cidr}.pdf`;
 
                 } else if (type === 'word') {
-                    // EXPORT WORD (DOCX)
-                    if (typeof window.docx === 'undefined') return alert("Library docx belum siap.");
+                    if (typeof window.docx === 'undefined') return alert("Docx library is not ready.");
 
-                    // Buat array table rows
                     const tableRows =[
                         new window.docx.TableRow({
                             tableHeader: true,
@@ -366,11 +415,8 @@
                             children: [
                                 new window.docx.Paragraph({ children:[new window.docx.TextRun({ text: "NETWORK ROUTING REPORT", bold: true, size: 32 })], alignment: window.docx.AlignmentType.CENTER, spacing: { after: 400 } }),
                                 new window.docx.Paragraph({ text: `Target Host  : ${ip} /${cidr}`, spacing: { after: 200 } }),
-                                new window.docx.Paragraph({ text: `Date         : ${new Date().toLocaleString()}`, spacing: { after: 400 } }), // "Generated by" dihapus
-                                new window.docx.Table({
-                                    width: { size: 100, type: window.docx.WidthType.PERCENTAGE },
-                                    rows: tableRows
-                                })
+                                new window.docx.Paragraph({ text: `Date         : ${new Date().toLocaleString()}`, spacing: { after: 400 } }),
+                                new window.docx.Table({ width: { size: 100, type: window.docx.WidthType.PERCENTAGE }, rows: tableRows })
                             ]
                         }]
                     });
@@ -379,7 +425,6 @@
                     finalFileName = `IP_Report_${ip}_Subnet${cidr}.docx`;
                 }
 
-                // Histori & Redirect (Monetisasi Iklan)
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('IP Calculator', finalFileName, finalBlob);
                     window.location.href = `../go.html?id=${historyId}`;
@@ -388,7 +433,7 @@
                 }
 
             } catch(e) {
-                alert("Gagal mengexport file: " + e.message);
+                alert("Failed to export file: " + e.message);
             } finally {
                 btnPdf.disabled = false; btnWord.disabled = false;
             }
@@ -432,6 +477,31 @@
                     <p class="text-[10px] text-slate-500 leading-tight">Validate, beautify, and compress JSON payloads securely.</p>
                 </div>
             </a>
+        </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- CONTACT & BUG REPORT CTA                   -->
+    <!-- ========================================== -->
+    <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
+        <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
+            <div class="absolute -left-20 -top-20 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
+            <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
+                <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
+                </div>
+            </div>
+            <div class="relative z-10 w-full md:w-auto shrink-0">
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-emerald-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Contact Developer
+                </a>
+            </div>
         </div>
     </section>
 
@@ -492,7 +562,7 @@
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">Can I export my subnet configuration?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Yes! You can instantly click the <strong>Export PDF</strong> button to generate a clean, professional report of your IP configuration. This is highly useful for documenting network architecture changes for IT audit compliance.</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">Yes! You can instantly click the <strong>Export PDF</strong> or <strong>Export Word</strong> button to generate a clean, professional report of your IP configuration. This is highly useful for documenting network architecture changes for IT audit compliance.</p>
                 </div>
             </div>
 

@@ -1,74 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - MARK_Tools</title>
-    <meta name="description" content="Learn about MARK_Tools. We build free, lightning-fast, and secure utility tools for developers and everyday users based on client-side processing technology.">
-    <link rel="icon" type="image/png" href="/favicon.png">
-    <link rel="apple-touch-icon" href="/favicon.png">
-    <meta property="og:image" content="https://marktoolbox.com/favicon.png">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>About MARK_Tools — Our Mission and Technology</title>
+    <meta name="description" content="Learn more about MARK_Tools, a privacy-focused utility suite built for speed and security using client-side processing.">
+    <link rel="icon" type="image/png" href="favicon.png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
-
-    <nav class="bg-white/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
-            <a href="/" class="text-2xl font-black tracking-tighter text-indigo-600">MARK_Tools</a>
-            <a href="/" class="text-sm font-bold text-slate-500 hover:text-indigo-600 transition">BACK TO HOME</a>
+<body class="bg-slate-50 dark:bg-darkBg text-slate-900 dark:text-slate-300">
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-6xl">
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md"><span class="text-white font-black text-sm">M</span></div>
+                <h1 class="text-xl font-black tracking-tighter dark:text-white">MARK<span class="text-blue-600">_Tools</span></h1>
+            </a>
+            <a href="/" class="text-xs font-bold text-slate-500 hover:text-blue-600 transition">BACK TO HOME</a>
         </div>
     </nav>
 
-    <main class="flex-grow container mx-auto px-4 py-16 max-w-4xl">
-        <div class="text-center mb-16">
-            <h1 class="text-4xl md:text-5xl font-black text-slate-900 mb-4 tracking-tight">Empowering Your Digital Workflow.</h1>
-            <p class="text-lg text-slate-500 max-w-2xl mx-auto">MARK_Tools is built on a simple philosophy: everyday digital tasks should be fast, free, and absolutely secure.</p>
-        </div>
+    <main class="container mx-auto px-4 py-20 max-w-4xl">
+        <header class="text-center mb-16">
+            <h2 class="text-4xl md:text-6xl font-black mb-6 tracking-tight text-slate-800 dark:text-white">Built for <span class="text-blue-600">Privacy</span>. <br>Designed for Speed.</h2>
+            <p class="text-lg text-slate-500 dark:text-slate-400 font-medium">MARK_Tools is a premium utility suite developed by a Computer Systems & Network Engineering student with a focus on client-side security.</p>
+        </header>
 
-        <div class="bg-white p-8 md:p-12 rounded-3xl shadow-xl border border-slate-200">
-            <div class="prose prose-slate max-w-none">
-                <h2 class="text-2xl font-bold text-indigo-600 mb-4">Our Story</h2>
-                <p class="mb-6 leading-relaxed">
-                    Started in 2024 by a passionate Computer Systems and Network Engineering student, MARK_Tools was born out of frustration. We noticed that most online tools forced users to upload sensitive documents to unknown servers, subjected them to long waiting queues, or hid basic features behind expensive paywalls.
-                </p>
-                <p class="mb-10 leading-relaxed">
-                    We decided to change that. By leveraging modern web technologies (like WebAssembly, HTML5 Canvas, and advanced Client-Side JavaScript), we shifted the processing power back to where it belongs: <strong>Your Device</strong>.
-                </p>
+        <article class="bg-white dark:bg-darkCard p-8 md:p-12 rounded-[2.5rem] shadow-xl border border-slate-200 dark:border-darkBorder prose prose-slate dark:prose-invert max-w-none">
+            <h3 class="text-2xl font-bold text-slate-800 dark:text-white">The Client-Side Revolution</h3>
+            <p>Traditional online tools force you to upload sensitive documents—PDFs, invoices, or private photos—to their remote servers. We believe this is an unnecessary security risk.</p>
+            <p><strong>MARK_Tools</strong> changes the game by utilizing <strong>Client-Side Processing</strong>. Whether you are calculating IP subnets, scanning documents, or merging PDFs, the actual work happens 100% inside your browser's memory using modern JavaScript and WebAssembly. Your files never touch our server.</p>
 
-                <div class="grid md:grid-cols-3 gap-6 mb-10 text-center">
-                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div class="text-3xl mb-3">🛡️</div>
-                        <h3 class="font-bold text-slate-800 mb-2">Privacy First</h3>
-                        <p class="text-xs text-slate-500">No server uploads. Your files never leave your browser.</p>
-                    </div>
-                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div class="text-3xl mb-3">⚡</div>
-                        <h3 class="font-bold text-slate-800 mb-2">Lightning Fast</h3>
-                        <p class="text-xs text-slate-500">Zero server latency. Processing speed depends entirely on your device.</p>
-                    </div>
-                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                        <div class="text-3xl mb-3">💎</div>
-                        <h3 class="font-bold text-slate-800 mb-2">100% Free</h3>
-                        <p class="text-xs text-slate-500">No subscriptions, no hidden fees, and no watermarks.</p>
-                    </div>
+            <div class="grid md:grid-cols-2 gap-8 my-12 not-prose">
+                <div class="bg-slate-50 dark:bg-darkBg p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                    <h4 class="font-bold text-blue-600 mb-2 uppercase tracking-widest text-xs">The Vision</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">To provide a global, accessible, and free toolkit that eliminates the need for expensive software subscriptions or privacy-invasive online services.</p>
                 </div>
-
-                <h2 class="text-2xl font-bold text-indigo-600 mb-4">Our Mission</h2>
-                <p class="leading-relaxed">
-                    Our mission is to provide an all-in-one utility suite for professionals, developers, and everyday users worldwide. Whether you are generating a network subnet report, scanning a physical document, or calculating bandwidth, MARK_Tools is your reliable digital Swiss Army Knife.
-                </p>
+                <div class="bg-slate-50 dark:bg-darkBg p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                    <h4 class="font-bold text-blue-600 mb-2 uppercase tracking-widest text-xs">Technology Stack</h4>
+                    <p class="text-sm text-slate-500 leading-relaxed">Built with HTML5, Tailwind CSS, PDF-Lib, Tesseract OCR, and OpenCV.js for high-performance data manipulation directly on your hardware.</p>
+                </div>
             </div>
-        </div>
+
+            <h3 class="text-2xl font-bold text-slate-800 dark:text-white mt-12">Who is behind this?</h3>
+            <p>MARK_Tools was founded as a project to combine Network Engineering expertise with web development. As we continue to grow, our commitment remains the same: <strong>No watermarks, no hidden fees, and absolute privacy for every user.</strong></p>
+        </article>
     </main>
 
-    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-xs">
-        <p>&copy; 2025-2026 MARK_Tools. All Rights Reserved.</p>
+    <footer class="bg-slate-900 text-slate-500 py-12 text-center text-xs">
+        <p>&copy; 2024-2026 MARK_Tools. Handcrafted for a more secure web.</p>
     </footer>
 </body>
 </html>

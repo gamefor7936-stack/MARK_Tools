@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>MarkSnip - The Ultimate Offline OCR & Snipping Tool for Windows</title>
+    <meta name="description" content="Download MarkSnip, the lightweight, offline-first OCR sniper and in-place image editor for Windows. Extract text instantly and annotate with precision.">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="apple-touch-icon" href="favicon.png">
+    <meta property="og:image" content="https://marktoolbox.com/favicon.png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b1120',
+                        darkCard: '#0f172a',
+                        darkBorder: '#1e293b',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0b1120; color: #cbd5e1; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        .hero-gradient { background: radial-gradient(circle at top right, rgba(6, 182, 212, 0.15), transparent 40%), radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.15), transparent 40%); }
+        .glass-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .floating { animation: float 6s ease-in-out infinite; }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Image Showcase Hover Effects */
+        .showcase-img { transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .group:hover .showcase-img { transform: scale(1.03); }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
+     crossorigin="anonymous"></script>
+</head>
+<body class="selection:bg-cyan-500/30 selection:text-cyan-200">
+
+    <!-- Navbar -->
+    <nav class="bg-darkBg/90 backdrop-blur-md sticky top-0 z-50 border-b border-darkBorder">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-7xl">
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-8 h-8 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-lg flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.4)] group-hover:scale-105 transition-transform">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                </div>
+                <h1 class="text-xl font-black tracking-tighter text-white">Mark<span class="text-cyan-400">Snip</span></h1>
+                <span class="bg-blue-900/30 border border-blue-500/30 text-blue-400 text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-widest hidden md:block">For Windows 10/11</span>
+            </a>
+            <div class="flex items-center gap-4">
+                <a class="text-xs font-bold text-slate-400 hover:text-white transition hidden sm:block" href="index.html">← Back to Web Tools</a>
+                <a href="https://github.com/Muhammad-Azmi-MarkDev/MarkSnip/releases/latest" target="_blank" class="bg-white text-slate-900 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-widest hover:bg-cyan-400 transition-colors shadow-[0_0_15px_rgba(255,255,255,0.2)]">Download MarkSnip</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative pt-24 pb-16 overflow-hidden hero-gradient">
+        <div class="container mx-auto px-4 max-w-6xl relative z-10">
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                
+                <!-- Text Content -->
+                <div class="w-full lg:w-1/2 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-950/50 border border-cyan-500/30 text-cyan-400 text-[10px] font-bold uppercase tracking-widest mb-6">
+                        <span class="relative flex h-2 w-2"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span></span>
+                        v1.1.0 Update is Live!
+                    </div>
+                    
+                    <h2 class="text-5xl md:text-6xl font-black text-white leading-tight tracking-tight mb-6">
+                        The Snipping Tool, <br/><span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">Evolved.</span>
+                    </h2>
+                    
+                    <p class="text-slate-400 text-base md:text-lg mb-8 leading-relaxed max-w-xl mx-auto lg:mx-0">
+                        Why settle for basic screenshots? <strong>MarkSnip</strong> is a native, offline-first desktop utility that lets you extract text (OCR), scan QR codes, and annotate directly on your screen without opening heavy editors.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                        <a href="https://github.com/Muhammad-Azmi-MarkDev/MarkSnip/releases/latest" target="_blank" class="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-8 py-4 rounded-xl font-black uppercase text-sm tracking-widest shadow-[0_0_20px_rgba(6,182,212,0.4)] transition-all transform hover:-translate-y-1 flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Download for Windows
+                        </a>
+                        <a href="https://github.com/Muhammad-Azmi-MarkDev/MarkSnip" target="_blank" class="w-full sm:w-auto bg-darkCard hover:bg-slate-800 text-white border border-darkBorder px-8 py-4 rounded-xl font-bold text-sm transition-colors flex items-center justify-center gap-2">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"></path></svg>
+                            Star on GitHub
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Hero Image (Gambar 1: Editor Full Screen) -->
+                <div class="w-full lg:w-1/2 relative">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-2xl blur opacity-30"></div>
+                    
+                    <!-- GANTI DENGAN GAMBAR 1 (Gambar Editor Hutan Bambu Full) -->
+                    <img src="image/GAMBAR_1.png" alt="MarkSnip Full Editor" class="relative rounded-2xl shadow-2xl border border-slate-700 w-full floating">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- PRODUCT SHOWCASE (BENTO GRID) -->
+    <section class="py-20 border-t border-darkBorder relative bg-[#060b14]">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-black text-white">Engineered for Power Users</h2>
+                <p class="text-slate-400 mt-3 text-sm max-w-2xl mx-auto">MarkSnip provides everything you need to capture, annotate, and extract data from your screen without interrupting your workflow.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- Fitur 1: Toolbar / Annotation (Gambar 3) -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group hover:border-cyan-500/50 transition-colors">
+                    <div class="p-8 pb-4">
+                        <div class="w-12 h-12 bg-cyan-500/10 text-cyan-400 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">In-Place Annotation Toolbar</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Freeze your screen and annotate instantly. Use pens, add text, draw arrows, and use redaction blocks to hide sensitive info before saving.</p>
+                    </div>
+                    <div class="mt-auto pt-6 px-6 overflow-hidden flex justify-center">
+                        <!-- GANTI DENGAN GAMBAR 3 (Gambar Toolbar atas melayang) -->
+                        <img src="image/GAMBAR_3.png" alt="Floating Toolbar" class="w-[90%] rounded-t-xl border-t border-x border-slate-700 shadow-2xl showcase-img">
+                    </div>
+                </div>
+
+                <!-- Fitur 2: History (Gambar 2) -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group hover:border-blue-500/50 transition-colors">
+                    <div class="p-8 pb-4">
+                        <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Snipping History & Sync</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Never lose a screenshot again. MarkSnip logs your recent captures, allowing you to revisit past snips, extract text from them, or re-edit them anytime.</p>
+                    </div>
+                    <div class="mt-auto pt-6 px-6 overflow-hidden flex justify-center">
+                        <!-- GANTI DENGAN GAMBAR 2 (Gambar Window History) -->
+                        <img src="image/GAMBAR_2.png" alt="Snipping History" class="w-[90%] rounded-t-xl border-t border-x border-slate-700 shadow-2xl showcase-img">
+                    </div>
+                </div>
+
+                <!-- Fitur 3: QR Scanner (Gambar 5) -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group hover:border-emerald-500/50 transition-colors">
+                    <div class="p-8 pb-4">
+                        <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Native QR & Barcode Scanner</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">See a QR code in a video or website? Just snip it! MarkSnip instantly decodes the matrix into clickable text or URLs directly from your screen.</p>
+                    </div>
+                    <div class="mt-auto pt-6 px-6 overflow-hidden flex justify-center">
+                        <!-- GANTI DENGAN GAMBAR 5 (Gambar scan QR Code) -->
+                        <img src="image/GAMBAR_5.png" alt="QR Scanner Feature" class="w-[90%] rounded-t-xl border-t border-x border-slate-700 shadow-2xl showcase-img">
+                    </div>
+                </div>
+
+                <!-- Fitur 4: Settings/Workflow (Gambar 4) -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group hover:border-purple-500/50 transition-colors">
+                    <div class="p-8 pb-4">
+                        <div class="w-12 h-12 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Customizable Workflow</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Remap your global keyboard shortcuts, enable Instant Quick Save to bypass dialogues, or set up an Auto-Save directory for rapid-fire screenshotting.</p>
+                    </div>
+                    <div class="mt-auto pt-6 px-6 overflow-hidden flex justify-center">
+                        <!-- GANTI DENGAN GAMBAR 4 (Gambar Menu Settings) -->
+                        <img src="image/GAMBAR_4.png" alt="MarkSnip Settings" class="w-[90%] rounded-t-xl border-t border-x border-slate-700 shadow-2xl showcase-img">
+                    </div>
+                </div>
+
+                <!-- Fitur 5: System Tray (Gambar 6) -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group hover:border-orange-500/50 transition-colors">
+                    <div class="p-8 pb-4">
+                        <div class="w-12 h-12 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">System Tray Integration</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Runs silently in the background with zero bloat. Launch a new snip, access your history, or tweak settings instantly right from your Windows taskbar.</p>
+                    </div>
+                    <div class="mt-auto pt-6 px-6 overflow-hidden flex justify-center items-end">
+                        <!-- GANTI DENGAN GAMBAR 6 (Gambar System Tray Menu) -->
+                        <img src="image/GAMBAR_6.png" alt="MarkSnip System Tray" class="w-[60%] sm:w-[45%] rounded-t-xl border-t border-x border-slate-700 shadow-2xl showcase-img">
+                    </div>
+                </div>
+
+                <!-- Fitur 6: Context Menu (Gambar 7) -->
+                <div class="glass-card rounded-3xl overflow-hidden border border-slate-800 flex flex-col group hover:border-amber-500/50 transition-colors">
+                    <div class="p-8 pb-4">
+                        <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-3">Windows Context Menu</h3>
+                        <p class="text-slate-400 text-sm leading-relaxed">Need to extract text or draw on an image you already saved? Just Right-Click any picture in File Explorer and select <strong>"Open with MarkSnip"</strong> to bypass the snipping phase completely.</p>
+                    </div>
+                    <div class="mt-auto pt-6 px-6 overflow-hidden flex justify-center">
+                        <!-- GANTI DENGAN GAMBAR 7 (Gambar Right Click Open With) -->
+                        <img src="image/GAMBAR_7.png" alt="Context Menu Integration" class="w-[90%] sm:w-[80%] rounded-t-xl border-t border-x border-slate-700 shadow-2xl showcase-img">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SHORTCUTS -->
+    <section class="py-16 bg-darkCard border-y border-darkBorder">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-2xl font-black text-center text-white mb-10">Master the Workflow</h2>
+            
+            <div class="bg-darkBg border border-darkBorder rounded-2xl overflow-hidden shadow-2xl">
+                <table class="w-full text-left text-sm text-slate-300">
+                    <thead class="bg-slate-800/50 text-xs uppercase font-black text-slate-400">
+                        <tr>
+                            <th class="px-6 py-4">Keyboard Shortcut</th>
+                            <th class="px-6 py-4">Action Triggered</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800 font-mono">
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="px-6 py-4"><span class="bg-slate-800 text-cyan-400 border border-slate-700 px-2 py-1 rounded shadow-sm">Ctrl</span> + <span class="bg-slate-800 text-cyan-400 border border-slate-700 px-2 py-1 rounded shadow-sm">Shift</span> + <span class="bg-slate-800 text-cyan-400 border border-slate-700 px-2 py-1 rounded shadow-sm">Q</span></td>
+                            <td class="px-6 py-4">Start Snipping Mode (Global Hotkey)</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="px-6 py-4"><span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">Ctrl</span> + <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">C</span></td>
+                            <td class="px-6 py-4">Copy cropped image (or extracted text) to clipboard</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="px-6 py-4"><span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">Ctrl</span> + <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">S</span></td>
+                            <td class="px-6 py-4">Save annotated image to File Explorer</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="px-6 py-4"><span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">Ctrl</span> + <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">Z</span> / <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-1 rounded shadow-sm">Y</span></td>
+                            <td class="px-6 py-4">Undo / Redo drawing annotations</td>
+                        </tr>
+                        <tr class="hover:bg-slate-800/30 transition">
+                            <td class="px-6 py-4"><span class="bg-slate-800 text-red-400 border border-slate-700 px-2 py-1 rounded shadow-sm">Esc</span></td>
+                            <td class="px-6 py-4 text-slate-500">Cancel snip and close the transparent editor</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEO CONTENT / YAPPING AREA -->
+    <section class="py-16 relative z-10 bg-darkBg">
+        <div class="container mx-auto px-4 max-w-4xl prose prose-invert prose-slate">
+            <h2 class="text-3xl font-black text-white mb-6 tracking-tight">Why Choose MarkSnip Over the Default Windows Snipping Tool?</h2>
+            <p class="text-sm md:text-base text-slate-400 mb-6 leading-relaxed">
+                As developers, students, and professionals, we capture our screens dozens of times a day. While the default Windows Snipping Tool is adequate for casual users, it severely lacks advanced workflow capabilities. <strong>MarkSnip</strong> was explicitly built to eliminate friction. 
+            </p>
+            <p class="text-sm md:text-base text-slate-400 mb-6 leading-relaxed">
+                Cannot copy text from a protected PDF, a YouTube video, or a Zoom meeting presentation? Our application integrates Optical Character Recognition (OCR) directly into the selection tool. Instead of snipping an image, opening a web browser, and uploading it to an online OCR service to extract the text, MarkSnip processes the binary image data locally in milliseconds.
+            </p>
+
+            <h3 class="text-xl font-bold text-white mt-8 mb-4">A Zero-Trust Desktop Environment</h3>
+            <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                Privacy is at the core of the MARK_Tools ecosystem. When dealing with sensitive corporate emails, source code, or banking information, taking a screenshot and pasting it into cloud-based apps is a massive vulnerability. MarkSnip operates entirely offline. It uses the native Windows 10/11 API to perform text extraction, ensuring that your screen data is never transmitted to an external server. What happens on your machine, stays on your machine.
+            </p>
+        </div>
+    </section>
+
+    <!-- FOOTER CTA -->
+    <footer class="bg-darkCard py-16 border-t border-darkBorder mt-auto text-center">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl md:text-4xl font-black text-white mb-8">Ready to upgrade your workflow?</h2>
+            <a href="https://github.com/Muhammad-Azmi-MarkDev/MarkSnip/releases/latest" target="_blank" class="inline-block bg-white hover:bg-slate-200 text-slate-900 px-10 py-5 rounded-full font-black uppercase text-sm tracking-widest shadow-[0_0_30px_rgba(255,255,255,0.15)] transition-all transform hover:scale-105">
+                Download MarkSnip Latest
+            </a>
+            <p class="text-[15px] text-slate-500 mt-6 font-mono">Requires Windows 10 (1903) or Windows 11. Built with ♥ by Muhammad Azmi.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
