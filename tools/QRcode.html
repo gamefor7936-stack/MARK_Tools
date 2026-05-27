@@ -202,7 +202,7 @@
             const response = await fetch(img.src);
             const blob = await response.blob();
 
-            if (typeof processRedirect === 'function') {
+            if (typeof processDirectDownload === 'function') {
                 await processDirectDownload('QR Code Generator', fileName, blob);
             } else {
                 saveFile(URL.createObjectURL(blob), fileName);

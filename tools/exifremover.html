@@ -254,7 +254,7 @@
 
                             try {
                                 await new Promise(r => setTimeout(r, 600)); // Dramatic pause
-                                if (typeof processRedirect === 'function') {
+                                if (typeof processDirectDownload === 'function') {
                                     await processDirectDownload('Exif Privacy Remover', fileName, blob);
                                 } else {
                                     saveFile(URL.createObjectURL(blob), fileName);
