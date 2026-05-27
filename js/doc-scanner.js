@@ -401,7 +401,7 @@ async function generateFinalPDF() {
     // Save to History & redirect to go.html with ID
     if (typeof addToHistory === 'function') {
         const historyId = await addToHistory('Doc Scanner', fileName, blob);
-        window.location.href = `../go.html?id=${historyId}`;
+        await downloadFromHistory(historyId);
     } else {
         saveFile(URL.createObjectURL(blob), fileName);
     }

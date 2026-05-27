@@ -368,7 +368,7 @@
             // Redirect & Simpan
             if (typeof addToHistory === 'function') {
                 const historyId = await addToHistory('Image Compressor', fileName, compressedBlob);
-                window.location.href = `../go.html?id=${historyId}`;
+                await downloadFromHistory(historyId);
             } else {
                 saveFile(URL.createObjectURL(compressedBlob), fileName);
             }

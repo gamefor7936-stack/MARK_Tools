@@ -151,7 +151,7 @@ async function processRedirect(toolName, fileName, fileBlob) {
         await addToHistory(toolName, cleanName, fileBlob);
         
         // 3. --- REDIRECT GO.HTML DIMATIKAN ---
-        // window.location.href = `../go.html?id=${historyId}`;
+        // await downloadFromHistory(historyId);
 
         // 4. --- GANTI MENJADI DIRECT DOWNLOAD ---
         // Browser akan langsung mengunduh file tanpa berpindah halaman

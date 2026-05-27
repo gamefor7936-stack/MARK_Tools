@@ -460,7 +460,7 @@ Email / phone" rows="4"></textarea>
 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('Invoice Generator', name, blob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');

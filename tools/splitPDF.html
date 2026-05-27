@@ -275,7 +275,7 @@
 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('Split PDF', outName, zipContent);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     saveFile(URL.createObjectURL(zipContent), outName);
                 }

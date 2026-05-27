@@ -541,7 +541,7 @@
                 // History & Redirect System
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('DNS Lookup', finalFileName, finalBlob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     const url = URL.createObjectURL(finalBlob);
                     const a = document.createElement('a');

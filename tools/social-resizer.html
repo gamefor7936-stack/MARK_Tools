@@ -266,7 +266,7 @@
 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('Social Resizer', finalFileName, zipBlob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     saveFile(URL.createObjectURL(zipBlob), finalFileName);
                 }

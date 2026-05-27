@@ -402,7 +402,7 @@
 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('Universal Converter', finalFileName, finalBlob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     saveFile(URL.createObjectURL(finalBlob), finalFileName);
                 }

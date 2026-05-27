@@ -149,7 +149,7 @@
             
             if (typeof addToHistory === 'function') {
                 const historyId = await addToHistory('Color Palette', fileName, blob);
-                window.location.href = `../go.html?id=${historyId}`;
+                await downloadFromHistory(historyId);
             } else {
                 saveFile(URL.createObjectURL(blob), fileName);
             }

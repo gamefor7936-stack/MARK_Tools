@@ -152,7 +152,7 @@
 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('YT Thumbnail Downloader', fileName, blob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');

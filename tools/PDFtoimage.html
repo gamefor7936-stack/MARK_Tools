@@ -238,7 +238,7 @@
 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('PDF to Image', finalFileName, zipContent);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     saveFile(URL.createObjectURL(zipContent), finalFileName);
                 }

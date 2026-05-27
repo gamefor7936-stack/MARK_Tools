@@ -245,7 +245,7 @@
                 
                 if (typeof addToHistory === 'function') {
                     const historyId = await addToHistory('PDF to Word', finalFileName, blob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                    await downloadFromHistory(historyId);
                 } else {
                     saveFile(URL.createObjectURL(blob), finalFileName);
                 }
