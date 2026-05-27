@@ -181,12 +181,21 @@
                 </div>
             </div>
 
-            <!-- CIDR Quick Reference Cheat Sheet -->
+            <!-- INTERACTIVE CIDR QUICK REFERENCE CHEAT SHEET -->
             <div>
-                <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Common Subnets Cheat Sheet (Class C)
-                </h4>
+                <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-3 gap-3">
+                    <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Subnets Cheat Sheet
+                    </h4>
+                    <!-- Tabs untuk Class A, B, C -->
+                    <div class="flex gap-2 bg-[#020617] p-1 rounded-lg border border-slate-800">
+                        <button onclick="switchTab('C')" id="tabC" class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all">Class C (/24+)</button>
+                        <button onclick="switchTab('B')" id="tabB" class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all">Class B (/16+)</button>
+                        <button onclick="switchTab('A')" id="tabA" class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all">Class A (/8+)</button>
+                    </div>
+                </div>
+
                 <div class="overflow-x-auto rounded-xl border border-slate-800">
                     <table class="w-full text-left text-xs text-slate-300 font-mono">
                         <thead class="bg-[#020617] text-[10px] uppercase tracking-widest text-slate-500">
@@ -197,28 +206,40 @@
                                 <th class="px-4 py-3">Usable Hosts</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800 bg-[#0f172a]">
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/24</td><td class="px-4 py-2">255.255.255.0</td><td class="px-4 py-2">0.0.0.255</td><td class="px-4 py-2 text-white">254</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/25</td><td class="px-4 py-2">255.255.255.128</td><td class="px-4 py-2">0.0.0.127</td><td class="px-4 py-2 text-white">126</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/26</td><td class="px-4 py-2">255.255.255.192</td><td class="px-4 py-2">0.0.0.63</td><td class="px-4 py-2 text-white">62</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/27</td><td class="px-4 py-2">255.255.255.224</td><td class="px-4 py-2">0.0.0.31</td><td class="px-4 py-2 text-white">30</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/28</td><td class="px-4 py-2">255.255.255.240</td><td class="px-4 py-2">0.0.0.15</td><td class="px-4 py-2 text-white">14</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/29</td><td class="px-4 py-2">255.255.255.248</td><td class="px-4 py-2">0.0.0.7</td><td class="px-4 py-2 text-white">6</td>
-                            </tr>
-                            <tr class="hover:bg-slate-800/50 transition">
-                                <td class="px-4 py-2 font-bold text-emerald-400">/30</td><td class="px-4 py-2">255.255.255.252</td><td class="px-4 py-2">0.0.0.3</td><td class="px-4 py-2 text-white">2 <span class="text-[9px] text-slate-500">(Pt2Pt)</span></td>
-                            </tr>
+                        
+                        <!-- CLASS C BODY -->
+                        <tbody id="bodyC" class="divide-y divide-slate-800 bg-[#0f172a]">
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/24</td><td class="px-4 py-2">255.255.255.0</td><td class="px-4 py-2">0.0.0.255</td><td class="px-4 py-2 text-white">254</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/25</td><td class="px-4 py-2">255.255.255.128</td><td class="px-4 py-2">0.0.0.127</td><td class="px-4 py-2 text-white">126</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/26</td><td class="px-4 py-2">255.255.255.192</td><td class="px-4 py-2">0.0.0.63</td><td class="px-4 py-2 text-white">62</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/27</td><td class="px-4 py-2">255.255.255.224</td><td class="px-4 py-2">0.0.0.31</td><td class="px-4 py-2 text-white">30</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/28</td><td class="px-4 py-2">255.255.255.240</td><td class="px-4 py-2">0.0.0.15</td><td class="px-4 py-2 text-white">14</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/29</td><td class="px-4 py-2">255.255.255.248</td><td class="px-4 py-2">0.0.0.7</td><td class="px-4 py-2 text-white">6</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/30</td><td class="px-4 py-2">255.255.255.252</td><td class="px-4 py-2">0.0.0.3</td><td class="px-4 py-2 text-white">2 <span class="text-[9px] text-slate-500">(Pt2Pt)</span></td></tr>
+                        </tbody>
+
+                        <!-- CLASS B BODY -->
+                        <tbody id="bodyB" class="divide-y divide-slate-800 bg-[#0f172a] hidden">
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/16</td><td class="px-4 py-2">255.255.0.0</td><td class="px-4 py-2">0.0.255.255</td><td class="px-4 py-2 text-white">65,534</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/17</td><td class="px-4 py-2">255.255.128.0</td><td class="px-4 py-2">0.0.127.255</td><td class="px-4 py-2 text-white">32,766</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/18</td><td class="px-4 py-2">255.255.192.0</td><td class="px-4 py-2">0.0.63.255</td><td class="px-4 py-2 text-white">16,382</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/19</td><td class="px-4 py-2">255.255.224.0</td><td class="px-4 py-2">0.0.31.255</td><td class="px-4 py-2 text-white">8,190</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/20</td><td class="px-4 py-2">255.255.240.0</td><td class="px-4 py-2">0.0.15.255</td><td class="px-4 py-2 text-white">4,094</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/21</td><td class="px-4 py-2">255.255.248.0</td><td class="px-4 py-2">0.0.7.255</td><td class="px-4 py-2 text-white">2,046</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/22</td><td class="px-4 py-2">255.255.252.0</td><td class="px-4 py-2">0.0.3.255</td><td class="px-4 py-2 text-white">1,022</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/23</td><td class="px-4 py-2">255.255.254.0</td><td class="px-4 py-2">0.0.1.255</td><td class="px-4 py-2 text-white">510</td></tr>
+                        </tbody>
+
+                        <!-- CLASS A BODY -->
+                        <tbody id="bodyA" class="divide-y divide-slate-800 bg-[#0f172a] hidden">
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/8</td><td class="px-4 py-2">255.0.0.0</td><td class="px-4 py-2">0.255.255.255</td><td class="px-4 py-2 text-white">16,777,214</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/9</td><td class="px-4 py-2">255.128.0.0</td><td class="px-4 py-2">0.127.255.255</td><td class="px-4 py-2 text-white">8,388,606</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/10</td><td class="px-4 py-2">255.192.0.0</td><td class="px-4 py-2">0.63.255.255</td><td class="px-4 py-2 text-white">4,194,302</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/11</td><td class="px-4 py-2">255.224.0.0</td><td class="px-4 py-2">0.31.255.255</td><td class="px-4 py-2 text-white">2,097,150</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/12</td><td class="px-4 py-2">255.240.0.0</td><td class="px-4 py-2">0.15.255.255</td><td class="px-4 py-2 text-white">1,048,574</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/13</td><td class="px-4 py-2">255.248.0.0</td><td class="px-4 py-2">0.7.255.255</td><td class="px-4 py-2 text-white">524,286</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/14</td><td class="px-4 py-2">255.252.0.0</td><td class="px-4 py-2">0.3.255.255</td><td class="px-4 py-2 text-white">262,142</td></tr>
+                            <tr class="hover:bg-slate-800/50 transition"><td class="px-4 py-2 font-bold text-emerald-400">/15</td><td class="px-4 py-2">255.254.0.0</td><td class="px-4 py-2">0.1.255.255</td><td class="px-4 py-2 text-white">131,070</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -244,6 +265,25 @@
             calculateSubnet();
             if(typeof renderHistoryUI === 'function') renderHistoryUI('IP Calculator');
         };
+
+        // --- TAB SWITCHER FOR CHEAT SHEET ---
+        function switchTab(tabName) {
+            // Reset all tabs UI
+            ['A', 'B', 'C'].forEach(id => {
+                const btn = document.getElementById('tab' + id);
+                const body = document.getElementById('body' + id);
+                
+                btn.className = "px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all";
+                body.classList.add('hidden');
+            });
+
+            // Activate Selected Tab
+            const activeBtn = document.getElementById('tab' + tabName);
+            const activeBody = document.getElementById('body' + tabName);
+            
+            activeBtn.className = "px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all";
+            activeBody.classList.remove('hidden');
+        }
 
         function initMaskSelect() {
             const select = document.getElementById('maskSelect');
@@ -398,8 +438,8 @@
                         new window.docx.TableRow({
                             tableHeader: true,
                             children:[
-                                new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Network Parameter", bold: true})], shading: { fill: "10b981" } }),
-                                new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Value", bold: true})], shading: { fill: "10b981" } }),
+                                new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Network Parameter", bold: true, color: "ffffff"})], shading: { fill: "10b981" } }),
+                                new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Value", bold: true, color: "ffffff"})], shading: { fill: "10b981" } }),
                             ]
                         }),
                         ...tableData.map(row => new window.docx.TableRow({
@@ -425,9 +465,8 @@
                     finalFileName = `IP_Report_${ip}_Subnet${cidr}.docx`;
                 }
 
-                if (typeof addToHistory === 'function') {
-                    const historyId = await addToHistory('IP Calculator', finalFileName, finalBlob);
-                    window.location.href = `../go.html?id=${historyId}`;
+                if (typeof processRedirect === 'function') {
+                    await processRedirect('IP Calculator', finalFileName, finalBlob);
                 } else {
                     saveFile(URL.createObjectURL(finalBlob), finalFileName);
                 }
@@ -440,9 +479,7 @@
         }
     </script>
 
-    <!-- ========================================== -->
-    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
-    <!-- ========================================== -->
+    <!-- INTERNAL LINKING -->
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
@@ -480,9 +517,7 @@
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CONTACT & BUG REPORT CTA                   -->
-    <!-- ========================================== -->
+    <!-- CONTACT CTA -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
@@ -505,9 +540,7 @@
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
-    <!-- ========================================== -->
+    <!-- SEO YAPPING MAX PRO -->
     <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             

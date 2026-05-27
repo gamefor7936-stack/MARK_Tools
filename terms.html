@@ -1,38 +1,83 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>Terms of Service — MARK_Tools</title>
+    <meta name="description" content="Terms of Service and End User License Agreement for using MARK_Tools utility suite.">
     <link rel="icon" type="image/png" href="favicon.png">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0b1120', darkCard: '#0f172a', darkBorder: '#1e293b' } } } }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 p-6 md:p-20">
-    <div class="max-w-4xl mx-auto bg-white p-8 md:p-16 rounded-[3rem] shadow-sm border border-slate-200">
-        <h1 class="text-4xl font-black text-slate-900 mb-4 tracking-tight">Terms of Service</h1>
-        <p class="text-slate-400 text-sm mb-12">Last Updated: May 2026</p>
+<body class="bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col">
 
-        <section class="space-y-8 text-sm text-slate-600 leading-relaxed">
-            <div>
-                <h2 class="text-xl font-bold text-slate-800 mb-3 uppercase tracking-widest text-[10px]">1. Usage Agreement</h2>
-                <p>By using MARK_Tools, you agree to comply with all applicable local and international laws. Our services are provided "as-is" for personal and professional utility tasks.</p>
-            </div>
+    <nav class="bg-white/80 dark:bg-darkCard/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-4xl">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md"><span class="text-white font-black text-sm">M</span></div>
+                <h1 class="text-xl font-black tracking-tighter dark:text-white">MARK<span class="text-blue-600">_Tools</span></h1>
+            </a>
+            <a href="index.html" class="text-xs font-bold text-slate-500 hover:text-blue-600 transition uppercase tracking-widest">← Back to Home</a>
+        </div>
+    </nav>
 
-            <div>
-                <h2 class="text-xl font-bold text-slate-800 mb-3 uppercase tracking-widest text-[10px]">2. No Warranty (Disclaimer)</h2>
-                <p>While we strive for 100% accuracy in our <strong>IP Subnet Calculators</strong>, <strong>Invoice Generators</strong>, and <strong>PDF Converters</strong>, we cannot guarantee the absence of errors. MARK_Tools is not responsible for any financial loss, data corruption, or business interruption resulting from the use of our tools.</p>
-            </div>
+    <main class="container mx-auto px-4 py-16 max-w-4xl flex-grow">
+        <div class="bg-white dark:bg-darkCard p-8 md:p-14 rounded-[2rem] shadow-xl border border-slate-200 dark:border-darkBorder leading-relaxed">
+            <h1 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Terms of Service</h1>
+            <p class="text-slate-400 text-sm mb-10 font-mono">Last Updated: May 2026</p>
 
-            <div>
-                <h2 class="text-xl font-bold text-slate-800 mb-3 uppercase tracking-widest text-[10px]">3. Prohibited Use</h2>
-                <p>You may not use our platform to process illegal, copyrighted (without permission), or malicious content. Automated scraping of our tools or bypassing our ad-bridge (go.html) is strictly prohibited.</p>
-            </div>
+            <section class="space-y-10 text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">1. Acceptance of Terms</h2>
+                    <p>By accessing the website at <a href="https://marktoolbox.com" class="text-blue-500 hover:underline">https://marktoolbox.com</a>, you are agreeing to be bound by these terms of service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws. If you do not agree with any of these terms, you are prohibited from using or accessing this site.</p>
+                </div>
 
-            <div>
-                <h2 class="text-xl font-bold text-slate-800 mb-3 uppercase tracking-widest text-[10px]">4. Intellectual Property</h2>
-                <p>The code, UI design, and brand "MARK_Tools" are protected by copyright laws. You may use our tools freely, but you may not duplicate our software for commercial resale without written consent.</p>
-            </div>
-        </section>
-    </div>
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">2. Use License & Restrictions</h2>
+                    <p class="mb-3">Permission is granted to temporarily use the materials and web tools on MARK_Tools' website for personal, commercial, and professional transitory viewing and processing only. This is the grant of a license, not a transfer of title, and under this license you may not:</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li>Modify, reverse engineer, or copy the underlying JavaScript code or algorithms.</li>
+                        <li>Use the materials for any commercial software resale, or public display (commercial or non-commercial) without attributing MARK_Tools.</li>
+                        <li>Attempt to decompile or extract the source code contained on the MARK_Tools website.</li>
+                        <li>Use automated bots, spiders, or scrapers to access or manipulate the web tools.</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">3. Disclaimer of Warranties</h2>
+                    <p>The materials and tools on MARK_Tools' website are provided on an 'as is' basis. MARK_Tools makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property. Furthermore, while we strive for 100% accuracy in our <strong>IP Subnet Calculators</strong>, <strong>Universal Converters</strong>, and <strong>Financial Invoice Generators</strong>, MARK_Tools does not warrant or make any representations concerning the absolute mathematical accuracy or reliability of the use of the materials on its website.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">4. Limitations of Liability</h2>
+                    <p>In no event shall MARK_Tools or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the tools on MARK_Tools' website, even if MARK_Tools or a MARK_Tools authorized representative has been notified orally or in writing of the possibility of such damage. This includes damages resulting from inaccurate IP subnets deployed in production environments or incorrectly formatted legal PDF documents.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">5. Accuracy of Materials</h2>
+                    <p>The materials appearing on MARK_Tools' website could include technical, typographical, or photographic errors. MARK_Tools does not warrant that any of the materials on its website are accurate, complete or current. MARK_Tools may make changes to the materials contained on its website at any time without notice.</p>
+                </div>
+
+                <div>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">6. Modifications to Terms of Service</h2>
+                    <p>MARK_Tools may revise these terms of service for its website at any time without notice. By using this website you are agreeing to be bound by the then current version of these terms of service.</p>
+                </div>
+
+            </section>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-500 py-10 text-center text-xs font-mono">
+        <p>&copy; 2024-2026 MARK_Tools.</p>
+    </footer>
 </body>
 </html>
