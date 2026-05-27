@@ -11,7 +11,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="../js/main.js"></script>
-    <script src="../js/history.js"></script>
+    <script src="../js/history.js?v=2.0"></script>
 
     <script>
         tailwind.config = { 
@@ -186,6 +186,7 @@
             document.getElementById('icoSettings').classList.toggle('hidden', format !== 'image/x-icon');
         }
 
+        // --- HANYA ADA 1 FUNGSI START CONVERSION SEKARANG ---
         async function startConversion() {
             const btn = document.getElementById('btnConvert');
             const targetFormat = document.getElementById('targetFormat').value;
@@ -197,73 +198,14 @@
             try {
                 const zip = new JSZip();
                 
-                for (let item of fileQueue) {
-                    let blob;
-                    if (ext === 'ico') {
-                        // LOGIK KHUSUS ICO MULTI-SIZE
-                        blob = await generateIcoBlob(item.dataUrl);
-                    } else {
-                        // LOGIK STANDAR (Canvas)
-                        blob = await convertWithCanvas(item.dataUrl, targetFormat);
-                    }
-                    
-                    const fileName = item.file.name.split('.')[0] + "." + ext;
-                    zip.file(fileName, blob);
-                }
-
-                const zipContent = await zip.generateAsync({ type: "blob" });
-                const finalFileName = `Converted_Images_${Date.now()}.zip`;
-
-                if (typeof processRedirect === 'function') {
-                    await processDirectDownload('Image Converter', finalFileName, zipContent);
-                }
-
-            } catch (error) {
-                console.error(error);
-                alert("Conversion failed.");
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `Convert (<span id="queueCount">${fileQueue.length}</span>) Files`;
-            }
-        }
-
-        function convertWithCanvas(dataUrl, format) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0);
-                    canvas.toBlob(resolve, format, 0.9);
-                };
-                img.src = dataUrl;
-            });
-        }
-
-        async function startConversion() {
-            const btn = document.getElementById('btnConvert');
-            const targetFormat = document.getElementById('targetFormat').value;
-            const ext = targetFormat === 'image/x-icon' ? 'ico' : targetFormat.split('/')[1];
-            
-            btn.disabled = true;
-            btn.innerText = "Processing...";
-
-            try {
-                const zip = new JSZip();
-                
-                // Ambil ukuran ICO yang dicentang
                 const sizes = Array.from(document.querySelectorAll('.ico-size:checked')).map(cb => parseInt(cb.value));
-                if (sizes.length === 0) sizes.push(256); // Default jika kosong
+                if (sizes.length === 0) sizes.push(256);
 
                 for (let item of fileQueue) {
                     let blob;
                     if (ext === 'ico') {
-                        // MENGGUNAKAN TRUE BINARY ICO GENERATOR
                         blob = await generateTrueIcoBlob(item.dataUrl, sizes);
                     } else {
-                        // LOGIK STANDAR (Canvas)
                         blob = await convertWithCanvas(item.dataUrl, targetFormat);
                     }
                     
@@ -274,8 +216,18 @@
                 const zipContent = await zip.generateAsync({ type: "blob" });
                 const finalFileName = `Converted_Images_${Date.now()}.zip`;
 
-                if (typeof processRedirect === 'function') {
+                // PERBAIKAN FATAL: Memanggil fungsi direct download dengan benar
+                if (typeof processDirectDownload === 'function') {
                     await processDirectDownload('Image Converter', finalFileName, zipContent);
+                } else {
+                    // Fallback Anti-Gagal jika file history.js telat dimuat
+                    const url = URL.createObjectURL(zipContent);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = finalFileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
                 }
 
             } catch (error) {
@@ -302,19 +254,14 @@
             });
         }
 
-        // --- TRUE BINARY ICO GENERATOR ---
-        // Menyusun file ICO resmi standar Win32 C# / .NET
         async function generateTrueIcoBlob(dataUrl, sizes) {
-            const pngBuffers =[];
-            
-            // 1. Buat gambar PNG untuk setiap ukuran yang dipilih
+            const pngBuffers = [];
             for (let size of sizes) {
                 const blob = await resizeToPngBlob(dataUrl, size);
                 const buffer = await blob.arrayBuffer();
                 pngBuffers.push({ size: size, buffer: buffer });
             }
 
-            // 2. Kalkulasi ukuran file biner
             const numImages = pngBuffers.length;
             const headerSize = 6;
             const dirSize = 16 * numImages;
@@ -322,39 +269,32 @@
             pngBuffers.forEach(img => totalDataSize += img.buffer.byteLength);
 
             const totalFileSize = headerSize + dirSize + totalDataSize;
-            
-            // 3. Siapkan Memory Buffer
             const outBuffer = new ArrayBuffer(totalFileSize);
             const view = new DataView(outBuffer);
             const uint8Array = new Uint8Array(outBuffer);
 
-            // 4. Tulis ICONDIR (Header Resmi Win32)
-            view.setUint16(0, 0, true); // Reserved (selalu 0)
-            view.setUint16(2, 1, true); // Tipe (1 = ICO)
-            view.setUint16(4, numImages, true); // Jumlah gambar di dalam file
+            view.setUint16(0, 0, true); 
+            view.setUint16(2, 1, true); 
+            view.setUint16(4, numImages, true); 
 
-            // 5. Tulis ICONDIRENTRY (Direktori) & Masukkan Data Gambar
             let dirOffset = headerSize;
             let dataOffset = headerSize + dirSize;
 
             for (let i = 0; i < numImages; i++) {
                 const img = pngBuffers[i];
-                // Aturan Win32: Jika ukuran >= 256, tulis 0 di header
                 const width = img.size >= 256 ? 0 : img.size;
                 const height = img.size >= 256 ? 0 : img.size;
                 const sizeBytes = img.buffer.byteLength;
 
-                // Direktori Header per ukuran
-                view.setUint8(dirOffset + 0, width);        // Width
-                view.setUint8(dirOffset + 1, height);       // Height
-                view.setUint8(dirOffset + 2, 0);            // Color count (0 = true color)
-                view.setUint8(dirOffset + 3, 0);            // Reserved
-                view.setUint16(dirOffset + 4, 1, true);     // Color planes
-                view.setUint16(dirOffset + 6, 32, true);    // Bits per pixel (32-bit RGBA)
-                view.setUint32(dirOffset + 8, sizeBytes, true); // Ukuran data byte gambar
-                view.setUint32(dirOffset + 12, dataOffset, true); // Offset mulai data
+                view.setUint8(dirOffset + 0, width);        
+                view.setUint8(dirOffset + 1, height);       
+                view.setUint8(dirOffset + 2, 0);            
+                view.setUint8(dirOffset + 3, 0);            
+                view.setUint16(dirOffset + 4, 1, true);     
+                view.setUint16(dirOffset + 6, 32, true);    
+                view.setUint32(dirOffset + 8, sizeBytes, true); 
+                view.setUint32(dirOffset + 12, dataOffset, true); 
 
-                // Masukkan biner PNG murni ke dalam kontainer ICO
                 uint8Array.set(new Uint8Array(img.buffer), dataOffset);
 
                 dirOffset += 16;
@@ -364,7 +304,6 @@
             return new Blob([outBuffer], { type: 'image/x-icon' });
         }
 
-        // Helper crop tengah
         function resizeToPngBlob(dataUrl, size) {
             return new Promise((resolve) => {
                 const img = new Image();
@@ -373,13 +312,10 @@
                     canvas.width = size;
                     canvas.height = size;
                     const ctx = canvas.getContext('2d');
-                    
-                    // Auto-crop tengah (Square)
                     const s = Math.min(img.width, img.height);
                     const x = (img.width - s) / 2;
                     const y = (img.height - s) / 2;
                     ctx.drawImage(img, x, y, s, s, 0, 0, size, size);
-                    
                     canvas.toBlob(resolve, 'image/png');
                 };
                 img.src = dataUrl;
