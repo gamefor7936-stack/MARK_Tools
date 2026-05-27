@@ -369,7 +369,7 @@
 
                 const pdfBytes = await originalPdfDoc.save();
                 const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-                await processRedirect('Watermark Pro', `Watermarked_${Date.now()}.pdf`, blob);
+                await processDirectDownload('Watermark Pro', `Watermarked_${Date.now()}.pdf`, blob);
 
             } catch (e) { console.error(e); alert("Failed."); }
             finally { btn.innerText = "Apply & Download"; btn.disabled = false; }

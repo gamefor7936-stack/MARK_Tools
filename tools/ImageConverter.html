@@ -215,7 +215,7 @@
                 const finalFileName = `Converted_Images_${Date.now()}.zip`;
 
                 if (typeof processRedirect === 'function') {
-                    await processRedirect('Image Converter', finalFileName, zipContent);
+                    await processDirectDownload('Image Converter', finalFileName, zipContent);
                 }
 
             } catch (error) {
@@ -275,7 +275,7 @@
                 const finalFileName = `Converted_Images_${Date.now()}.zip`;
 
                 if (typeof processRedirect === 'function') {
-                    await processRedirect('Image Converter', finalFileName, zipContent);
+                    await processDirectDownload('Image Converter', finalFileName, zipContent);
                 }
 
             } catch (error) {

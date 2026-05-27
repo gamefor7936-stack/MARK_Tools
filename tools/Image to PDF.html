@@ -276,7 +276,7 @@
             const fileName = `MARK_Compiled_${Date.now().toString().slice(-4)}.pdf`;
 
             if (typeof processRedirect === 'function') {
-                await processRedirect('Image to PDF', fileName, blob);
+                await processDirectDownload('Image to PDF', fileName, blob);
             } else {
                 saveFile(URL.createObjectURL(blob), fileName);
             }

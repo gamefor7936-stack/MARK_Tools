@@ -466,7 +466,7 @@
                 }
 
                 if (typeof processRedirect === 'function') {
-                    await processRedirect('IP Calculator', finalFileName, finalBlob);
+                    await processDirectDownload('IP Calculator', finalFileName, finalBlob);
                 } else {
                     saveFile(URL.createObjectURL(finalBlob), finalFileName);
                 }

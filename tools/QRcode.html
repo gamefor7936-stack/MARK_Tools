@@ -203,7 +203,7 @@
             const blob = await response.blob();
 
             if (typeof processRedirect === 'function') {
-                await processRedirect('QR Code Generator', fileName, blob);
+                await processDirectDownload('QR Code Generator', fileName, blob);
             } else {
                 saveFile(URL.createObjectURL(blob), fileName);
             }

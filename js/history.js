@@ -115,9 +115,44 @@ async function downloadFromHistory(id) {
     }
 }
 
-// 5. PROCESS REDIRECT BYPASS (Menggagalkan perintah dari tools yang pakai fungsi ini)
-async function processRedirect(toolName, fileName, fileBlob) {
-    let cleanName = fileName.replace(/[\\/:*?"<>|]/g, "_").replace(/\s+/g, "_");
-    // addToHistory sekarang otomatis mendownload, jadi tidak perlu script tambahan
-    await addToHistory(toolName, cleanName, fileBlob);
+// --- NEW: DIRECT DOWNLOAD LOGIC ---
+async function processDirectDownload(toolName, fileName, fileBlob) {
+    try {
+        // 1. Tetap simpan ke Histori (Agar user tetap loyal)
+        // Kita paksa statusnya langsung UNLOCKED (true)
+        if (typeof addToHistory === 'function') {
+            const db = await openDB();
+            const transaction = db.transaction("history", "readwrite");
+            const store = transaction.objectStore("history");
+            
+            await store.add({
+                tool: toolName,
+                name: fileName,
+                data: fileBlob,
+                date: new Date().toLocaleString('en-US'),
+                isUnlocked: true // Langsung terbuka
+            });
+            renderHistoryUI(toolName);
+        }
+
+        // 2. TRIGGER DOWNLOAD LANGSUNG
+        const url = window.URL.createObjectURL(fileBlob);
+        const link = document.body.appendChild(document.createElement('a'));
+        link.href = url;
+        link.download = fileName;
+        link.click();
+        
+        // Bersihkan
+        setTimeout(() => {
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        }, 500);
+
+    } catch (e) {
+        console.error("Download Error:", e);
+        // Fallback jika sistem histori gagal
+        const url = URL.createObjectURL(fileBlob);
+        const a = document.createElement('a');
+        a.href = url; a.download = fileName; a.click();
+    }
 }
