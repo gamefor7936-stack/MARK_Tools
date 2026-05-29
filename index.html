@@ -124,36 +124,46 @@
 
     <main class="container mx-auto px-4 py-16 max-w-7xl">
         <!-- ========================================== -->
-        <!-- FEATURED APP BANNER (MARKSNIP)             -->
+        <!-- FEATURED APP BANNER (MARKSNIP v1.1.1)      -->
         <!-- ========================================== -->
         <div class="mb-14 relative z-20">
-            <a href="MarkSnip.html" class="group block relative bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-3xl p-6 md:p-8 overflow-hidden shadow-sm hover:shadow-xl hover:border-cyan-500/40 dark:hover:border-cyan-500/40 transition-all duration-300">
+            <a href="marksnip.html" class="group block relative bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-3xl p-6 md:p-8 overflow-hidden shadow-sm hover:shadow-xl hover:border-cyan-500/50 dark:hover:border-cyan-500/50 transition-all duration-300">
                 
-                <!-- Ornamen Latar Belakang Subtle (Tidak Norak) -->
+                <!-- Ornamen Latar Belakang -->
                 <div class="absolute -right-20 -top-20 w-64 h-64 bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/10 dark:group-hover:bg-cyan-500/20 transition-colors duration-500"></div>
 
                 <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     
                     <!-- Kiri: Ikon & Informasi Aplikasi -->
                     <div class="flex items-center gap-5">
-                        <!-- Placeholder Ikon Aplikasi (Outer Border Gradient) -->
-                        <div class="w-14 h-14 md:w-16 md:h-16 shrink-0 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl p-0.5 shadow-md group-hover:scale-105 transition-transform duration-300">
-                            <!-- Inner Container untuk Ikon -->
+                        <!-- Ikon Aplikasi -->
+                        <div class="w-14 h-14 md:w-16 md:h-16 shrink-0 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl p-0.5 shadow-md group-hover:scale-105 transition-transform duration-300">
                             <div class="w-full h-full bg-white dark:bg-[#0f172a] rounded-[14px] flex items-center justify-center overflow-hidden relative">
-                                
-                                <!-- GANTI ATRIBUT SRC DI BAWAH INI DENGAN LOGO APLIKASI ANDA (.png / .svg) -->
-                                <img src="image/T.png" alt="MarkSnip Logo" class="w-full h-full object-cover">
-                                
+                                <!-- PASTIKAN SRC GAMBAR LOGO ANDA BENAR DI SINI -->
+                                <img src="image/marksnip-logo.png" alt="MarkSnip Logo" class="w-full h-full object-cover">
                             </div>
                         </div>
                         
                         <div>
-                            <div class="flex items-center gap-3 mb-1.5">
+                            <!-- Header Bar (Tags) -->
+                            <div class="flex items-center gap-2 mb-2 flex-wrap">
                                 <h3 class="text-lg md:text-xl font-black text-slate-800 dark:text-white tracking-tight">Mark<span class="text-cyan-600 dark:text-cyan-400">Snip</span></h3>
-                                <span class="bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/20 px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest">Windows App</span>
+                                
+                                <!-- NEW UPDATE BADGE -->
+                                <span class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-2 py-0.5 rounded text-[9px] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-lg shadow-cyan-900/30">
+                                    <span class="relative flex h-1.5 w-1.5">
+                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                                        <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
+                                    </span>
+                                    v1.1.1 Update
+                                </span>
+                                
+                                <span class="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest hidden sm:block">Windows App</span>
                             </div>
+                            
+                            <!-- Updated Description -->
                             <p class="text-xs md:text-sm text-slate-500 dark:text-slate-400 leading-relaxed max-w-2xl">
-                                The ultimate offline OCR & snipping tool. Extract text, scan QR codes, and annotate your screen instantly without the cloud.
+                                The ultimate offline OCR & snipping tool. Now featuring <strong class="text-slate-700 dark:text-slate-200">Stealth Capture for Games</strong> and a <strong class="text-slate-700 dark:text-slate-200">Smart Adaptive Toolbar</strong>. Extract text and scan QR codes instantly.
                             </p>
                         </div>
                     </div>
