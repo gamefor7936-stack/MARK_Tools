@@ -3,151 +3,292 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SEO Word Counter & Keyword Density - Optimize Your Content</title>
-    <meta name="description" content="Advanced SEO Word Counter. Analyze your article's keyword density, character count, and reading time to optimize your content for search engines.">
+    <title>Free SEO Word Counter & 1-3 Word Keyword Density Analyzer | MARK_Tools</title>
+    <meta name="description" content="Analyze your text with our Privacy-first SEO Word Counter. Calculate 1-3 word keyword density, check Flesch Reading Ease, detect keyword stuffing, and drag & drop text files instantly.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
 
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/history.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
         .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        .term-input { background: #0f172a; border: 1px solid #334155; color: #10b981; transition: all 0.3s; }
-        .term-input:focus { border-color: #10b981; outline: none; }
+        .term-input { background: #0f172a; border: 1px solid #334155; color: #e2e8f0; transition: all 0.3s; line-height: 1.7; }
+        .term-input:focus { border-color: #10b981; outline: none; box-shadow: 0 0 15px rgba(16, 185, 129, 0.15); }
+        
+        textarea::-webkit-scrollbar { width: 8px; }
+        textarea::-webkit-scrollbar-track { background: #0f172a; border-radius: 8px; }
+        textarea::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
+        textarea::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        .drag-active { border-color: #10b981 !important; background-color: rgba(16, 185, 129, 0.05) !important; }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
      crossorigin="anonymous"></script>
 </head>
 <body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
 
+    <!-- Navbar -->
     <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
         <div class="container mx-auto px-6 h-16 flex justify-between items-center">
-            <a href="/" class="text-emerald-500 font-black text-xl tracking-tighter">MARK_Tools | SEO</a>
-            <a href="/" class="text-xs font-bold text-slate-400 hover:text-emerald-400">BACK TO HOME</a>
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-emerald-500 font-black text-xl tracking-tighter hover:opacity-80 transition">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">SEO & Copywriting</span>
+            </div>
+            <a href="/" class="text-xs font-bold text-slate-400 hover:text-emerald-400 transition">BACK TO HOME</a>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6">
+    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6 max-w-7xl">
         
         <!-- LEFT COLUMN: INPUT TEXTAREA -->
         <div class="w-full lg:w-3/5 flex flex-col gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-emerald-500/20 text-emerald-400 rounded-lg flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-2xl flex items-center justify-center shadow-lg">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-black text-white tracking-tight">SEO Text Analyzer</h1>
+                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-0.5">Word Count & Density Optimizer</p>
+                    </div>
                 </div>
-                <div>
-                    <h1 class="text-lg font-bold text-white">SEO Text Analyzer</h1>
-                    <p class="text-[10px] text-slate-400 uppercase tracking-widest">Word Count & Density</p>
-                </div>
+                <button onclick="clearText()" class="text-xs font-bold text-slate-500 hover:text-red-400 transition flex items-center gap-1 bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg> Clear
+                </button>
             </div>
 
-            <textarea id="textInput" class="w-full flex-grow min-h-[400px] p-6 rounded-3xl term-input text-sm leading-relaxed" placeholder="Paste your article or text here to analyze..." oninput="analyzeText()"></textarea>
+            <!-- Drag Zone Textarea -->
+            <div class="relative flex-grow flex flex-col" id="dropZone">
+                <textarea id="textInput" class="w-full flex-grow min-h-[400px] lg:min-h-[500px] p-6 rounded-3xl term-input text-sm shadow-inner" placeholder="Paste your article here to analyze keyword density, or drag and drop a .txt/.md file directly..." oninput="analyzeText()"></textarea>
+                <div class="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur text-emerald-400 border border-slate-700 px-3 py-1 rounded-lg text-[10px] font-mono font-bold tracking-widest shadow-lg">SAFE LOCAL ENVIRONMENT</div>
+            </div>
             
             <div class="flex gap-2">
-                <button onclick="document.getElementById('textInput').value=''; analyzeText();" class="px-6 py-3 bg-slate-800 text-slate-400 rounded-xl text-xs font-bold hover:bg-slate-700 transition">Clear Text</button>
-                <button onclick="copyContent()" class="px-6 py-3 bg-emerald-600 text-white rounded-xl text-xs font-bold hover:bg-emerald-500 transition shadow-lg ml-auto">Copy Text</button>
+                <button onclick="copyContent()" id="btnCopy" class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition flex items-center gap-2 border border-slate-700 ml-auto">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    Copy Text
+                </button>
             </div>
         </div>
 
-        <!-- RIGHT COLUMN: STATISTICS -->
-        <div class="w-full lg:w-2/5 glass-dark rounded-3xl p-6 flex flex-col border-t-4 border-t-emerald-500">
+        <!-- RIGHT COLUMN: STATISTICS & DENSITY -->
+        <div class="w-full lg:w-2/5 flex flex-col gap-6 shrink-0">
             
-            <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Basic Metrics</h3>
+            <!-- Basic Metrics & Flesch -->
+            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-emerald-500 shadow-2xl">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Semantic Analytics</h3>
 
-            <div class="grid grid-cols-2 gap-4 mb-8 text-center">
-                <div class="bg-[#020617] p-4 rounded-2xl border border-slate-800">
-                    <p class="text-3xl font-black text-emerald-400" id="statWords">0</p>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Words</p>
+                <!-- Grid Stats -->
+                <div class="grid grid-cols-2 gap-3 mb-6 text-center">
+                    <div class="bg-[#020617] p-3.5 rounded-xl border border-slate-800">
+                        <p class="text-2xl font-black text-emerald-400 font-mono" id="statWords">0</p>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Words</p>
+                    </div>
+                    <div class="bg-[#020617] p-3.5 rounded-xl border border-slate-800">
+                        <p class="text-2xl font-black text-white font-mono" id="statChars">0</p>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Characters</p>
+                    </div>
+                    <div class="bg-[#020617] p-3.5 rounded-xl border border-slate-800">
+                        <p class="text-2xl font-black text-white font-mono" id="statSentences">0</p>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Sentences</p>
+                    </div>
+                    <div class="bg-[#020617] p-3.5 rounded-xl border border-slate-800">
+                        <p class="text-2xl font-black text-emerald-400 font-mono" id="statReadTime">0m</p>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest mt-0.5">Read Time</p>
+                    </div>
                 </div>
-                <div class="bg-[#020617] p-4 rounded-2xl border border-slate-800">
-                    <p class="text-3xl font-black text-white" id="statChars">0</p>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Characters</p>
-                </div>
-                <div class="bg-[#020617] p-4 rounded-2xl border border-slate-800">
-                    <p class="text-3xl font-black text-white" id="statSentences">0</p>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Sentences</p>
-                </div>
-                <div class="bg-[#020617] p-4 rounded-2xl border border-slate-800">
-                    <p class="text-3xl font-black text-emerald-400" id="statReadTime">0m</p>
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">Reading Time</p>
+
+                <!-- Flesch Readability Score -->
+                <div class="bg-[#020617] p-4 rounded-xl border border-slate-800 flex justify-between items-center shadow-inner">
+                    <div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Flesch Reading Ease</p>
+                        <p id="fleschGrade" class="text-xs text-slate-400 font-bold mt-1">Awaiting text analysis...</p>
+                    </div>
+                    <div class="text-right">
+                        <p id="fleschScore" class="text-3xl font-black text-white font-mono">0.0</p>
+                    </div>
                 </div>
             </div>
 
-            <div class="flex justify-between items-end border-b border-slate-700 pb-4 mb-4 mt-4">
-                <h3 class="text-xl font-bold text-white">Keyword Density</h3>
-                <span class="text-[10px] font-bold text-slate-500 uppercase">Top 10 Words</span>
-            </div>
+            <!-- Keyword Density (Interactive Tabs) -->
+            <div class="glass-dark p-6 rounded-3xl border border-slate-800 shadow-2xl flex-grow flex flex-col min-h-[350px]">
+                <div class="flex flex-col md:flex-row justify-between md:items-end gap-3 mb-4 border-b border-slate-800 pb-3">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">LSI Keyword Density</h3>
+                    
+                    <!-- Tabs 1-word, 2-word, 3-word -->
+                    <div class="flex gap-1.5 bg-[#020617] p-1 rounded-lg border border-slate-800">
+                        <button onclick="switchDensityTab(1)" id="tab1w" class="px-2 py-1 text-[9px] font-bold uppercase rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all">1 Word</button>
+                        <button onclick="switchDensityTab(2)" id="tab2w" class="px-2 py-1 text-[9px] font-bold uppercase rounded-md text-slate-400 hover:text-white transition-all">2 Words</button>
+                        <button onclick="switchDensityTab(3)" id="tab3w" class="px-2 py-1 text-[9px] font-bold uppercase rounded-md text-slate-400 hover:text-white transition-all">3 Words</button>
+                    </div>
+                </div>
 
-            <!-- Area Density Bar -->
-            <div id="densityList" class="flex-grow overflow-y-auto space-y-3 pr-2">
-                <div class="text-center text-slate-500 text-sm mt-10 italic">Start typing to see keyword density analysis.</div>
+                <!-- Density List rendering area -->
+                <div id="densityList" class="space-y-4 flex-grow overflow-y-auto max-h-[300px] pr-2 scrollbar-thin">
+                    <div class="text-center text-slate-500 text-xs mt-10 italic uppercase tracking-widest">Type text to begin analysis</div>
+                </div>
             </div>
 
         </div>
     </main>
 
     <script>
-        // Stopwords standar (kata yang diabaikan dalam SEO)
-        const stopWords =['the', 'a', 'an', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'as', 'it', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'we', 'they', 'yang', 'di', 'ke', 'dari', 'dan', 'atau', 'ini', 'itu', 'adalah', 'untuk', 'dengan', 'pada', 'akan'];
+        // Stopwords standard (English & Indonesian Combined)
+        const stopWords = ['the', 'a', 'an', 'and', 'or', 'but', 'is', 'are', 'was', 'were', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'as', 'it', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'we', 'they', 'them', 'yang', 'di', 'ke', 'dari', 'dan', 'atau', 'ini', 'itu', 'adalah', 'untuk', 'dengan', 'pada', 'akan', 'bisa', 'ada', 'telah', 'saya', 'kami', 'kita', 'mereka'];
+
+        let activeNgram = 1; // 1-word, 2-word, or 3-word phrase
+
+        window.onload = () => {
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('SEO Analyzer');
+            setupDragAndDrop();
+        };
+
+        function clearText() {
+            document.getElementById('textInput').value = '';
+            analyzeText();
+        }
+
+        function switchDensityTab(n) {
+            activeNgram = n;
+            ['1w', '2w', '3w'].forEach(id => {
+                document.getElementById('tab' + id).className = "px-2 py-1 text-[9px] font-bold uppercase rounded-md text-slate-400 hover:text-white transition-all";
+            });
+            document.getElementById('tab' + n + 'w').className = "px-2 py-1 text-[9px] font-bold uppercase rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all";
+            analyzeText();
+        }
+
+        // Syllable Counter Heuristic for Readability Index
+        function countSyllables(word) {
+            word = word.toLowerCase().trim();
+            if (word.length <= 3) return 1;
+            word = word.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '');
+            word = word.replace(/^y/, '');
+            const matches = word.match(/[aeiouy]{1,2}/g);
+            return matches ? matches.length : 1;
+        }
 
         function analyzeText() {
             const text = document.getElementById('textInput').value;
+            const wordsArray = text.trim() === '' ? [] : text.trim().split(/\s+/);
             
-            // Basic Metrics
-            const chars = text.length;
-            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
-            const sentences = text.trim() === '' ? 0 : text.split(/[.!?]+/).filter(Boolean).length;
-            const readTime = Math.ceil(words / 200); // Avg reading speed: 200 wpm
+            const wordsCount = wordsArray.length;
+            const charsCount = text.length;
+            const sentencesCount = text.trim() === '' ? 0 : text.split(/[.!?]+/).filter(Boolean).length;
+            const readTime = Math.ceil(wordsCount / 200);
 
-            document.getElementById('statChars').innerText = chars.toLocaleString();
-            document.getElementById('statWords').innerText = words.toLocaleString();
-            document.getElementById('statSentences').innerText = sentences.toLocaleString();
-            document.getElementById('statReadTime').innerText = readTime + "m";
+            document.getElementById('statChars').innerText = charsCount.toLocaleString();
+            document.getElementById('statWords').innerText = wordsCount.toLocaleString();
+            document.getElementById('statSentences').innerText = sentencesCount.toLocaleString();
+            document.getElementById('statReadTime').innerText = wordsCount > 0 ? readTime + "m" : "0m";
+
+            // Flesch Reading Ease Calculation
+            if (wordsCount > 0 && sentencesCount > 0) {
+                let totalSyllables = 0;
+                wordsArray.forEach(w => {
+                    let clean = w.replace(/[^a-zA-Z]/g, '');
+                    if (clean) totalSyllables += countSyllables(clean);
+                });
+
+                let score = 206.835 - (1.015 * (wordsCount / sentencesCount)) - (84.6 * (totalSyllables / wordsCount));
+                score = Math.max(0, Math.min(100, score));
+
+                document.getElementById('fleschScore').innerText = score.toFixed(1);
+
+                // Output Difficulty Description
+                let grade = "Standard (Easy to Read)";
+                let gradeClass = "text-emerald-400";
+                if(score > 90) { grade = "Very Easy (5th Grade)"; }
+                else if(score > 80) { grade = "Easy (6th Grade)"; }
+                else if(score > 70) { grade = "Fairly Easy (7th Grade)"; }
+                else if(score > 60) { grade = "Standard (8th Grade)"; }
+                else if(score > 50) { grade = "Fairly Difficult"; gradeClass = "text-yellow-500"; }
+                else if(score > 30) { grade = "Difficult (College)"; gradeClass = "text-orange-500"; }
+                else { grade = "Very Difficult (Academic)"; gradeClass = "text-red-500"; }
+
+                const displayGrade = document.getElementById('fleschGrade');
+                displayGrade.innerText = grade;
+                displayGrade.className = `text-xs font-bold mt-1 ${gradeClass}`;
+            } else {
+                document.getElementById('fleschScore').innerText = "0.0";
+                document.getElementById('fleschGrade').innerText = "Awaiting text analysis...";
+                document.getElementById('fleschGrade').className = "text-xs text-slate-400 font-bold mt-1";
+            }
 
             // Keyword Density Logic
-            if (words === 0) {
-                document.getElementById('densityList').innerHTML = '<div class="text-center text-slate-500 text-sm mt-10 italic">Start typing to see keyword density analysis.</div>';
+            const densityContainer = document.getElementById('densityList');
+            if (wordsCount === 0) {
+                densityContainer.innerHTML = '<div class="text-center text-slate-500 text-xs mt-10 italic uppercase tracking-widest">Type text to begin analysis</div>';
                 return;
             }
 
-            // Clean text from punctuation & make lowercase
             const cleanText = text.toLowerCase().replace(/[^\w\s\u00C0-\u017F]/g, '');
-            const wordList = cleanText.split(/\s+/).filter(w => w.length > 2 && !stopWords.includes(w));
-            
-            // Hitung frekuensi kata
-            const wordCounts = {};
-            wordList.forEach(w => {
-                wordCounts[w] = (wordCounts[w] || 0) + 1;
-            });
+            const parsedWords = cleanText.split(/\s+/).filter(w => w.length > 2);
+            const filteredWords = parsedWords.filter(w => !stopWords.includes(w));
 
-            // Sort from most frequent and take Top 10
-            const sortedWords = Object.entries(wordCounts)
+            let phrases = {};
+            let totalPhrasesCount = 0;
+
+            if (activeNgram === 1) {
+                filteredWords.forEach(w => {
+                    phrases[w] = (phrases[w] || 0) + 1;
+                });
+                totalPhrasesCount = filteredWords.length;
+            } else {
+                const n = activeNgram;
+                for (let i = 0; i < parsedWords.length - n + 1; i++) {
+                    const chunk = parsedWords.slice(i, i + n);
+                    if (stopWords.includes(chunk[0]) || stopWords.includes(chunk[n - 1])) continue;
+                    
+                    const phraseStr = chunk.join(' ');
+                    phrases[phraseStr] = (phrases[phraseStr] || 0) + 1;
+                    totalPhrasesCount++;
+                }
+            }
+
+            const sortedPhrases = Object.entries(phrases)
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);
 
-            // Render Progress Bar UI
-            const densityContainer = document.getElementById('densityList');
             densityContainer.innerHTML = "";
 
-            if(sortedWords.length === 0) return;
+            if(sortedPhrases.length === 0) {
+                densityContainer.innerHTML = '<div class="text-center text-slate-500 text-xs mt-10 italic">Not enough phrase context. Continue writing.</div>';
+                return;
+            }
 
-            const maxCount = sortedWords[0][1]; // Untuk hitung persentase bar
+            const maxCount = sortedPhrases[0][1];
 
-            sortedWords.forEach(item => {
-                const word = item[0];
+            sortedPhrases.forEach(item => {
+                const phrase = item[0];
                 const count = item[1];
-                const percent = ((count / wordList.length) * 100).toFixed(1);
+                const percent = ((count / totalPhrasesCount) * 100).toFixed(1);
                 const barWidth = (count / maxCount) * 100;
+
+                // Keyword stuffing warnings (>2.5% density gets flagged)
+                let badgeHtml = '';
+                if (parseFloat(percent) > 2.5) {
+                    badgeHtml = `<span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[8px] font-black uppercase px-2 py-0.5 rounded tracking-wider">Over-Optimized</span>`;
+                } else {
+                    badgeHtml = `<span class="bg-emerald-500/20 text-emerald-400 text-[8px] font-black uppercase px-2 py-0.5 rounded tracking-wider">Optimal</span>`;
+                }
 
                 densityContainer.innerHTML += `
                     <div>
-                        <div class="flex justify-between text-xs font-bold mb-1">
-                            <span class="text-slate-300 capitalize">${word}</span>
-                            <span class="text-emerald-400">${count}x <span class="text-slate-500 font-normal">(${percent}%)</span></span>
+                        <div class="flex justify-between items-center text-xs font-bold mb-1.5">
+                            <span class="text-slate-300 capitalize truncate max-w-[180px] md:max-w-[240px]" title="${phrase}">${phrase}</span>
+                            <div class="flex items-center gap-2">
+                                ${badgeHtml}
+                                <span class="text-emerald-400 font-mono">${count}x <span class="text-slate-500 font-normal">(${percent}%)</span></span>
+                            </div>
                         </div>
                         <div class="w-full bg-[#020617] rounded-full h-1.5 overflow-hidden">
                             <div class="bg-emerald-500 h-1.5 rounded-full" style="width: ${barWidth}%"></div>
@@ -157,11 +298,45 @@
             });
         }
 
-        function copyContent() {
-            const el = document.getElementById('textInput');
-            el.select();
-            navigator.clipboard.writeText(el.value);
-            alert("Text copied successfully!");
+        async function copyContent() {
+            const input = document.getElementById('textInput');
+            if(!input.value) return;
+            const btn = document.getElementById('btnCopy');
+            try {
+                await navigator.clipboard.writeText(input.value);
+                const originalHtml = btn.innerHTML;
+                btn.innerHTML = `<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Copied!`;
+                
+                setTimeout(() => {
+                    btn.innerHTML = originalHtml;
+                }, 2000);
+            } catch (err) {
+                alert('Failed to copy text.');
+            }
+        }
+
+        function setupDragAndDrop() {
+            const textarea = document.getElementById('textInput');
+            
+            textarea.addEventListener('dragover', (e) => { e.preventDefault(); textarea.classList.add('drag-active'); });
+            textarea.addEventListener('dragleave', (e) => { e.preventDefault(); textarea.classList.remove('drag-active'); });
+            textarea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                textarea.classList.remove('drag-active');
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    const file = e.dataTransfer.files[0];
+                    if(file.name.endsWith(".txt") || file.name.endsWith(".md") || file.type.includes("text")) {
+                        const reader = new FileReader();
+                        reader.onload = (event) => {
+                            textarea.value = event.target.result;
+                            analyzeText();
+                        };
+                        reader.readAsText(file);
+                    } else {
+                        alert("Please upload a valid text (.txt) or markdown (.md) file.");
+                    }
+                }
+            });
         }
     </script>
 
@@ -171,7 +346,7 @@
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Other SEO Tools</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Other SEO & Text Tools</h3>
             <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -205,15 +380,13 @@
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CONTACT & BUG REPORT CTA                   -->
-    <!-- ========================================== -->
+    <!-- CONTACT CTA -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
             
             <!-- Ornamen Background Subtle -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+            <div class="absolute -left-20 -top-20 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
             
             <!-- Teks Kiri -->
             <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
@@ -228,8 +401,8 @@
             
             <!-- Tombol Kanan -->
             <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-emerald-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Contact Developer
                 </a>
             </div>
