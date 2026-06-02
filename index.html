@@ -41,13 +41,15 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
         
-        /* Gradient untuk Light Mode */
-        .gradient-bg-light { background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); }
-        /* Gradient untuk Dark Mode */
-        .gradient-bg-dark { background: linear-gradient(135deg, #0b1120 0%, #0f172a 100%); }
-        
-        .bg-grid-pattern { background-image: radial-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px); background-size: 24px 24px; }
-        .bg-grid-pattern-dark { background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); background-size: 24px 24px; }
+        /* Grid Pattern Otomatis Mendeteksi Dark Mode */
+        .bg-grid-pattern { 
+            background-image: radial-gradient(rgba(148, 163, 184, 0.15) 1px, transparent 1px); 
+            background-size: 24px 24px; 
+        }
+        /* Saat kelas .dark aktif di HTML, ubah warna titik grid */
+        .dark .bg-grid-pattern { 
+            background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px); 
+        }
         
         .tool-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
         .category-tab { transition: all 0.2s ease-in-out; }
@@ -94,9 +96,10 @@
         </div>
     </nav>
 
-    <!-- Hero Section (Transisi Warna & Kontras Diperbaiki) -->
-    <header class="gradient-bg-light dark:gradient-bg-dark py-24 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 overflow-hidden relative transition-colors duration-500">
-        <div class="absolute inset-0 bg-grid-pattern dark:bg-grid-pattern-dark opacity-70"></div>
+    <!-- Hero Section (Gradasi Asli Tailwind - Dijamin Anti-Gagal) -->
+    <header class="bg-gradient-to-br from-slate-50 to-slate-100 dark:from-[#0b1120] dark:to-[#0f172a] py-24 text-slate-900 dark:text-white border-b border-slate-200 dark:border-slate-800 overflow-hidden relative transition-colors duration-500">
+        <!-- Grid Pattern -->
+        <div class="absolute inset-0 bg-grid-pattern opacity-70"></div>
         
         <div class="absolute top-0 left-1/4 w-96 h-96 bg-blue-400/10 dark:bg-blue-600/5 rounded-full filter blur-[128px]"></div>
         <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-400/10 dark:bg-purple-600/5 rounded-full filter blur-[128px]"></div>
