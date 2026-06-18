@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Universal Unit Converter | MARK_Tools</title>
-    <meta name="description" content="All-in-one offline Universal Unit Converter. Instantly convert data storage, network speeds, length, weight, time, and temperatures accurately.">
+    <title>Omni Universal Converter | MARK_Tools</title>
+    <meta name="description" content="All-in-one offline Universal Unit Converter. Instantly convert data storage, network speeds, hex/binary systems, time, and engineering metrics accurately.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
@@ -18,137 +18,178 @@
     <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         .font-sans { font-family: 'Inter', sans-serif; }
         
-        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        .term-input { background: #0f172a; border: 1px solid #334155; color: #38bdf8; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
-        .term-input:focus { border-color: #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.2); outline: none; }
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        .term-input { background: #020617; border: 1px solid #334155; color: #14b8a6; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
+        .term-input:focus { border-color: #14b8a6; box-shadow: 0 0 15px rgba(20, 184, 166, 0.2); outline: none; }
         
-        /* Hide arrows on number input */
+        /* Hide arrows on number input for clean UI */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        
+        /* Sidebar Scrollbar */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
+<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col selection:bg-teal-500/30 selection:text-white">
 
     <!-- Navbar -->
-    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+    <nav class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800 shadow-xl shrink-0">
         <div class="container mx-auto px-6 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <a href="/" class="text-blue-400 font-black text-xl tracking-tighter hover:opacity-80 transition">MARK_Tools</a>
+                <a href="/" class="text-teal-500 font-black text-xl tracking-tighter hover:opacity-80 transition">MARK_Tools</a>
                 <span class="text-slate-600">|</span>
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Omnitool Calculator</span>
+                <span class="bg-teal-500/10 border border-teal-500/30 text-teal-400 text-[10px] px-2 py-0.5 rounded-md font-bold tracking-widest hidden sm:inline-block">OMNI CALCULATOR</span>
             </div>
-            <a href="/" class="text-xs font-bold text-slate-400 hover:text-blue-400 transition">BACK TO HOME</a>
+            <a href="/" class="text-[10px] font-bold text-slate-400 hover:text-teal-400 transition uppercase tracking-widest bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">BACK TO HOME</a>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6 max-w-7xl">
+    <main class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-6 flex-grow min-h-0 max-w-7xl">
         
-        <!-- LEFT COLUMN: CATEGORY & SETTINGS -->
-        <div class="w-full lg:w-1/3 flex flex-col gap-6">
+        <!-- LEFT COLUMN: CATEGORY MENU -->
+        <div class="w-full xl:w-72 flex flex-col gap-5 shrink-0 order-2 xl:order-1">
             
-            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-blue-500 shadow-2xl">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-14 h-14 bg-blue-500/10 text-blue-400 border border-blue-500/20 rounded-2xl flex items-center justify-center">
-                        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-black text-white tracking-tight">Universal Converter</h1>
-                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-1">Global Unit Metrics</p>
+            <div class="glass-dark rounded-3xl border-t-4 border-t-teal-500 shadow-2xl flex flex-col overflow-hidden h-[450px] xl:h-auto">
+                <div class="p-6 border-b border-slate-800 bg-[#0f172a]">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-teal-500/10 text-teal-400 border border-teal-500/20 rounded-xl flex items-center justify-center shrink-0">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-black text-white tracking-tight leading-none">Omnitool</h1>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Universal Converter</p>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Select Measurement Type</label>
-                    <div class="grid grid-cols-2 gap-3" id="categoryGrid">
-                        <!-- Buttons Generated by JS -->
-                    </div>
+                <div class="flex-grow overflow-y-auto custom-scroll p-4 space-y-1.5" id="categoryMenu">
+                    <!-- Buttons Generated by JS -->
                 </div>
             </div>
 
             <!-- Export Buttons -->
             <div class="grid grid-cols-2 gap-3">
-                <button onclick="exportReport('pdf')" id="btnExportPdf" class="bg-emerald-600 hover:bg-emerald-500 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-emerald-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
-                    <span class="text-lg">📄</span> Export PDF
+                <button onclick="exportReport('pdf')" id="btnExportPdf" class="bg-slate-800 hover:bg-teal-600 border border-slate-700 hover:border-teal-500 text-slate-300 hover:text-white py-3.5 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    PDF
                 </button>
-                <button onclick="exportReport('word')" id="btnExportWord" class="bg-indigo-600 hover:bg-indigo-500 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-indigo-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
-                    <span class="text-lg">📝</span> Export Word
+                <button onclick="exportReport('word')" id="btnExportWord" class="bg-slate-800 hover:bg-teal-600 border border-slate-700 hover:border-teal-500 text-slate-300 hover:text-white py-3.5 rounded-xl font-black uppercase text-[10px] tracking-widest transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Word
                 </button>
             </div>
-            
-            <div class="glass-dark p-6 rounded-3xl hidden lg:block border border-slate-800">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Conversion History
-                </h4>
-                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+
+            <!-- NORDVPN SIDEBAR BANNER -->
+            <div class="glass-dark border border-slate-800 p-5 rounded-2xl shadow-inner relative overflow-hidden group hidden xl:block mt-2">
+                <div class="absolute -right-10 -top-10 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-colors"></div>
+                <h5 class="text-xs font-black text-teal-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                    </span>
+                    Zero-Trust Privacy
+                </h5>
+                <p class="text-[10px] text-slate-400 leading-relaxed mb-4">
+                    Your engineering calculations are processed locally. Secure your live connection from ISP tracking with <strong>NordVPN</strong>.
+                </p>
+                <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=148983&url_id=902" target="_blank" class="w-full text-center block bg-teal-600/20 hover:bg-teal-600 border border-teal-600/50 hover:border-teal-500 text-teal-400 hover:text-white py-2.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all">
+                    Activate Shield →
+                </a>
             </div>
+
         </div>
 
         <!-- RIGHT COLUMN: CONVERSION WORKSPACE -->
-        <div class="w-full lg:w-2/3 glass-dark rounded-3xl p-6 md:p-12 flex flex-col relative overflow-hidden border border-slate-800 shadow-2xl">
+        <div class="w-full xl:w-[calc(100%-18rem)] flex flex-col gap-5 order-1 xl:order-2">
             
-            <div class="text-center mb-10">
-                <h2 id="activeCategoryTitle" class="text-3xl font-black text-white uppercase tracking-tight">DATA STORAGE</h2>
-                <p id="activeCategoryDesc" class="text-slate-400 text-sm mt-2 font-mono">Memory and file storage units.</p>
-            </div>
-
-            <!-- Interactive Calculator Area -->
-            <div class="bg-[#020617] p-6 md:p-10 rounded-2xl border border-slate-800 relative shadow-inner">
+            <div class="glass-dark rounded-3xl p-6 md:p-10 flex flex-col relative border border-slate-800 shadow-2xl h-full justify-center min-h-[500px]">
                 
-                <!-- Center Swap Button -->
-                <button onclick="swapUnits()" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-blue-900/50 hover:bg-blue-500 transition-all z-10 hover:rotate-180 duration-500 border-4 border-[#020617]" title="Swap Units">
-                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
-                </button>
+                <div class="text-center md:text-left mb-10 pb-6 border-b border-slate-800">
+                    <h2 id="activeCategoryTitle" class="text-2xl md:text-3xl font-black text-white uppercase tracking-tight">DATA STORAGE</h2>
+                    <p id="activeCategoryDesc" class="text-slate-400 text-sm mt-2 font-mono">Memory and file storage units.</p>
+                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-8 relative">
+                <!-- Interactive Calculator Area -->
+                <div class="relative">
                     
-                    <!-- BOX 1 (From) -->
-                    <div class="space-y-4">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">FROM UNIT</label>
-                        <select id="unit1" class="w-full p-4 rounded-xl term-input text-sm appearance-none font-bold" onchange="convert(1)">
-                            <!-- Options JS -->
-                        </select>
-                        <input type="number" id="val1" class="w-full p-4 rounded-xl term-input text-3xl font-black bg-[#0f172a] border-b-2 border-slate-600 focus:border-blue-500 outline-none text-center shadow-inner" value="1" oninput="convert(1)">
+                    <!-- Center Swap Button (Absolute) -->
+                    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 hidden md:block">
+                        <button onclick="swapUnits()" class="w-12 h-12 bg-teal-600 text-white rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(20,184,166,0.3)] hover:bg-teal-500 hover:scale-110 hover:rotate-180 transition-all duration-500 border-4 border-[#0b1120]" title="Swap Units">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                        </button>
                     </div>
 
-                    <!-- BOX 2 (To) -->
-                    <div class="space-y-4 mt-8 md:mt-0">
-                        <label class="block text-[10px] font-bold text-slate-500 uppercase tracking-widest">TO UNIT</label>
-                        <select id="unit2" class="w-full p-4 rounded-xl term-input text-sm appearance-none font-bold" onchange="convert(2)">
-                            <!-- Options JS -->
-                        </select>
-                        <input type="number" id="val2" class="w-full p-4 rounded-xl term-input text-3xl font-black bg-[#0f172a] border-b-2 border-slate-600 focus:border-emerald-500 outline-none text-center shadow-inner" oninput="convert(2)">
+                    <!-- Mobile Swap Button -->
+                    <div class="md:hidden flex justify-center my-4">
+                        <button onclick="swapUnits()" class="w-10 h-10 bg-teal-600 text-white rounded-full flex items-center justify-center shadow-lg hover:rotate-180 transition-transform duration-500">
+                            <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>
+                        </button>
                     </div>
 
-                </div>
-            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+                        
+                        <!-- BOX 1 (From) -->
+                        <div class="bg-[#0f172a] border border-slate-700 p-5 rounded-2xl shadow-inner flex flex-col gap-4">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">INPUT</label>
+                            </div>
+                            <select id="unit1" class="w-full p-4 bg-[#020617] border border-slate-600 text-slate-300 rounded-xl text-xs font-bold outline-none focus:border-teal-500 transition-colors" onchange="convert(1)"></select>
+                            <div class="relative">
+                                <input type="number" id="val1" class="w-full p-4 rounded-xl term-input text-2xl md:text-3xl font-black bg-[#020617] border border-slate-600 text-teal-400 placeholder-slate-700 text-left" placeholder="0" oninput="convert(1)">
+                                <button onclick="clearBox(1)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-red-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                            </div>
+                        </div>
 
-            <!-- Formula Output -->
-            <div class="mt-8 bg-[#0f172a] border border-slate-700 p-5 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <span class="flex h-3 w-3 relative">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
-                    </span>
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Base Formula Matrix</p>
-                </div>
-                <p id="formulaText" class="font-mono text-sm font-bold text-blue-400 break-words text-center md:text-right">1 Byte = 8 Bits</p>
-            </div>
+                        <!-- BOX 2 (To) -->
+                        <div class="bg-[#0f172a] border border-slate-700 p-5 rounded-2xl shadow-inner flex flex-col gap-4">
+                            <div class="flex justify-between items-center">
+                                <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">OUTPUT</label>
+                                <button onclick="copyResult()" class="text-[9px] font-bold text-teal-400 hover:text-teal-300 uppercase tracking-wider flex items-center gap-1 bg-teal-500/10 px-2 py-1 rounded">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Copy
+                                </button>
+                            </div>
+                            <select id="unit2" class="w-full p-4 bg-[#020617] border border-slate-600 text-slate-300 rounded-xl text-xs font-bold outline-none focus:border-teal-500 transition-colors" onchange="convert(2)"></select>
+                            <div class="relative">
+                                <input type="number" id="val2" class="w-full p-4 rounded-xl term-input text-2xl md:text-3xl font-black bg-[#020617] border border-slate-600 text-emerald-400 placeholder-slate-700 text-left" placeholder="0" oninput="convert(2)">
+                                <button onclick="clearBox(2)" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-red-400 p-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                            </div>
+                        </div>
 
+                    </div>
+                </div>
+
+                <!-- Formula Output -->
+                <div class="mt-8 bg-[#020617] border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Base Conversion Ratio</p>
+                    </div>
+                    <p id="formulaText" class="font-mono text-xs font-bold text-teal-500 break-words">1 Byte = 8 Bits</p>
+                </div>
+
+            </div>
         </div>
     </main>
 
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-teal-600 text-white px-5 py-3 rounded-xl shadow-2xl font-mono text-xs font-bold z-[100] transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toastMsg">Copied!</span>
+    </div>
+
     <script>
-        // --- COMPLETE UNITS DATABASE (English Translated) ---
+        // --- EXPANDED UNITS DATABASE (Engineered for Power Users) ---
         const unitDB = {
             data: {
-                title: "Data Storage", desc: "Memory and file storage capacities.", base: "Byte",
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>`,
+                title: "Data Storage", desc: "Memory and file storage capacities.",
                 units: {
                     "Bit (b)": 0.125, "Byte (B)": 1,
                     "Kilobyte (KB)": 1000, "Kibibyte (KiB)": 1024,
@@ -159,7 +200,8 @@
                 }
             },
             network: {
-                title: "Network Speed", desc: "Network data transfer rates (Bandwidth).", base: "bps",
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>`,
+                title: "Network Speed", desc: "Network data transfer rates (Bandwidth).",
                 units: {
                     "Bits per sec (bps)": 1, "Kilobits per sec (Kbps)": 1000,
                     "Megabits per sec (Mbps)": 1e6, "Gigabits per sec (Gbps)": 1e9,
@@ -167,54 +209,79 @@
                     "Gigabytes per sec (GB/s)": 8e9
                 }
             },
+            numeral: {
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>`,
+                title: "Numeral Base", desc: "Developer radix systems (Hex, Binary).", special: "base",
+                units: { "Decimal (Base-10)": 10, "Binary (Base-2)": 2, "Octal (Base-8)": 8, "Hexadecimal (Base-16)": 16 }
+            },
             length: {
-                title: "Length & Dist.", desc: "Length, distance, up to astronomy units.", base: "Meter",
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>`,
+                title: "Length & Dist", desc: "Length, distance, up to astronomy units.",
                 units: {
                     "Millimeter (mm)": 0.001, "Centimeter (cm)": 0.01, "Meter (m)": 1, "Kilometer (km)": 1000,
                     "Inch (in)": 0.0254, "Foot (ft)": 0.3048, "Yard (yd)": 0.9144, "Mile (mi)": 1609.34,
-                    "Nautical Mile (Knot)": 1852, "Fathom (ftm)": 1.8288, "League": 4828.03,
-                    "Light Year (ly)": 9.4607e15, "Parsec (pc)": 3.08567758e16, "Astronomical Unit (AU)": 1.4959787e11
+                    "Nautical Mile": 1852, "Light Year (ly)": 9.4607e15, "Parsec (pc)": 3.08567758e16
+                }
+            },
+            area: {
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"></path>`,
+                title: "Area", desc: "Surface measurements and real estate sizes.",
+                units: {
+                    "Square Meter (m²)": 1, "Square Kilometer (km²)": 1e6, "Hectare (ha)": 10000, "Acre": 4046.86,
+                    "Square Foot (sq ft)": 0.092903, "Square Mile (sq mi)": 2.59e6
+                }
+            },
+            volume: {
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>`,
+                title: "Volume", desc: "Liquid and space volume capacities.",
+                units: {
+                    "Liter (L)": 1, "Milliliter (ml)": 0.001, "Cubic Meter (m³)": 1000,
+                    "Gallon (US)": 3.78541, "Quart (US)": 0.946353, "Pint (US)": 0.473176
+                }
+            },
+            pressure: {
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>`,
+                title: "Pressure", desc: "Atmospheric and engineering pressures.",
+                units: {
+                    "Pascal (Pa)": 1, "Kilopascal (kPa)": 1000, "Bar": 100000,
+                    "Atmosphere (atm)": 101325, "PSI": 6894.76, "Torr": 133.322
                 }
             },
             weight: {
-                title: "Mass & Weight", desc: "International mass and weight measurements.", base: "Gram",
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"></path>`,
+                title: "Mass & Weight", desc: "International mass and weight measurements.",
                 units: {
                     "Milligram (mg)": 0.001, "Gram (g)": 1, "Kilogram (kg)": 1000, "Metric Ton (t)": 1e6,
-                    "Ounce (oz)": 28.3495, "Pound (lb)": 453.592, "Stone": 6350.29, "Slug": 14593.9
+                    "Ounce (oz)": 28.3495, "Pound (lb)": 453.592, "Stone": 6350.29
                 }
             },
             temperature: {
-                title: "Temperature", desc: "Weather and thermodynamic temperatures.", special: true, 
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>`,
+                title: "Temperature", desc: "Weather and thermodynamic scales.", special: "temp", 
                 units: { "Celsius (°C)": "C", "Fahrenheit (°F)": "F", "Kelvin (K)": "K", "Reaumur (°R)": "R" }
             },
             time: {
-                title: "Time Duration", desc: "Time, duration, up to millennium standard.", base: "Second",
+                icon: `<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>`,
+                title: "Time Duration", desc: "Time, duration, up to millennium standard.",
                 units: {
-                    "Nanosecond (ns)": 1e-9, "Microsecond (μs)": 1e-6, "Millisecond (ms)": 0.001,
-                    "Second (s)": 1, "Minute (min)": 60, "Hour (h)": 3600, "Day (d)": 86400,
-                    "Week": 604800, "Month (30 days)": 2592000, "Year (365 days)": 31536000, 
-                    "Decade": 315360000, "Century": 3153600000, "Millennium": 31536000000
+                    "Microsecond (μs)": 1e-6, "Millisecond (ms)": 0.001, "Second (s)": 1, 
+                    "Minute (min)": 60, "Hour (h)": 3600, "Day (d)": 86400,
+                    "Week": 604800, "Month (30 d)": 2592000, "Year (365 d)": 31536000
                 }
             }
         };
 
         let currentCategory = "data";
 
-        window.onload = () => {
-            buildCategoryGrid();
-            loadCategory(currentCategory);
-            if(typeof renderHistoryUI === 'function') renderHistoryUI('Universal Converter');
-        };
-
         function buildCategoryGrid() {
-            const grid = document.getElementById('categoryGrid');
+            const menu = document.getElementById('categoryMenu');
             Object.keys(unitDB).forEach(key => {
                 const btn = document.createElement('button');
-                btn.className = "cat-btn bg-[#020617] text-slate-400 p-4 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-slate-800 hover:text-white transition text-left truncate border border-slate-800 shadow-sm";
-                btn.innerText = unitDB[key].title;
+                btn.className = "cat-btn w-full flex items-center gap-3 p-3 rounded-xl text-xs font-bold uppercase tracking-widest transition-all text-left border border-transparent";
+                btn.innerHTML = `<svg class="w-4 h-4 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">${unitDB[key].icon}</svg> <span>${unitDB[key].title}</span>`;
                 btn.onclick = () => loadCategory(key);
                 btn.id = "btnCat-" + key;
-                grid.appendChild(btn);
+                menu.appendChild(btn);
             });
         }
 
@@ -222,33 +289,41 @@
             currentCategory = key;
             const data = unitDB[key];
             
-            // Update UI Active Category
+            // UI Active State
             document.querySelectorAll('.cat-btn').forEach(b => {
-                b.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
-                b.classList.add('bg-[#020617]', 'text-slate-400', 'border-slate-800');
+                b.classList.remove('bg-teal-600/20', 'text-teal-400', 'border-teal-500/30');
+                b.classList.add('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-300');
             });
-            
             const activeBtn = document.getElementById('btnCat-' + key);
-            activeBtn.classList.remove('bg-[#020617]', 'text-slate-400', 'border-slate-800');
-            activeBtn.classList.add('bg-blue-600', 'text-white', 'border-blue-500');
+            activeBtn.classList.remove('text-slate-400', 'hover:bg-slate-800', 'hover:text-slate-300');
+            activeBtn.classList.add('bg-teal-600/20', 'text-teal-400', 'border-teal-500/30');
             
             document.getElementById('activeCategoryTitle').innerText = data.title;
             document.getElementById('activeCategoryDesc').innerText = data.desc;
 
-            // Populate Dropdowns
             const u1 = document.getElementById('unit1');
             const u2 = document.getElementById('unit2');
-            u1.innerHTML = ""; u2.innerHTML = "";
+            const v1 = document.getElementById('val1');
+            const v2 = document.getElementById('val2');
 
+            u1.innerHTML = ""; u2.innerHTML = "";
             Object.keys(data.units).forEach(unitName => {
                 u1.innerHTML += `<option value="${unitName}">${unitName}</option>`;
                 u2.innerHTML += `<option value="${unitName}">${unitName}</option>`;
             });
-
-            // Set default offset for unit 2
             if(Object.keys(data.units).length > 1) u2.selectedIndex = 1;
 
-            document.getElementById('val1').value = 1;
+            // Handle Specific Inputs (Base uses Text instead of Number)
+            if (data.special === "base") {
+                v1.type = "text"; v2.type = "text";
+                v1.placeholder = "e.g., FF or 1010"; v2.placeholder = "";
+                v1.value = "10";
+            } else {
+                v1.type = "number"; v2.type = "number";
+                v1.placeholder = "0"; v2.placeholder = "0";
+                v1.value = 1;
+            }
+
             convert(1);
         }
 
@@ -261,26 +336,52 @@
             convert(1);
         }
 
+        function clearBox(box) {
+            document.getElementById(`val${box}`).value = "";
+            document.getElementById(`val${box === 1 ? 2 : 1}`).value = "";
+            document.getElementById('formulaText').innerText = "Awaiting input...";
+        }
+
         function convert(sourceBox) {
             const data = unitDB[currentCategory];
-            const val1 = parseFloat(document.getElementById('val1').value);
-            const val2 = parseFloat(document.getElementById('val2').value);
             const name1 = document.getElementById('unit1').value;
             const name2 = document.getElementById('unit2').value;
-            
             const out1 = document.getElementById('val1');
             const out2 = document.getElementById('val2');
             const formulaText = document.getElementById('formulaText');
 
-            // Handle empty inputs
-            if(sourceBox === 1 && isNaN(val1)) { out2.value = ""; return; }
-            if(sourceBox === 2 && isNaN(val2)) { out1.value = ""; return; }
+            const str1 = out1.value.trim();
+            const str2 = out2.value.trim();
 
-            // Special Logic for Temperature
-            if (data.special) {
+            if (sourceBox === 1 && !str1) { out2.value = ""; return; }
+            if (sourceBox === 2 && !str2) { out1.value = ""; return; }
+
+            // --- RADIX / NUMERAL BASE LOGIC ---
+            if (data.special === "base") {
+                const radix1 = data.units[name1];
+                const radix2 = data.units[name2];
+
+                if (sourceBox === 1) {
+                    const parsed = parseInt(str1, radix1);
+                    out2.value = isNaN(parsed) ? "Invalid" : parsed.toString(radix2).toUpperCase();
+                } else {
+                    const parsed = parseInt(str2, radix2);
+                    out1.value = isNaN(parsed) ? "Invalid" : parsed.toString(radix1).toUpperCase();
+                }
+                formulaText.innerText = `Base-${radix1} to Base-${radix2} string manipulation.`;
+                return;
+            }
+
+            // --- STANDARD & TEMP LOGIC ---
+            const val1 = parseFloat(str1);
+            const val2 = parseFloat(str2);
+            if(sourceBox === 1 && isNaN(val1)) return;
+            if(sourceBox === 2 && isNaN(val2)) return;
+
+            if (data.special === "temp") {
                 const type1 = data.units[name1];
                 const type2 = data.units[name2];
-                let tempC = 0; // Normalize to Celsius first
+                let tempC = 0; 
 
                 if (sourceBox === 1) {
                     if(type1==='C') tempC = val1;
@@ -307,28 +408,35 @@
                 return;
             }
 
-            // Standard Multiplier Logic
+            // STANDARD MULTIPLIER
             const rate1 = data.units[name1];
             const rate2 = data.units[name2];
 
             if (sourceBox === 1) {
-                const baseValue = val1 * rate1;
-                const result = baseValue / rate2;
-                out2.value = formatNumber(result);
+                out2.value = formatNumber((val1 * rate1) / rate2);
             } else {
-                const baseValue = val2 * rate2;
-                const result = baseValue / rate1;
-                out1.value = formatNumber(result);
+                out1.value = formatNumber((val2 * rate2) / rate1);
             }
 
-            // Display Base Ratio Formula
-            formulaText.innerText = `1 ${name1.split(' ')[0]} = ${formatNumber(rate1 / rate2)} ${name2.split(' ')[0]}`;
+            // Formula Ratio Display
+            const ratio = rate1 / rate2;
+            formulaText.innerText = `1 ${name1.split(' ')[0]} = ${formatNumber(ratio)} ${name2.split(' ')[0]}`;
         }
 
-        // Helper to remove excessive floating point artifacts
         function formatNumber(num) {
             if(num === 0) return 0;
-            return parseFloat(num.toPrecision(12)); 
+            // Prevent e-notation for small manageable numbers, allow precision
+            return parseFloat(num.toPrecision(10)); 
+        }
+
+        function copyResult() {
+            const result = document.getElementById('val2').value;
+            if(!result || result === "Invalid") return;
+            navigator.clipboard.writeText(result);
+            
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 2000);
         }
 
         // --- EXPORT PDF & WORD ---
@@ -344,9 +452,11 @@
             const u2 = document.getElementById('unit2').value;
             const formula = document.getElementById('formulaText').innerText;
 
-            const tableData = [['Category', catTitle],
-                ['Input Value', `${val1} ${u1}`],['Converted Result', `${val2} ${u2}`],
-                ['Conversion Ratio', formula]
+            const tableData = [
+                ['Category', catTitle],
+                ['Input Value', `${val1} ${u1}`],
+                ['Converted Result', `${val2} ${u2}`],
+                ['Engine Formula', formula]
             ];
 
             let finalBlob, finalFileName;
@@ -355,33 +465,33 @@
                 if (format === 'pdf') {
                     const { jsPDF } = window.jspdf;
                     const doc = new jsPDF('p', 'mm', 'a4'); 
-                    doc.setFont("courier", "bold").setFontSize(20);
-                    doc.text("UNIT CONVERSION RECEIPT", 105, 20, { align: "center" });
-                    doc.setFontSize(11).setFont("courier", "normal");
-                    doc.text(`Date : ${new Date().toLocaleString()}`, 14, 35);
+                    doc.setFont("courier", "bold").setFontSize(18);
+                    doc.text("ENGINEERING CONVERSION AUDIT", 105, 20, { align: "center" });
+                    doc.setFontSize(10).setFont("courier", "normal");
+                    doc.text(`Timestamp : ${new Date().toLocaleString()}`, 14, 35);
 
                     doc.autoTable({
-                        startY: 45, head: [['Parameter', 'Detail']],
+                        startY: 45, head: [['Parameter', 'Detail Log']],
                         body: tableData, theme: 'grid',
-                        styles: { font: 'courier', fontSize: 10, cellPadding: 5 },
-                        headStyles: { fillColor:[37, 99, 235] }
+                        styles: { font: 'courier', fontSize: 9, cellPadding: 4 },
+                        headStyles: { fillColor:[20, 184, 166] }
                     });
 
                     finalBlob = doc.output('blob');
-                    finalFileName = `Conversion_${catTitle.replace(/\s/g,'_')}.pdf`;
+                    finalFileName = `MARK_Audit_${catTitle.replace(/\s/g,'_')}.pdf`;
 
                 } else if (format === 'word') {
                     if (typeof window.docx === 'undefined') throw new Error("Docx library not loaded.");
 
                     const tableRows =[
                         new window.docx.TableRow({ tableHeader: true, children:[
-                            new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Parameter", bold: true, color: "ffffff"})], shading: { fill: "2563eb" } }),
-                            new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Detail", bold: true, color: "ffffff"})], shading: { fill: "2563eb" } })
+                            new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Parameter", bold: true, color: "ffffff"})], shading: { fill: "14b8a6" } }),
+                            new window.docx.TableCell({ children:[new window.docx.Paragraph({text: "Detail Log", bold: true, color: "ffffff"})], shading: { fill: "14b8a6" } })
                         ]}),
                         ...tableData.map(row => new window.docx.TableRow({
                             children:[
-                                new window.docx.TableCell({ children:[new window.docx.Paragraph(row[0])] }),
-                                new window.docx.TableCell({ children:[new window.docx.Paragraph(row[1])] })
+                                new window.docx.TableCell({ children:[new window.docx.Paragraph({text: row[0], font: "Courier New"})] }),
+                                new window.docx.TableCell({ children:[new window.docx.Paragraph({text: row[1], font: "Courier New"})] })
                             ]
                         }))
                     ];
@@ -389,138 +499,135 @@
                     const docWord = new window.docx.Document({
                         sections:[{
                             children:[
-                                new window.docx.Paragraph({ children:[new window.docx.TextRun({ text: "UNIT CONVERSION RECEIPT", bold: true, size: 28 })], alignment: window.docx.AlignmentType.CENTER, spacing: { after: 400 } }),
-                                new window.docx.Paragraph({ text: `Date : ${new Date().toLocaleString()}`, spacing: { after: 400 } }),
+                                new window.docx.Paragraph({ children:[new window.docx.TextRun({ text: "ENGINEERING CONVERSION AUDIT", bold: true, size: 28, font: "Courier New" })], alignment: window.docx.AlignmentType.CENTER, spacing: { after: 400 } }),
+                                new window.docx.Paragraph({ text: `Timestamp : ${new Date().toLocaleString()}`, font: "Courier New", spacing: { after: 400 } }),
                                 new window.docx.Table({ width: { size: 100, type: window.docx.WidthType.PERCENTAGE }, rows: tableRows })
                             ]
                         }]
                     });
 
                     finalBlob = await window.docx.Packer.toBlob(docWord);
-                    finalFileName = `Conversion_${catTitle.replace(/\s/g,'_')}.docx`;
+                    finalFileName = `MARK_Audit_${catTitle.replace(/\s/g,'_')}.docx`;
                 }
 
-                if (typeof addToHistory === 'function') {
-                    const historyId = await addToHistory('Universal Converter', finalFileName, finalBlob);
-                    await downloadFromHistory(historyId);
+                if (typeof processDirectDownload === 'function') {
+                    await processDirectDownload('Universal Converter', finalFileName, finalBlob);
                 } else {
-                    saveFile(URL.createObjectURL(finalBlob), finalFileName);
+                    const url = URL.createObjectURL(finalBlob);
+                    const link = document.createElement('a');
+                    link.href = url; link.download = finalFileName;
+                    document.body.appendChild(link); link.click(); link.remove();
+                    URL.revokeObjectURL(url);
                 }
 
             } catch(e) {
                 alert("Export failed: " + e.message);
-                console.error(e);
             } finally {
                 btnPdf.disabled = false; btnWord.disabled = false;
             }
         }
+        
+        window.onload = () => {
+            buildCategoryGrid();
+            loadCategory(currentCategory);
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('Universal Converter');
+        };
     </script>
 
-    <!-- ========================================== -->
-    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
-    <!-- ========================================== -->
+    <!-- INTERNAL LINKING -->
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Image & Media Tools</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Engineering Tools</h3>
             <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="compressor.html">
-                <div class="w-12 h-12 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="bandwidth-calc.html">
+                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image Compressor</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Shrink JPG and WebP file sizes locally with an interactive slider.</p>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Bandwidth Calculator</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Estimate network download times factoring in actual TCP overhead limits.</p>
                 </div>
             </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="social-resizer.html">
-                <div class="w-12 h-12 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="ip-subnet-calc.html">
+                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-xs">
+                    NET
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Social Media Resizer</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Auto-crop your photos for IG, YouTube, and Facebook instantly.</p>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">IP Subnet Matrix</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Calculate IPv4/IPv6 CIDR routing blocks, masks, and usable host limits.</p>
                 </div>
             </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="color-palette.html">
-                <div class="w-12 h-12 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="base64.html">
+                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-[10px]">
+                    B64
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Color Palette Generator</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Extract HEX and RGB colors directly from your uploaded images.</p>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Base64 Encoder</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Convert raw system texts or file payloads into safe ASCII format strings.</p>
                 </div>
             </a>
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CONTACT & BUG REPORT CTA                   -->
-    <!-- ========================================== -->
+    <!-- CONTACT CTA -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            
-            <!-- Ornamen Background Subtle -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
-            
-            <!-- Teks Kiri -->
+            <div class="absolute -left-20 -top-20 w-48 h-48 bg-teal-500/10 rounded-full blur-3xl group-hover:bg-teal-500/20 transition-colors duration-500"></div>
             <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
+                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Discovered a calculation anomaly?</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve the MARK_Tools ecosystem. Report a glitch or submit a module request.</p>
                 </div>
             </div>
-            
-            <!-- Tombol Kanan -->
             <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-teal-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(20,184,166,0.15)]">
+                    <svg class="w-4 h-4 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Contact Developer
                 </a>
             </div>
-
         </div>
     </section>
 
-    <!-- SEO CONTENT AREA -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 mt-12 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
+    <!-- SEO YAPPING -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Offline Omnitool Calculator</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">The Ultimate Engineering & Developer Omnitool</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Whether you are an IT engineer calculating database storage capacities in Petabytes, a web developer managing network bandwidth speeds, or a student solving thermodynamics equations, the <strong>MARK_Tools Universal Unit Converter</strong> provides instant mathematical accuracy. Our engine operates entirely in your browser using local Javascript matrices, ensuring lightning-fast results without pinging external APIs.
+                Whether you are a backend engineer converting Hexadecimal arrays, a system administrator calculating database storage capacities in Petabytes, or an architect drafting surface area metrics, the <strong>MARK_Tools Universal Converter</strong> provides instant mathematical accuracy. Our engine operates entirely inside your browser using local Javascript matrices, guaranteeing zero latency without pinging external API servers.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Zero-Trust Privacy</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-teal-600">Numeral Radix Translation</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Why do you need an offline calculator? Because tracking algorithms on other websites log the exact technical parameters you search for to build ad profiles. By running mathematical arrays purely via HTML5, we guarantee that no one knows what confidential company data you are converting.
+                        We have integrated a dedicated <em>Numeral Base</em> module specifically for programmers. You can seamlessly type raw Hexadecimal codes (like <code>1A3F</code>) and immediately see the equivalent Binary (Base-2), Octal (Base-8), or standard Decimal output. The engine automatically bypasses numerical restrictions to parse alphanumeric logic perfectly.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">Exportable Receipts</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Exportable Audit Receipts</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Unique to MARK_Tools, you can generate professional PDF or Microsoft Word receipts for your conversions. This is incredibly useful for attaching standardized metric calculations to academic papers, engineering plans, or client invoices.
+                        Unique to the MARK_Tools ecosystem, you can generate professional PDF or Microsoft Word receipts detailing your exact conversion parameters. This is incredibly useful for attaching standardized metric proofs to academic whitepapers, CAD engineering blueprints, or enterprise client invoices.
                     </p>
                 </div>
             </div>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Frequently Asked Questions</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">What is the difference between Data Storage and Network Speed?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">This is a common point of confusion. <strong>Data Storage</strong> is measured in Bytes (e.g., Megabyte/MB) representing file size. <strong>Network Speed</strong> is measured in bits (e.g., Megabits per second/Mbps). Since there are 8 bits in 1 Byte, a 100 Mbps internet connection actually downloads files at roughly 12.5 MB/s.</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">This is a classic point of confusion in IT infrastructure. <strong>Data Storage</strong> is measured in Bytes (e.g., Megabyte/MB) representing file volume. <strong>Network Speed</strong> is measured in bits (e.g., Megabits per second/Mbps). Since there are 8 bits in 1 Byte, a 100 Mbps fiber-optic internet connection actually downloads files at a maximum theoretical limit of 12.5 MB/s.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">How precise are the astronomical distance conversions?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Our matrix uses International System of Units (SI) standards. For instance, calculations involving Light Years and Parsecs utilize scientific notation extending up to 12 decimal points of precision via vanilla JavaScript engines.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Why did my Numeral Base conversion return "Invalid"?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Numeral logic is strict. If you select "Binary (Base-2)", the engine expects an input consisting exclusively of <code>0</code> and <code>1</code>. Typing a number like <code>2</code> or <code>A</code> into a Binary field will trigger an Invalid parameter flag. Ensure your input matches the mathematical rules of the selected base.</p>
                 </div>
             </div>
 
