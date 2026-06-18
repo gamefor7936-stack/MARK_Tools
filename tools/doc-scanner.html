@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document Scanner & PDF Converter</title>
-    <meta name="description" content="Free online document scanner. Deskew, auto-crop, and apply B&W filters to turn photos into clean A4 PDFs entirely in your browser. No data uploaded.">
+    <title>AI Document Scanner & PDF Engine | MARK_Tools</title>
+    <meta name="description" content="Free local document scanner. Deskew, auto-crop, and apply B&W threshold filters to turn photos into clean A4 PDFs entirely in your browser. No data uploaded.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
@@ -22,149 +22,191 @@
 
         body { font-family: 'Inter', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Hide scrollbar for mobile horizontal menu but keep functionality */
+        /* Hide scrollbar but keep horizontal scroll functional */
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-        /* Crop Handles */
+        /* ADVANCED MOBILE-FRIENDLY CROP HANDLES */
         .corner-handle {
-            width: 30px; height: 30px;
-            background: #0f172a;
-            border: 4px solid #38bdf8; /* Blue 400 */
+            width: 44px; height: 44px; /* Larger Touch Target */
+            background: rgba(15, 23, 42, 0.5);
+            backdrop-filter: blur(4px);
+            border: 2px solid rgba(56, 189, 248, 0.8);
             border-radius: 50%;
             position: absolute;
             transform: translate(-50%, -50%);
-            cursor: move;
+            cursor: crosshair;
             z-index: 60;
-            box-shadow: 0 0 15px rgba(56, 189, 248, 0.5);
-            transition: transform 0.1s;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s, border-color 0.2s;
         }
-        .corner-handle:active { transform: translate(-50%, -50%) scale(1.2); }
+        /* Inner precise dot to show exact corner pixel */
+        .corner-handle::after {
+            content: '';
+            width: 8px; height: 8px;
+            background: #38bdf8;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #38bdf8;
+            transition: transform 0.2s;
+        }
+        .corner-handle:active {
+            background: rgba(56, 189, 248, 0.2);
+            border-color: #38bdf8;
+        }
+        .corner-handle:active::after {
+            transform: scale(1.5);
+        }
 
         /* Input Custom Styling */
         .scanner-select {
-            background-color: #1e293b;
+            background-color: #0f172a;
             border: 1px solid #334155;
-            color: #e2e8f0;
+            color: #f8fafc;
             font-size: 0.75rem;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 0.5rem;
             padding: 0.5rem 0.75rem;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            cursor: pointer;
         }
-        .scanner-select:focus { border-color: #38bdf8; }
+        .scanner-select:focus, .scanner-select:hover { border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.15); }
         
         .scanner-input {
-            background-color: #1e293b;
+            background-color: #0f172a;
             border: 1px solid #334155;
-            color: #e2e8f0;
+            color: #f8fafc;
             font-size: 0.75rem;
             border-radius: 0.5rem;
             padding: 0.5rem;
             width: 4.5rem;
             outline: none;
             text-align: center;
+            transition: all 0.3s;
         }
         .scanner-input:focus { border-color: #38bdf8; }
+
+        /* Custom Slider (Cyber Range) */
+        .cyber-range { -webkit-appearance: none; background: transparent; }
+        .cyber-range::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #334155; border-radius: 4px; border: 1px solid #0f172a; }
+        .cyber-range::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #38bdf8; margin-top: -6px; cursor: pointer;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.5); transition: transform 0.1s;
+        }
+        .cyber-range::-webkit-slider-thumb:active { transform: scale(1.3); }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
 </head>
 
-<body class="bg-[#0b1120] text-slate-300 flex flex-col min-h-screen">
+<body class="bg-[#0b1120] text-slate-300 flex flex-col min-h-screen selection:bg-blue-500/30 selection:text-white">
 
-    <!-- HEADER NAVIGATION & TOOLBAR -->
-    <header class="bg-[#0f172a]/95 backdrop-blur-md border-b border-slate-800 shadow-xl shrink-0 sticky top-0 z-[100]">
-        <div class="px-4 py-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
-            
-            <!-- Logo Section -->
-            <div class="flex items-center justify-between shrink-0">
-                <div class="flex items-center gap-3">
-                    <a class="font-black text-xl tracking-tighter text-blue-400 hover:text-blue-300 transition" href="/">MARK_Tools</a>
-                    <span class="bg-blue-900/40 border border-blue-500/30 text-blue-400 text-[10px] px-2 py-0.5 rounded-md font-bold tracking-widest">PRO SCANNER</span>
-                </div>
+    <!-- Navbar Dark -->
+    <nav class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800 shadow-xl shrink-0">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-blue-500 font-black text-xl tracking-tighter hover:opacity-80 transition-opacity">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="bg-blue-500/10 border border-blue-500/30 text-blue-400 text-[10px] px-2 py-0.5 rounded-md font-bold tracking-widest hidden sm:inline-block">VISION ENGINE</span>
             </div>
-
-            <!-- Toolbar Section (Horizontally Scrollable on Mobile to prevent overlap) -->
-            <div class="flex overflow-x-auto items-center gap-3 w-full md:w-auto md:justify-end pb-2 md:pb-0 hide-scrollbar snap-x">
-                
-                <select id="filterMode" onchange="scheduleLivePreview()" class="scanner-select shrink-0 snap-start">
-                    <option value="bw" selected>B&amp;W Document</option>
-                    <option value="magic">Magic Color</option>
-                    <option value="original">Original Photo</option>
-                </select>
-
-                <select id="paperSize" onchange="toggleCustomSize()" class="scanner-select shrink-0 snap-start">
-                    <option value="a4" selected>A4 (210×297 mm)</option>
-                    <option value="letter">Letter (216×279 mm)</option>
-                    <option value="legal">Legal (216×356 mm)</option>
-                    <option value="custom">Custom Size</option>
-                </select>
-
-                <select id="fitMode" class="scanner-select shrink-0 snap-start">
-                    <option value="fit" selected>Fit to Paper</option>
-                    <option value="stretch">Stretch Full</option>
-                </select>
-
-                <div id="customSizeInputs" style="display: none;" class="flex items-center gap-2 text-xs text-slate-400 shrink-0 snap-start">
-                    <input type="number" id="customWidth" placeholder="W" min="1" value="210" class="scanner-input font-mono" title="Width (mm)">
-                    <span>×</span>
-                    <input type="number" id="customHeight" placeholder="H" min="1" value="297" class="scanner-input font-mono" title="Height (mm)">
-                    <span>mm</span>
-                </div>
-
-                <!-- NEW: Slider Strength with Loader & onchange Logic -->
-                <div class="flex items-center gap-2 text-[10px] text-slate-300 bg-slate-800/50 border border-slate-700 px-3 py-1.5 rounded-lg shrink-0 snap-start">
-                    <span class="font-bold uppercase tracking-widest">Strength</span>
-                    <input type="range" id="scanStrength" min="0" max="100" value="50" class="w-20 md:w-24 accent-blue-500 cursor-pointer" onchange="handleStrengthChange()">
-                    <!-- Mini Loading Indicator -->
-                    <div id="strengthLoader" class="w-3.5 h-3.5 border-2 border-slate-500 border-t-blue-400 rounded-full animate-spin hidden ml-1"></div>
-                </div>
-
-                <a class="bg-slate-800 text-slate-300 border border-slate-700 px-4 py-2 rounded-lg text-xs font-bold hover:bg-slate-700 transition-all flex items-center gap-2 shrink-0 snap-start" href="/">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-                    Back
-                </a>
-
-                <button type="button" onclick="generateFinalPDF()" id="dlBtn2" class="bg-blue-600 text-white px-5 py-2 rounded-lg text-xs font-bold shadow-lg shadow-blue-900/50 hover:bg-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shrink-0 snap-start flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                    Save PDF
-                </button>
-            </div>
+            <a href="/" class="text-[10px] font-bold text-slate-400 hover:text-blue-400 transition uppercase tracking-widest bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">Back to Home</a>
         </div>
-    </header>
+    </nav>
 
-    <!-- MAIN WORKSPACE -->
-    <div class="flex flex-col lg:flex-row flex-1 min-h-0 bg-[#0b1120] overflow-hidden relative">
+    <main class="container mx-auto px-4 py-6 flex flex-col xl:flex-row gap-6 flex-grow min-h-0">
 
-        <!-- Sidebar (Pages & Upload) -->
-        <aside class="w-full lg:w-72 bg-[#0f172a] border-b lg:border-b-0 lg:border-r border-slate-800 flex flex-col overflow-y-auto shrink-0 z-10">
-            <div class="p-5 border-b border-slate-800">
-                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
-                    Document Pages
-                </h4>
-                
-                <div id="pageList" class="grid grid-cols-3 lg:grid-cols-1 gap-3"></div>
-                
-                <label class="mt-4 w-full py-6 border-2 border-dashed border-slate-600 hover:border-blue-500 rounded-xl flex flex-col items-center justify-center cursor-pointer bg-slate-800/30 hover:bg-blue-900/20 transition-all group">
-                    <input type="file" id="imageInput" class="hidden" accept="image/*" multiple onchange="handleBulkUpload(this)">
-                    <span class="text-3xl text-slate-500 group-hover:text-blue-400 mb-1 transition">+</span>
-                    <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest group-hover:text-blue-300">Add Page</span>
-                </label>
-            </div>
+        <!-- KIRI / ATAS (PADA MOBILE): Kontrol & Halaman -->
+        <aside class="w-full xl:w-80 flex flex-col gap-5 shrink-0 order-2 xl:order-1">
             
-            <div class="p-5 flex-grow hidden lg:block">
-                <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Export History</h4>
-                <div id="historyList" class="space-y-2"></div>
-                <!-- NORDVPN SIDEBAR BANNER (AFFILIATE) -->
-                <div class="mt-6 bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner relative overflow-hidden group">
-                    <!-- Subtle background glow -->
-                    <div class="absolute -right-10 -top-10 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl"></div>
+            <!-- Alat Resolusi Utama -->
+            <div class="glass-dark p-5 rounded-2xl border-t-4 border-t-blue-500 shadow-2xl">
+                <div class="mb-4">
+                    <h2 class="text-sm font-black text-white uppercase tracking-widest">Scanner Properties</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Processing Filter</label>
+                        <select id="filterMode" onchange="scheduleLivePreview()" class="scanner-select w-full">
+                            <option value="bw" selected>Black & White Matrix</option>
+                            <option value="magic">Magic Color Enhancement</option>
+                            <option value="original">Unfiltered (Original)</option>
+                        </select>
+                    </div>
 
-                    <h5 class="text-[10px] font-black text-rose-400 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Output Size</label>
+                            <select id="paperSize" onchange="toggleCustomSize()" class="scanner-select w-full">
+                                <option value="a4" selected>A4 Size</option>
+                                <option value="letter">US Letter</option>
+                                <option value="legal">Legal Size</option>
+                                <option value="custom">Custom...</option>
+                            </select>
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Scale Mapping</label>
+                            <select id="fitMode" class="scanner-select w-full">
+                                <option value="fit" selected>Fit (Preserve)</option>
+                                <option value="stretch">Force Stretch</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="customSizeInputs" style="display: none;" class="flex items-center justify-between gap-2 bg-[#0f172a] p-2 rounded-xl border border-slate-700">
+                        <input type="number" id="customWidth" placeholder="W" min="1" value="210" class="scanner-input font-mono flex-1" title="Width (mm)">
+                        <span class="text-slate-500 font-mono text-xs">×</span>
+                        <input type="number" id="customHeight" placeholder="H" min="1" value="297" class="scanner-input font-mono flex-1" title="Height (mm)">
+                        <span class="text-slate-500 font-mono text-[10px]">mm</span>
+                    </div>
+
+                    <div class="flex flex-col gap-2 bg-[#0f172a] p-3 rounded-xl border border-slate-700">
+                        <div class="flex justify-between items-center">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Noise Threshold</label>
+                            <div id="strengthLoader" class="w-3 h-3 border-2 border-slate-600 border-t-blue-400 rounded-full animate-spin hidden"></div>
+                        </div>
+                        <input type="range" id="scanStrength" min="0" max="100" value="50" class="cyber-range w-full" onchange="handleStrengthChange()">
+                    </div>
+
+                    <button type="button" onclick="generateFinalPDF()" id="dlBtn2" class="w-full mt-2 bg-blue-600 text-white px-5 py-3.5 rounded-xl text-xs font-black uppercase tracking-widest shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        Compile to PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Page Management -->
+            <div class="glass-dark p-5 rounded-2xl flex flex-col shrink-0 overflow-hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"></path></svg>
+                        Document Queue
+                    </h4>
+                    <label class="bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-600 hover:text-white transition-colors cursor-pointer px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
+                        <input type="file" id="imageInput" class="hidden" accept="image/*" multiple onchange="handleBulkUpload(this)">
+                        <span>+ Add</span>
+                    </label>
+                </div>
+                
+                <!-- Horizontal scroll on mobile, wrap on desktop -->
+                <div id="pageList" class="flex overflow-x-auto xl:grid xl:grid-cols-2 gap-3 pb-2 snap-x hide-scrollbar">
+                    <div class="w-full min-w-[100px] h-24 border border-dashed border-slate-700 rounded-xl flex items-center justify-center text-slate-600 text-[10px] uppercase font-bold text-center shrink-0">Empty Queue</div>
+                </div>
+            </div>
+
+            <!-- Area Histori & Banner -->
+            <div class="hidden xl:flex flex-col gap-5">
+                <div class="glass-dark p-5 rounded-2xl border border-slate-800">
+                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Export History</h4>
+                    <div id="historyList" class="space-y-2 max-h-32 overflow-y-auto pr-1"></div>
+                </div>
+
+                <!-- NORDVPN SIDEBAR BANNER (AFFILIATE) -->
+                <div class="bg-[#020617] border border-slate-800 p-5 rounded-2xl shadow-inner relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 w-24 h-24 bg-rose-500/5 rounded-full blur-2xl group-hover:bg-rose-500/10 transition-colors"></div>
+                    <h5 class="text-xs font-black text-rose-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
                         <span class="relative flex h-2 w-2">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
@@ -172,96 +214,121 @@
                         Privacy Shield
                     </h5>
                     <p class="text-[10px] text-slate-400 leading-relaxed mb-4">
-                        Your documents are processed safely on your local device, but your live network traffic is still exposed to trackers and ISPs. Protect your connection anonymously with <strong>NordVPN</strong>.
+                        Your documents are scanned locally, but your live network traffic is still exposed to ISPs. Secure your IP with <strong>NordVPN</strong>.
                     </p>
-                    <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=148983&url_id=902" target="_blank" class="w-full text-center block bg-rose-600/20 hover:bg-rose-600 border border-rose-600/50 hover:border-rose-500 text-rose-400 hover:text-white py-2 rounded-lg font-bold text-[9px] uppercase tracking-widest transition-all">
-                        Protect My Connection →
+                    <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=148983&url_id=902" target="_blank" class="w-full text-center block bg-rose-600/20 hover:bg-rose-600 border border-rose-600/50 hover:border-rose-500 text-rose-400 hover:text-white py-2.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all">
+                        Protect Connection →
                     </a>
                 </div>
             </div>
+
         </aside>
 
-        <!-- Canvas Area -->
-        <main class="flex-grow flex flex-col relative min-h-0 overflow-auto p-4 md:p-6">
-
-            <div id="scannerContainer" class="w-full max-w-5xl mx-auto flex flex-col h-full">
+        <!-- KANAN / BAWAH (PADA MOBILE): Ruang Kerja / Workspace (Fokus Utama) -->
+        <div id="scannerContainer" class="flex-grow flex flex-col order-1 xl:order-2 h-[60vh] xl:h-auto min-h-[400px]">
+            
+            <!-- Action Toolbar Canvas -->
+            <div class="bg-slate-800/80 backdrop-blur-md border border-slate-700 p-3 rounded-t-2xl flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2 px-2">
+                    <div class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-pulse"></div>
+                    <span class="text-[10px] text-slate-300 font-mono font-bold uppercase tracking-widest" id="statusIndicator">Awaiting Matrix...</span>
+                </div>
                 
-                <!-- Action Controls Overlay -->
-                <div class="bg-slate-800/50 backdrop-blur border border-slate-700 p-3 rounded-2xl mb-4 flex flex-wrap items-center justify-between gap-4">
-                    <p class="text-xs text-slate-400 font-mono hidden md:block">Adjust blue points to match document corners.</p>
-                    <div class="flex gap-2 ml-auto">
-                        <button id="btnReCrop" onclick="switchMode('crop')" class="hidden bg-slate-700 text-slate-300 px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-slate-600 transition-all">
-                            Edit Crop
-                        </button>
-                        <button id="btnApply" onclick="processPreview()" class="bg-emerald-600 text-white px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/50 flex items-center gap-2">
-                            Apply Filter
-                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                        </button>
+                <div class="flex gap-2">
+                    <button id="btnReCrop" onclick="switchMode('crop')" class="hidden bg-[#0f172a] text-slate-300 border border-slate-600 px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-slate-700 transition-all focus:ring-1 focus:ring-blue-500">
+                        Adjust Crop
+                    </button>
+                    <button id="btnApply" onclick="processPreview()" class="bg-emerald-600 text-white px-5 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-900/30 flex items-center gap-1.5 focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2 focus:ring-offset-[#020617]">
+                        Run Filter
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Viewport Area -->
+            <div id="editorViewport" class="relative w-full flex-grow bg-[#020617] rounded-b-2xl overflow-hidden flex items-center justify-center border-x border-b border-slate-800 shadow-2xl">
+                
+                <!-- Petunjuk Kosong -->
+                <div class="absolute flex flex-col items-center justify-center opacity-30 pointer-events-none" id="emptyPlaceholder">
+                    <svg class="w-20 h-20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    <p class="font-mono text-sm tracking-widest uppercase">Upload to Begin</p>
+                </div>
+
+                <!-- Cropping Layer -->
+                <div id="cropLayer" class="relative inline-block touch-none select-none">
+                    <canvas id="srcCanvas" class="max-w-full max-h-[100%] block object-contain"></canvas>
+                    <div id="cropOverlay" class="absolute inset-0">
+                        <svg class="w-full h-full absolute inset-0 pointer-events-none" id="svgGuide">
+                            <defs>
+                                <mask id="cropMask">
+                                    <rect width="100%" height="100%" fill="white" />
+                                    <polygon id="cropMaskPolygon" points="" fill="black" />
+                                </mask>
+                            </defs>
+                            <rect width="100%" height="100%" fill="rgba(2, 6, 23, 0.75)" mask="url(#cropMask)" />
+                            
+                            <!-- Grid Estetik Cyberpunk -->
+                            <polygon id="cropLines" points="" fill="rgba(56, 189, 248, 0.05)" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4,6" />
+                        </svg>
+                        
+                        <!-- 4 Titik Transformasi Mobile-Friendly -->
+                        <div class="corner-handle" id="h0"></div>
+                        <div class="corner-handle" id="h1"></div>
+                        <div class="corner-handle" id="h2"></div>
+                        <div class="corner-handle" id="h3"></div>
                     </div>
                 </div>
 
-                <!-- Viewport -->
-                <div class="relative w-full flex-grow bg-[#020617] rounded-3xl overflow-hidden flex items-center justify-center border border-slate-800 shadow-2xl min-h-[50vh]" id="editorViewport">
-                    
-                    <!-- Cropping UI -->
-                    <div id="cropLayer" class="relative inline-block">
-                        <canvas id="srcCanvas" class="max-w-full max-h-[70vh] block"></canvas>
-                        <div id="cropOverlay" class="absolute inset-0 touch-none select-none">
-                            <svg class="w-full h-full absolute inset-0 pointer-events-none" id="svgGuide">
-                                <defs>
-                                    <mask id="cropMask">
-                                        <rect width="100%" height="100%" fill="white" />
-                                        <polygon id="cropMaskPolygon" points="" fill="black" />
-                                    </mask>
-                                </defs>
-                                <rect width="100%" height="100%" fill="rgba(15, 23, 42, 0.7)" mask="url(#cropMask)" />
-                                <polygon id="cropLines" points="" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" stroke-width="2" stroke-dasharray="6,4" />
-                            </svg>
-                            <div class="corner-handle" id="h0"></div>
-                            <div class="corner-handle" id="h1"></div>
-                            <div class="corner-handle" id="h2"></div>
-                            <div class="corner-handle" id="h3"></div>
-                        </div>
-                    </div>
+                <!-- Result Final Layer -->
+                <div id="resultLayer" class="hidden relative w-full h-full p-4 flex items-center justify-center bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiLz48L3N2Zz4=')]">
+                    <img id="resultPreview" class="shadow-[0_0_40px_rgba(0,0,0,0.8)] max-w-full max-h-full border border-slate-700 bg-white">
+                </div>
 
-                    <!-- Final Preview UI -->
-                    <div id="resultLayer" class="hidden relative max-w-full max-h-[70vh] p-4">
-                        <img id="resultPreview" class="shadow-2xl max-w-full max-h-[70vh] border border-slate-700 rounded-sm">
+                <!-- Heavy Processing Indicator (WASM Loading) -->
+                <div id="procLoading" class="hidden absolute inset-0 bg-[#0b1120]/80 backdrop-blur-md z-[200] flex flex-col items-center justify-center">
+                    <div class="relative w-16 h-16 mb-4">
+                        <div class="absolute inset-0 rounded-full border-t-2 border-blue-500 animate-spin"></div>
+                        <div class="absolute inset-2 rounded-full border-b-2 border-emerald-500 animate-spin" style="animation-direction: reverse;"></div>
+                        <div class="absolute inset-4 rounded-full border-l-2 border-fuchsia-500 animate-spin" style="animation-duration: 0.5s;"></div>
                     </div>
-
-                    <!-- Heavy Processing Loader -->
-                    <div id="procLoading" class="hidden absolute inset-0 bg-[#0b1120]/80 backdrop-blur-sm z-[200] flex flex-col items-center justify-center">
-                        <div class="w-12 h-12 border-4 border-slate-700 border-t-blue-500 rounded-full animate-spin mb-4 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-                        <p class="text-[10px] font-black uppercase tracking-[0.2em] text-blue-400 animate-pulse">Running Computer Vision...</p>
-                    </div>
+                    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-400 animate-pulse font-mono">Neural Processing...</p>
                 </div>
 
             </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
-    <!-- SCRIPT TAMBAHAN UNTUK SLIDER & LOADER -->
+    <!-- SCRIPT INJEKSI KHUSUS UI (Tidak merusak doc-scanner.js) -->
     <script>
         function handleStrengthChange() {
             const loader = document.getElementById('strengthLoader');
             loader.classList.remove('hidden');
             
-            // Memberi waktu browser me-render spinner sebelum JS memblokir CPU
+            // Jeda async kecil agar browser sempat memuat spinner sebelum OpenCV memblokir thread
             requestAnimationFrame(() => {
                 setTimeout(() => {
-                    // Panggil fungsi processing dari doc-scanner.js
                     if (typeof scheduleLivePreview === 'function') {
                         scheduleLivePreview();
                     }
-                    
-                    // Matikan spinner setelah estimasi OpenCV selesai
-                    setTimeout(() => {
-                        loader.classList.add('hidden');
-                    }, 600); // 600ms cukup untuk mem-bypass freeze
+                    setTimeout(() => loader.classList.add('hidden'), 500); 
                 }, 50);
             });
         }
+        
+        // Memodifikasi sedikit listener ketika gambar termuat agar indikator teks berubah
+        document.getElementById('imageInput').addEventListener('change', () => {
+            const status = document.getElementById('statusIndicator');
+            const placeholder = document.getElementById('emptyPlaceholder');
+            if(status) {
+                status.innerText = 'Matrix Ready. Set Anchors.';
+                status.classList.replace('text-slate-300', 'text-emerald-400');
+                status.previousElementSibling.classList.replace('bg-blue-500', 'bg-emerald-500');
+            }
+            if(placeholder) placeholder.style.display = 'none';
+        });
     </script>
+
+    <!-- Logika OpenCV Utama -->
     <script src="../js/doc-scanner.js"></script>
 
     <!-- ========================================== -->
@@ -270,7 +337,7 @@
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our PDF & Security Tools</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our PDF Utility Suite</h3>
             <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -280,7 +347,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">PDF Watermark</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Stamp confidential logos on your newly scanned documents.</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Stamp confidential logos on your newly scanned documents safely.</p>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="Image to PDF.html">
@@ -288,8 +355,8 @@
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image to PDF</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Quickly bundle plain images into a PDF without scanning filters.</p>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image to PDF Matrix</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Quickly bundle plain unedited images directly into a PDF payload.</p>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-blue-500 transition-all shadow-sm" href="splitPDF.html">
@@ -297,8 +364,8 @@
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758L5 19m0-14l4.121 4.121" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Split PDF Pages</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Extract specific pages from large multi-page PDF documents.</p>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Split PDF Blueprint</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Extract specific critical pages from massive compiled PDF contracts.</p>
                 </div>
             </a>
         </div>
@@ -309,58 +376,53 @@
     <!-- ========================================== -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            
-            <!-- Ornamen Background Subtle -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
             <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
             
-            <!-- Teks Kiri -->
             <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
+                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Discovered an anomaly?</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve the MARK_Tools ecosystem. Report a glitch or submit a module request.</p>
                 </div>
             </div>
             
-            <!-- Tombol Kanan -->
             <div class="relative z-10 w-full md:w-auto shrink-0">
                 <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
                     <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Contact Developer
                 </a>
             </div>
-
         </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING MAX) -->
+    <!-- SEO CONTENT AREA (ZERO PRO RULE) -->
     <!-- ========================================== -->
     <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Turn Your Smartphone into a Professional AI Scanner</h2>
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Advanced AI Smartphone Digitization Framework</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Gone are the days of relying on bulky hardware scanners to digitize receipts, identity cards, or signed legal contracts. Taking a photo with your smartphone is fast, but it often results in terrible angles, dark shadows, and unreadable text. The <strong>MARK_Tools Document Scanner</strong> utilizes advanced Computer Vision to magically flatten, crop, and enhance your photos, converting them into crisp, professional A4 PDFs.
+                Gone are the days of relying on bulky hardware scanners to digitize receipts, identity cards, or signed legal contracts. Taking a photo with your smartphone is fast, but it often results in terrible angles, dark shadows, and unreadable text. The <strong>MARK_Tools Document Scanner</strong> utilizes advanced Computer Vision algorithms to magically flatten, crop, and enhance your photos, converting them into crisp, presentation-ready A4 PDFs.
             </p>
             <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
-                Most mobile scanner apps are infamous for locking basic features behind expensive subscriptions, watermarking your documents, or secretly harvesting your sensitive data. By running OpenCV (Open Source Computer Vision Library) compiled into WebAssembly directly inside your browser, we guarantee 100% data privacy.
+                Most mobile app counterparts are infamous for locking basic features behind expensive subscriptions, watermarking your sensitive documents, or secretly uploading your data to third-party servers. By compiling OpenCV (Open Source Computer Vision Library) into WebAssembly, our engine executes heavy geometric mathematics strictly inside your local browser memory.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-800 mb-3 text-blue-600">Smart Perspective Deskew</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Took a photo of a document sitting on a table from an awkward, slanted angle? No problem. By dragging the four blue corner handles to match the edges of your paper, our engine uses a mathematical matrix called <em>Perspective Transformation</em> to warp and flatten the image, making it appear as if it was scanned perfectly from above.
+                        Took a photo of a document sitting on a table from an awkward, slanted angle? No problem. By dragging the four intelligent corner handles to match the edges of your paper, our engine calculates a mathematical matrix called <em>Perspective Transformation</em> to warp and flatten the image, rendering it identically to a top-down hardware scan.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Adaptive B&W Thresholding</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Lighting conditions are rarely perfect. The "B&W Document" filter applies an Adaptive Gaussian Threshold to your image. This algorithm analyzes small clusters of pixels to eliminate background shadows, turning the paper pure white and the text solid black. You can use the "Strength" slider to fine-tune the noise reduction.
+                        Lighting conditions are rarely perfect. The built-in Black & White Matrix filter applies an Adaptive Gaussian Threshold to your payload. This algorithm analyzes isolated pixel clusters to eliminate background shadows, turning the paper pure white and the text solidly dark. Utilize the "Noise Threshold" slider for extreme clarity calibration.
                     </p>
                 </div>
             </div>
@@ -368,12 +430,12 @@
             <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Can I combine multiple scans into one PDF?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Absolutely! Just click "Add Page" on the sidebar to upload another photo. The system will hold them in a queue. Once you have deskewed and applied filters to all your pages, clicking "Save PDF" will compile them all into a single, multi-page document.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Can I batch process multiple scans into a single PDF payload?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Absolutely. Simply tap the "Add" button inside the Document Queue to upload additional captures. The internal memory will cache them locally. Once you have deskewed and applied matrix filters to all active frames, executing the "Compile to PDF" function will bundle them into a unified multi-page document.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Why does the browser freeze for a second when applying a filter?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Running complex graphical matrix calculations (like grayscale conversion, blurring, and perspective warping) on high-resolution, multi-megapixel smartphone photos requires massive CPU power. Because we prioritize your privacy by doing this completely offline, your browser is doing all the heavy mathematical lifting locally.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Why does the browser interface temporarily stall when applying a filter?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Running complex graphical matrix equations (such as tensor conversion, dimensional blurring, and perspective wrapping) on high-resolution, multi-megapixel smartphone captures demands massive instantaneous CPU power. Because we prioritize total privacy architecture by running offline, your device processor is absorbing the entire calculation load independently.</p>
                 </div>
             </div>
 

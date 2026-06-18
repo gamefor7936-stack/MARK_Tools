@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced IP Subnet & CIDR Calculator | MARK_Tools</title>
-    <meta name="description" content="Advanced IPv4 Subnet and CIDR Calculator. Calculate network, broadcast, wildcard mask, and usable host range instantly with binary visualizer.">
+    <meta name="description" content="Advanced IPv4 and IPv6 Subnet Calculator. Calculate network, broadcast, wildcard mask, and usable host range instantly with binary bit-map visualizer.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
@@ -25,7 +25,12 @@
         .term-input { background: #0f172a; border: 1px solid #334155; color: #10b981; font-family: 'JetBrains Mono', monospace; transition: all 0.3s; }
         .term-input:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); outline: none; }
         .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
+     crossorigin="anonymous"></script>
 </head>
 <body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
 
@@ -52,12 +57,19 @@
                         NET
                     </div>
                     <div>
-                        <h1 class="text-xl font-black text-white tracking-tight">IPv4 Calculator</h1>
-                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-1">Subnet & CIDR Tool</p>
+                        <h1 class="text-xl font-black text-white tracking-tight">IP Subnet Calculator</h1>
+                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-1">IPv4 & IPv6 Subnetting</p>
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <!-- Tab Selector (IPv4 vs IPv6) -->
+                <div class="flex p-1 bg-[#020617] rounded-xl border border-slate-800 mb-6 shadow-inner">
+                    <button onclick="switchIPVersion('v4')" id="tabV4" class="flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all">IPv4 Mode</button>
+                    <button onclick="switchIPVersion('v6')" id="tabV6" class="flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg text-slate-400 hover:text-white transition-all">IPv6 Tool</button>
+                </div>
+
+                <!-- IPv4 Inputs -->
+                <div id="v4Inputs" class="space-y-6">
                     <div>
                         <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Host IP Address</label>
                         <input type="text" id="ipInput" value="192.168.1.10" class="w-full p-4 rounded-xl term-input text-xl text-center tracking-widest font-bold shadow-inner" placeholder="192.168.1.1" oninput="calculateSubnet()">
@@ -79,7 +91,15 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mt-8">
+                <!-- IPv6 Inputs (Hidden by default) -->
+                <div id="v6Inputs" class="hidden space-y-6">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Raw IPv6 Address</label>
+                        <textarea id="ipV6Input" class="w-full p-4 rounded-xl term-input text-xs text-center font-mono leading-relaxed shadow-inner" rows="4" placeholder="2001:0db8:0000:0000:0000:ff00:0042:8329" oninput="calculateIPv6()"></textarea>
+                    </div>
+                </div>
+
+                <div id="exportBtnGroup" class="grid grid-cols-2 gap-3 mt-8">
                     <button onclick="exportReport('pdf')" id="btnExportPdf" class="bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-emerald-900/50 flex flex-col items-center justify-center gap-1 disabled:opacity-50">
                         <span class="text-lg">📄</span> Export PDF
                     </button>
@@ -99,7 +119,7 @@
             </div>
 
             <!-- SAILY ESIM BANNER (IP SUBNET) -->
-            <div class="glass-dark p-5 rounded-2xl border border-slate-800 relative overflow-hidden group">
+            <div class="glass-dark p-5 rounded-2xl border border-slate-800 relative overflow-hidden group shadow-lg">
                 <!-- Subtle background glow -->
                 <div class="absolute -right-10 -top-10 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl"></div>
 
@@ -128,88 +148,151 @@
                 Invalid IPv4 Address Format!
             </div>
 
-            <div id="resultArea" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-8">
-                <!-- Bento Grid Results -->
-                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Network Address</p>
-                    <p id="resNetwork" class="text-xl font-mono text-white font-bold">---</p>
-                </div>
-                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Broadcast Address</p>
-                    <p id="resBroadcast" class="text-xl font-mono text-white font-bold">---</p>
-                </div>
-                
-                <div class="md:col-span-2 bg-emerald-900/10 border border-emerald-500/30 p-5 rounded-2xl shadow-inner">
-                    <p class="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-2">Usable Host IP Range</p>
-                    <p id="resRange" class="text-xl md:text-2xl font-mono text-emerald-400 font-black">---</p>
-                </div>
-                
-                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner flex justify-between items-center">
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Hosts</p>
-                        <p id="resTotal" class="text-lg font-mono text-slate-300">---</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Usable Hosts</p>
-                        <p id="resUsable" class="text-lg font-mono text-emerald-400 font-bold">---</p>
+            <!-- IPv4 RESULT AREA -->
+            <div id="v4ResultContainer" class="flex flex-col">
+                <!-- Sub-Tabs Header (Quick Stats vs Subnet Splitter) -->
+                <div class="flex justify-between items-center mb-6 pb-3 border-b border-slate-800 flex-wrap gap-3">
+                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Network Analysis</h3>
+                    <div class="flex gap-2 bg-[#020617] p-1 rounded-lg border border-slate-800 shadow-inner">
+                        <button onclick="switchResultTab('stats')" id="tabQuickStats" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all">Quick Stats</button>
+                        <button onclick="switchResultTab('divider')" id="tabDivider" class="px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all">Subnet Splitter</button>
                     </div>
                 </div>
 
-                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner flex justify-between items-center">
-                    <div>
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Class</p>
-                        <p id="resClass" class="text-sm font-mono text-slate-300">---</p>
+                <!-- Sub-Section: Quick Stats -->
+                <div id="sectionQuickStats" class="space-y-6">
+                    <div id="resultArea" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+                        <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Network Address</p>
+                            <p id="resNetwork" class="text-xl font-mono text-white font-bold">---</p>
+                        </div>
+                        <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Broadcast Address</p>
+                            <p id="resBroadcast" class="text-xl font-mono text-white font-bold">---</p>
+                        </div>
+                        <div class="md:col-span-2 bg-emerald-900/10 border border-emerald-500/30 p-5 rounded-2xl shadow-inner">
+                            <p class="text-[10px] font-bold text-emerald-400/70 uppercase tracking-widest mb-2">Usable Host IP Range</p>
+                            <p id="resRange" class="text-xl md:text-2xl font-mono text-emerald-400 font-black">---</p>
+                        </div>
+                        <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Total Hosts</p>
+                                <p id="resTotal" class="text-lg font-mono text-slate-300">---</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Usable Hosts</p>
+                                <p id="resUsable" class="text-lg font-mono text-emerald-400 font-bold">---</p>
+                            </div>
+                        </div>
+                        <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner flex justify-between items-center">
+                            <div>
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Class</p>
+                                <p id="resClass" class="text-sm font-mono text-slate-300">---</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Type</p>
+                                <p id="resType" class="text-sm font-mono text-blue-400 font-bold">---</p>
+                            </div>
+                        </div>
+                        <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Subnet Mask</p>
+                            <p id="resMask" class="text-lg font-mono text-slate-300">---</p>
+                        </div>
+                        <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
+                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Wildcard Mask</p>
+                            <p id="resWildcard" class="text-lg font-mono text-slate-300">---</p>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">IP Type</p>
-                        <p id="resType" class="text-sm font-mono text-blue-400 font-bold">---</p>
+
+                    <!-- Advanced Binary Breakdown -->
+                    <div id="binaryArea" class="bg-[#0f172a] p-5 rounded-2xl border border-slate-700 overflow-x-auto">
+                        <div class="flex justify-between items-center mb-4 min-w-[300px]">
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Binary Bit-Map Visualizer</p>
+                            <div class="flex gap-3 text-[9px] font-bold uppercase tracking-widest">
+                                <span class="text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Network Bits</span>
+                                <span class="text-slate-500 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-500"></span> Host Bits</span>
+                            </div>
+                        </div>
+                        <div class="space-y-3 text-xs md:text-sm font-mono">
+                            <div class="flex items-center w-full min-w-[400px]">
+                                <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">IP</span>
+                                <span id="binIp" class="tracking-[0.2em]"></span>
+                            </div>
+                            <div class="flex items-center w-full min-w-[400px]">
+                                <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">Mask</span>
+                                <span id="binMask" class="tracking-[0.2em]"></span>
+                            </div>
+                            <div class="flex items-center w-full min-w-[400px]">
+                                <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">Net</span>
+                                <span id="binNet" class="tracking-[0.2em]"></span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Subnet Mask</p>
-                    <p id="resMask" class="text-lg font-mono text-slate-300">---</p>
-                </div>
-                <div class="bg-[#020617] border border-slate-800 p-4 rounded-2xl shadow-inner">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Wildcard Mask</p>
-                    <p id="resWildcard" class="text-lg font-mono text-slate-300">---</p>
+                <!-- Sub-Section: Subnet Splitter (VLSM) -->
+                <div id="sectionDivider" class="hidden space-y-6 animate-fade-in">
+                    <div class="bg-[#020617] p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <h4 class="text-sm font-bold text-white mb-1">Dynamic Network Divider</h4>
+                            <p class="text-xs text-slate-400">Carve your current network range into smaller sub-subnets.</p>
+                        </div>
+                        <div class="flex items-center gap-3 shrink-0">
+                            <span class="text-xs text-slate-500 font-bold uppercase">Split Into Size:</span>
+                            <select id="splitSelector" class="p-2.5 rounded-xl term-input text-xs font-bold appearance-none text-center cursor-pointer min-w-[80px]" onchange="generateSubnetSplits()">
+                                <!-- Generated Dynamically based on current CIDR -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Output Splits Table -->
+                    <div class="overflow-x-auto rounded-2xl border border-slate-800">
+                        <table class="w-full text-left text-xs text-slate-300 font-mono">
+                            <thead class="bg-[#020617] text-[10px] uppercase tracking-widest text-slate-500 border-b border-slate-800">
+                                <tr>
+                                    <th class="px-4 py-3">Subnet IP/CIDR</th>
+                                    <th class="px-4 py-3">Usable IP Range</th>
+                                    <th class="px-4 py-3">Broadcast</th>
+                                    <th class="px-4 py-3 text-right">Hosts</th>
+                                </tr>
+                            </thead>
+                            <tbody id="splitTableBody" class="divide-y divide-slate-800 bg-[#0f172a]">
+                                <!-- Generated Dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
 
-            <!-- Advanced Binary Breakdown -->
-            <div id="binaryArea" class="bg-[#0f172a] p-5 rounded-2xl border border-slate-700 overflow-x-auto mb-8">
-                <div class="flex justify-between items-center mb-4 min-w-[300px]">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Binary Breakdown</p>
-                    <div class="flex gap-3 text-[9px] font-bold uppercase tracking-widest">
-                        <span class="text-emerald-400 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400"></span> Network Bits</span>
-                        <span class="text-slate-500 flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-500"></span> Host Bits</span>
-                    </div>
+            <!-- IPv6 RESULT CONTAINER (Hidden by default) -->
+            <div id="v6ResultContainer" class="hidden glass-dark rounded-3xl p-6 md:p-8 flex flex-col border border-slate-800 shadow-2xl animate-fade-in">
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-6 pb-3 border-b border-slate-800">IPv6 Address Expansion</h3>
+                
+                <div id="v6ErrorBanner" class="hidden bg-red-900/20 border border-red-500/50 text-red-400 p-4 rounded-xl text-sm mb-6 font-mono text-center font-bold">
+                    Invalid IPv6 Address Format!
                 </div>
-                <div class="space-y-3 text-xs md:text-sm font-mono">
-                    <div class="flex items-center w-full min-w-[400px]">
-                        <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">IP</span>
-                        <span id="binIp" class="tracking-[0.2em]"></span>
+
+                <div class="space-y-6">
+                    <div class="bg-[#020617] border border-slate-800 p-5 rounded-2xl shadow-inner">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Compressed / Shortened Address</p>
+                        <p id="resV6Compressed" class="text-md md:text-lg font-mono text-emerald-400 font-bold break-all font-bold">---</p>
                     </div>
-                    <div class="flex items-center w-full min-w-[400px]">
-                        <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">Mask</span>
-                        <span id="binMask" class="tracking-[0.2em]"></span>
-                    </div>
-                    <div class="flex items-center w-full min-w-[400px]">
-                        <span class="text-slate-500 w-16 font-bold uppercase text-[10px] tracking-widest">Net</span>
-                        <span id="binNet" class="tracking-[0.2em]"></span>
+                    <div class="bg-[#020617] border border-slate-800 p-5 rounded-2xl shadow-inner">
+                        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1.5">Uncompressed / Expanded Address</p>
+                        <p id="resV6Expanded" class="text-md md:text-lg font-mono text-white font-bold break-all">---</p>
                     </div>
                 </div>
             </div>
 
             <!-- INTERACTIVE CIDR QUICK REFERENCE CHEAT SHEET -->
-            <div>
+            <div id="cheatSheetContainer">
                 <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-3 gap-3">
                     <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                         <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         Subnets Cheat Sheet
                     </h4>
                     <!-- Tabs untuk Class A, B, C -->
-                    <div class="flex gap-2 bg-[#020617] p-1 rounded-lg border border-slate-800">
+                    <div class="flex gap-2 bg-[#020617] p-1 rounded-lg border border-slate-800 shadow-inner">
                         <button onclick="switchTab('C')" id="tabC" class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all">Class C (/24+)</button>
                         <button onclick="switchTab('B')" id="tabB" class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all">Class B (/16+)</button>
                         <button onclick="switchTab('A')" id="tabA" class="px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all">Class A (/8+)</button>
@@ -268,6 +351,129 @@
         </div>
     </main>
 
+    <!-- INTERNAL LINKING -->
+    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-800 flex-grow"></div>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Developer Tools</h3>
+            <div class="h-px bg-slate-800 flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="bandwidth-calc.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Bandwidth Calculator</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Convert Mbps to MB/s and estimate network transfer times.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="dns-lookup.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+                    DNS
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">DNS Lookup Resolver</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Dig domain records (A, MX, TXT) via secure DNS-over-HTTPS.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="JSONformatter.html">
+                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-lg">
+                    { }
+                </div>
+                <div>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">JSON Formatter</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Validate, beautify, and compress JSON payloads securely.</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- CONTACT CTA -->
+    <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
+        <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
+            <div class="absolute -left-20 -top-20 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
+            <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
+                <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
+                </div>
+            </div>
+            <div class="relative z-10 w-full md:w-auto shrink-0">
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-emerald-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    Contact Developer
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEO CONTENT AREA -->
+    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
+        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+            
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Understanding IPv4 Subnetting & CIDR</h2>
+            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
+                Network engineering is the backbone of modern cloud computing. Whether you are configuring an AWS Virtual Private Cloud (VPC), setting up a corporate firewall, or segmenting a local office network to improve security, you must understand IP Subnetting. The <strong>MARK_Tools IP Subnet Calculator</strong> eliminates the tedious binary mathematics required to determine Network Addresses, Broadcast IPs, and Usable Host Ranges.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
+                By simply inputting an IPv4 address and selecting a <strong>CIDR (Classless Inter-Domain Routing)</strong> mask, our client-side logic engine instantly maps out your entire network topology. Because we prioritize privacy, plotting your internal corporate IP structures on our site is completely safe—no data is logged or transmitted to external servers.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">What is CIDR Notation?</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        CIDR notation (e.g., <code>/24</code> or <code>/26</code>) dictates how many binary bits are "locked" for the network portion of an IP address. The remaining bits determine how many host devices (computers, servers) can connect to that network. For example, a <code>/24</code> mask allows for 254 usable hosts, which is the standard for most home and small office routers.
+                    </p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Wildcard Masks Explained</h3>
+                    <p class="text-sm text-slate-600 leading-relaxed">
+                        A Wildcard Mask is the exact mathematical inverse of a Subnet Mask. It is critically used by Network Administrators when configuring Access Control Lists (ACLs) on Cisco routers and firewalls to explicitly permit or deny traffic to specific groups of IP addresses within a subnet.
+                    </p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Why Segment Your Network?</h3>
+            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
+                <li class="flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">✓</span> 
+                    <span><strong>Security & Isolation:</strong> Putting IoT devices, guest Wi-Fi users, and corporate servers on the same subnet is a massive security risk. Subnetting isolates traffic, ensuring a compromised guest laptop cannot communicate with internal databases.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">✓</span> 
+                    <span><strong>Broadcast Storm Prevention:</strong> Every device occasionally shouts "broadcast" messages to the entire network. If 1000 devices are on a single <code>/16</code> subnet, the noise will cripple network speed. Subnetting breaks collision domains into smaller, manageable chunks.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="text-emerald-500 font-bold">✓</span> 
+                    <span><strong>Organization:</strong> Allocating specific IP ranges to specific departments (e.g., <code>192.168.10.x</code> for HR, <code>192.168.20.x</code> for Engineering) makes firewall rule management infinitely easier.</span>
+                </li>
+            </ul>
+
+            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Why are there 2 IPs I cannot use for hosts?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">In any IPv4 subnet, the absolute first IP address is reserved as the <strong>Network ID</strong> (used by routing tables to identify the entire block), and the absolute last IP address is reserved as the <strong>Broadcast IP</strong> (used to send packets to every device in that subnet simultaneously). Therefore, a <code>/24</code> subnet has 256 total IPs, but only 254 are usable for computers.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Does this tool support IPv6?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Currently, this specific calculator is optimized for IPv4 (Internet Protocol version 4) infrastructure, which still powers 99% of internal corporate LANs and private cloud VPCs. We are actively developing a dedicated tool for IPv6 hexadecimal calculation.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">Can I export my subnet configuration?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Yes! You can instantly click the <strong>Export PDF</strong> or <strong>Export Word</strong> button to generate a clean, professional report of your IP configuration. This is highly useful for documenting network architecture changes for IT audit compliance.</p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
     <script>
         // Init & STATE RESTORATION
         window.onload = () => {
@@ -286,18 +492,76 @@
             if(typeof renderHistoryUI === 'function') renderHistoryUI('IP Calculator');
         };
 
+        // --- IP MODE SWITCHER (IPv4 vs IPv6) ---
+        function switchIPVersion(version) {
+            const tabV4 = document.getElementById('tabV4');
+            const tabV6 = document.getElementById('tabV6');
+            const v4Inputs = document.getElementById('v4Inputs');
+            const v6Inputs = document.getElementById('v6Inputs');
+            const v4Result = document.getElementById('v4ResultContainer');
+            const v6Result = document.getElementById('v6ResultContainer');
+            const exportGroup = document.getElementById('exportBtnGroup');
+            const cheatSheet = document.getElementById('cheatSheetContainer');
+
+            // Reset Tab UI
+            [tabV4, tabV6].forEach(tab => {
+                tab.className = "flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg text-slate-400 hover:text-white transition-all";
+            });
+
+            if (version === 'v4') {
+                tabV4.className = "flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all";
+                v4Inputs.classList.remove('hidden');
+                v6Inputs.classList.add('hidden');
+                v4Result.classList.remove('hidden');
+                v6Result.classList.add('hidden');
+                exportGroup.classList.remove('hidden');
+                exportGroup.classList.add('grid');
+                cheatSheet.classList.remove('hidden');
+            } else {
+                tabV6.className = "flex-1 py-2 text-[10px] font-bold uppercase tracking-widest rounded-lg bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all";
+                v4Inputs.classList.add('hidden');
+                v6Inputs.classList.remove('hidden');
+                v4Result.classList.add('hidden');
+                v6Result.classList.remove('hidden');
+                exportGroup.classList.remove('grid');
+                exportGroup.classList.add('hidden');
+                cheatSheet.classList.add('hidden');
+                calculateIPv6(); // Initial empty calc
+            }
+        }
+
+        // --- SUB SECTION RESULT SWITCHER (Quick Stats vs Subnet Splitter) ---
+        function switchResultTab(tabName) {
+            const tabQuickStats = document.getElementById('tabQuickStats');
+            const tabDivider = document.getElementById('tabDivider');
+            const sectionQuickStats = document.getElementById('sectionQuickStats');
+            const sectionDivider = document.getElementById('sectionDivider');
+
+            [tabQuickStats, tabDivider].forEach(tab => {
+                tab.className = "px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all";
+            });
+
+            if (tabName === 'stats') {
+                tabQuickStats.className = "px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all";
+                sectionQuickStats.classList.remove('hidden');
+                sectionDivider.classList.add('hidden');
+            } else {
+                tabDivider.className = "px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest rounded-md bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 transition-all";
+                sectionQuickStats.classList.add('hidden');
+                sectionDivider.classList.remove('hidden');
+                generateSubnetSplits(); // Render splits
+            }
+        }
+
         // --- TAB SWITCHER FOR CHEAT SHEET ---
         function switchTab(tabName) {
-            // Reset all tabs UI
             ['A', 'B', 'C'].forEach(id => {
                 const btn = document.getElementById('tab' + id);
                 const body = document.getElementById('body' + id);
-                
                 btn.className = "px-3 py-1 text-[10px] font-bold uppercase tracking-widest rounded-md text-slate-400 hover:text-white transition-all";
                 body.classList.add('hidden');
             });
 
-            // Activate Selected Tab
             const activeBtn = document.getElementById('tab' + tabName);
             const activeBody = document.getElementById('body' + tabName);
             
@@ -344,6 +608,7 @@
             return html;
         }
 
+        // --- CORE CALCULATOR ENGINE (IPv4) ---
         function calculateSubnet() {
             const ipStr = document.getElementById('ipInput').value.trim();
             const cidr = parseInt(document.getElementById('cidrSlider').value);
@@ -409,6 +674,156 @@
             document.getElementById('binIp').innerHTML = getColoredBinaryHTML(ipInt, cidr);
             document.getElementById('binMask').innerHTML = getColoredBinaryHTML(maskInt, cidr);
             document.getElementById('binNet').innerHTML = getColoredBinaryHTML(networkInt, cidr);
+
+            // Populate Subnet Splitter Options (Dropdown)
+            populateSplitOptions(cidr);
+            generateSubnetSplits(); // Render splits dynamically
+        }
+
+        // --- DYNAMIC SUBNET DIVIDER ENGINE (VLSM) ---
+        function populateSplitOptions(currentCidr) {
+            const select = document.getElementById('splitSelector');
+            select.innerHTML = "";
+            
+            if (currentCidr >= 30) {
+                select.innerHTML = `<option value="">N/A</option>`;
+                return;
+            }
+
+            for (let i = currentCidr + 1; i <= 30; i++) {
+                const count = Math.pow(2, i - currentCidr);
+                const opt = document.createElement('option');
+                opt.value = i;
+                opt.innerText = `/${i} (${count} subnets)`;
+                select.appendChild(opt);
+            }
+        }
+
+        function generateSubnetSplits() {
+            const tableBody = document.getElementById('splitTableBody');
+            const targetCidr = parseInt(document.getElementById('splitSelector').value);
+            const currentCidr = parseInt(document.getElementById('cidrSlider').value);
+
+            tableBody.innerHTML = "";
+
+            if (!targetCidr || isNaN(targetCidr) || targetCidr <= currentCidr) {
+                tableBody.innerHTML = `<tr><td colspan="4" class="px-4 py-4 text-center text-slate-500 italic">Cannot split subnets on tight CIDR constraints.</td></tr>`;
+                return;
+            }
+
+            const baseIpInt = ipToInt(document.getElementById('resNetwork').innerText);
+            const subnetsCount = Math.pow(2, targetCidr - currentCidr);
+            const ipsPerSubnet = Math.pow(2, 32 - targetCidr);
+
+            // Limit rendering of splits (Max 64 to prevent freezing browser tab)
+            const maxRender = Math.min(64, subnetsCount);
+
+            for (let i = 0; i < maxRender; i++) {
+                const subNetInt = baseIpInt + (i * ipsPerSubnet);
+                const subBroadcastInt = subNetInt + ipsPerSubnet - 1;
+                
+                const usableFirst = subNetInt + 1;
+                const usableLast = subBroadcastInt - 1;
+                const hostsCount = ipsPerSubnet - 2;
+
+                tableBody.innerHTML += `
+                    <tr class="hover:bg-slate-800/50 transition">
+                        <td class="px-4 py-3 font-bold text-emerald-400 font-mono">${intToIp(subNetInt)}/${targetCidr}</td>
+                        <td class="px-4 py-3 font-mono">${intToIp(usableFirst)} - ${intToIp(usableLast)}</td>
+                        <td class="px-4 py-3 font-mono text-slate-400">${intToIp(subBroadcastInt)}</td>
+                        <td class="px-4 py-3 text-right font-mono text-white">${hostsCount.toLocaleString()}</td>
+                    </tr>
+                `;
+            }
+
+            if (subnetsCount > 64) {
+                tableBody.innerHTML += `
+                    <tr>
+                        <td colspan="4" class="px-4 py-3 text-center text-slate-500 italic">
+                            Showing first 64 of ${subnetsCount} total subnets. (Render capped for UI performance)
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // --- CORE IPV6 UTILITY ENGINE ---
+        function calculateIPv6() {
+            const input = document.getElementById('ipV6Input').value.trim();
+            const errBanner = document.getElementById('v6ErrorBanner');
+
+            if (!input) {
+                errBanner.classList.add('hidden');
+                document.getElementById('resV6Compressed').innerText = "---";
+                document.getElementById('resV6Expanded').innerText = "---";
+                return;
+            }
+
+            // Simple IPv6 validation Regex
+            const ipv6Regex = /^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+
+            if (!ipv6Regex.test(input)) {
+                errBanner.classList.remove('hidden');
+                document.getElementById('resV6Compressed').innerText = "---";
+                document.getElementById('resV6Expanded').innerText = "---";
+                return;
+            }
+
+            errBanner.classList.add('hidden');
+
+            try {
+                // Expand IPv6
+                let expanded = expandIPv6(input);
+                // Compress IPv6
+                let compressed = compressIPv6(expanded);
+
+                document.getElementById('resV6Compressed').innerText = compressed;
+                document.getElementById('resV6Expanded').innerText = expanded;
+            } catch (e) {
+                errBanner.classList.remove('hidden');
+            }
+        }
+
+        // Helper: Expand IPv6 short-form address
+        function expandIPv6(address) {
+            let fullAddress = "";
+            let parts = address.split("::");
+
+            if (parts.length === 2) {
+                let left = parts[0].split(":").filter(Boolean);
+                let right = parts[1].split(":").filter(Boolean);
+                let missingPartsCount = 8 - (left.length + right.length);
+                let middle = Array(missingPartsCount).fill("0000");
+                
+                let combined = [...left, ...middle, ...right];
+                fullAddress = combined.map(x => x.padStart(4, "0")).join(":");
+            } else {
+                fullAddress = address.split(":").map(x => x.padStart(4, "0")).join(":");
+            }
+            return fullAddress.toLowerCase();
+        }
+
+        // Helper: Compress expanded IPv6 address
+        function compressIPv6(address) {
+            let parts = address.split(":").map(x => parseInt(x, 16).toString(16));
+            let compressed = parts.join(":");
+            
+            // Find longest sequence of zeroes
+            let zerosRegex = /(?:^|:)0(?::0)+(?:$|:)/g;
+            let match;
+            let longestMatch = "";
+            
+            while ((match = zerosRegex.exec(compressed)) !== null) {
+                if (match[0].length > longestMatch.length) {
+                    longestMatch = match[0];
+                }
+            }
+            
+            if (longestMatch) {
+                compressed = compressed.replace(longestMatch, "::");
+                compressed = compressed.replace(":::", "::");
+            }
+            return compressed.toLowerCase();
         }
 
         function ipToInt(ip) { return ip.split('.').reduce((int, oct) => (int << 8) + parseInt(oct, 10), 0) >>> 0; }
@@ -486,7 +901,8 @@
                 }
 
                 if (typeof processDirectDownload === 'function') {
-                    await processDirectDownload('IP Calculator', finalFileName, finalBlob);
+                    const historyId = await addToHistory('IP Calculator', finalFileName, finalBlob);
+                    await downloadFromHistory(historyId);
                 } else {
                     saveFile(URL.createObjectURL(finalBlob), finalFileName);
                 }
@@ -498,129 +914,5 @@
             }
         }
     </script>
-
-    <!-- INTERNAL LINKING -->
-    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Developer Tools</h3>
-            <div class="h-px bg-slate-800 flex-grow"></div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="bandwidth-calc.html">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                </div>
-                <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Bandwidth Calculator</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Convert Mbps to MB/s and estimate network transfer times.</p>
-                </div>
-            </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="dns-lookup.html">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
-                    DNS
-                </div>
-                <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">DNS Lookup Resolver</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Dig domain records (A, MX, TXT) via secure DNS-over-HTTPS.</p>
-                </div>
-            </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="JSONformatter.html">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-lg">
-                    { }
-                </div>
-                <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">JSON Formatter</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Validate, beautify, and compress JSON payloads securely.</p>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <!-- CONTACT CTA -->
-    <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
-        <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors duration-500"></div>
-            <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
-                <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
-                </div>
-            </div>
-            <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-emerald-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Contact Developer
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- SEO YAPPING MAX PRO -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
-        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
-            
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Understanding IPv4 Subnetting & CIDR</h2>
-            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Network engineering is the backbone of modern cloud computing. Whether you are configuring an AWS Virtual Private Cloud (VPC), setting up a corporate firewall, or segmenting a local office network to improve security, you must understand IP Subnetting. The <strong>MARK_Tools IP Subnet Calculator</strong> eliminates the tedious binary mathematics required to determine Network Addresses, Broadcast IPs, and Usable Host Ranges.
-            </p>
-            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
-                By simply inputting an IPv4 address and selecting a <strong>CIDR (Classless Inter-Domain Routing)</strong> mask, our client-side logic engine instantly maps out your entire network topology. Because we prioritize privacy, plotting your internal corporate IP structures on our site is completely safe—no data is logged or transmitted to external servers.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">What is CIDR Notation?</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        CIDR notation (e.g., <code>/24</code> or <code>/26</code>) dictates how many binary bits are "locked" for the network portion of an IP address. The remaining bits determine how many host devices (computers, servers) can connect to that network. For example, a <code>/24</code> mask allows for 254 usable hosts, which is the standard for most home and small office routers.
-                    </p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">Wildcard Masks Explained</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        A Wildcard Mask is the exact mathematical inverse of a Subnet Mask. It is critically used by Network Administrators when configuring Access Control Lists (ACLs) on Cisco routers and firewalls to explicitly permit or deny traffic to specific groups of IP addresses within a subnet.
-                    </p>
-                </div>
-            </div>
-
-            <h3 class="text-2xl font-bold text-slate-800 mb-4">Why Segment Your Network?</h3>
-            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
-                <li class="flex items-start gap-3">
-                    <span class="text-emerald-500 font-bold">1.</span> 
-                    <span><strong>Security & Isolation:</strong> Putting IoT devices, guest Wi-Fi users, and corporate servers on the same subnet is a massive security risk. Subnetting isolates traffic, ensuring a compromised guest laptop cannot communicate with internal databases.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-emerald-500 font-bold">2.</span> 
-                    <span><strong>Broadcast Storm Prevention:</strong> Every device occasionally shouts "broadcast" messages to the entire network. If 1000 devices are on a single <code>/16</code> subnet, the noise will cripple network speed. Subnetting breaks collision domains into smaller, manageable chunks.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-emerald-500 font-bold">3.</span> 
-                    <span><strong>Organization:</strong> Allocating specific IP ranges to specific departments (e.g., <code>192.168.10.x</code> for HR, <code>192.168.20.x</code> for Engineering) makes firewall rule management infinitely easier.</span>
-                </li>
-            </ul>
-
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
-            <div class="space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Why are there 2 IPs I cannot use for hosts?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">In any IPv4 subnet, the absolute first IP address is reserved as the <strong>Network ID</strong> (used by routing tables to identify the entire block), and the absolute last IP address is reserved as the <strong>Broadcast IP</strong> (used to send packets to every device in that subnet simultaneously). Therefore, a <code>/24</code> subnet has 256 total IPs, but only 254 are usable for computers.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Does this tool support IPv6?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Currently, this specific calculator is optimized for IPv4 (Internet Protocol version 4) infrastructure, which still powers 99% of internal corporate LANs and private cloud VPCs. We are actively developing a dedicated tool for IPv6 hexadecimal calculation.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Can I export my subnet configuration?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Yes! You can instantly click the <strong>Export PDF</strong> or <strong>Export Word</strong> button to generate a clean, professional report of your IP configuration. This is highly useful for documenting network architecture changes for IT audit compliance.</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
 </body>
 </html>

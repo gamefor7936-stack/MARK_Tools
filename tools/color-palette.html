@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Palette Extractor - MARK_Tools</title>
-    <meta name="description" content="Extract the dominant color palette from any image automatically. Perfect tool for graphic designers and web developers to find color harmony.">
+    <title>Color Palette Extractor & Generator - MARK_Tools</title>
+    <meta name="description" content="Extract the dominant color palette from any image automatically, use the pixel eyedropper, and export directly to Tailwind CSS or standard CSS variables.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
@@ -12,7 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/main.js"></script>
     <script src="../js/history.js?v=2.0"></script>
-    <!-- ColorThief Library untuk Ekstrak Warna -->
+    <!-- ColorThief Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
 
     <style>
@@ -21,137 +21,433 @@
         .font-sans { font-family: 'Inter', sans-serif; }
         .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
         
-        .color-box { transition: all 0.3s; cursor: pointer; }
-        .color-box:hover { transform: scale(1.05); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+        /* Interactive Color Cards */
+        .color-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .color-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+        .color-card:active { transform: translateY(0) scale(0.95); }
+
+        /* Canvas Eyedropper Overlay */
+        #canvasContainer { position: relative; display: inline-block; cursor: crosshair; overflow: hidden; border-radius: 0.75rem; }
+        #imageCanvas { display: block; max-width: 100%; height: auto; border-radius: 0.75rem; background: #000; }
+        
+        /* Eyedropper Loupe */
+        #loupe {
+            position: absolute; width: 60px; height: 60px; border-radius: 50%;
+            border: 3px solid #fff; box-shadow: 0 0 15px rgba(0,0,0,0.8), inset 0 0 5px rgba(0,0,0,0.5);
+            pointer-events: none; display: none; z-index: 10;
+            display: flex; align-items: center; justify-content: center;
+        }
+        #loupe::after {
+            content: ''; width: 4px; height: 4px; background: rgba(255,255,255,0.8);
+            border: 1px solid #000; border-radius: 50%; position: absolute;
+        }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
+<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col selection:bg-fuchsia-500 selection:text-white">
 
     <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
         <div class="container mx-auto px-6 h-16 flex justify-between items-center">
-            <a href="/" class="text-rose-500 font-black text-xl tracking-tighter">MARK_Tools | Design</a>
-            <a href="/" class="text-xs font-bold text-slate-400 hover:text-rose-400">BACK TO HOME</a>
+            <a href="/" class="text-fuchsia-500 font-black text-xl tracking-tighter">MARK_Tools <span class="text-slate-500 font-normal">| Design</span></a>
+            <a href="/" class="text-xs font-bold text-slate-400 hover:text-fuchsia-400 transition-colors">BACK TO HOME</a>
         </div>
     </nav>
 
     <main class="container mx-auto px-4 py-12 flex-grow flex flex-col lg:flex-row gap-6">
         
-        <!-- KIRI: UPLOAD -->
-        <div class="w-full lg:w-1/3 flex flex-col gap-6">
-            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-rose-500">
-                <div class="text-center mb-6">
-                    <h1 class="text-2xl font-bold text-white">Palette Generator</h1>
-                    <p class="text-xs text-slate-400 mt-1">Extract Dominant Color from Image</p>
+        <!-- KIRI: CONTROLS & UPLOAD -->
+        <div class="w-full lg:w-[30%] flex flex-col gap-6 shrink-0">
+            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-fuchsia-500">
+                <div class="mb-6">
+                    <h1 class="text-2xl font-black text-white tracking-tight">Color Engine</h1>
+                    <p class="text-xs text-slate-400 mt-1">AI Extractor & Pixel Eyedropper</p>
                 </div>
 
-                <label for="imgInput" class="w-full h-48 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 hover:border-rose-500 transition-all">
-                    <span class="text-4xl mb-2">📸</span>
-                    <span class="text-sm font-bold text-slate-400">Upload Image</span>
+                <label for="imgInput" class="w-full h-40 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 hover:border-fuchsia-500 transition-all group mb-6">
+                    <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">📸</span>
+                    <span class="text-sm font-bold text-slate-400 group-hover:text-fuchsia-400">Upload Image to Canvas</span>
                     <input type="file" id="imgInput" class="hidden" accept="image/*" onchange="processImage(this)">
                 </label>
+
+                <!-- Export Section -->
+                <div id="exportSection" class="hidden opacity-0 transition-opacity duration-500">
+                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Export Output Format</h4>
+                    <select id="exportFormat" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 outline-none mb-4">
+                        <option value="css">CSS Variables (.css)</option>
+                        <option value="tailwind">Tailwind Config (.js)</option>
+                        <option value="json">JSON Object (.json)</option>
+                    </select>
+                    
+                    <button onclick="saveAndRedirect()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white py-3.5 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-lg shadow-fuchsia-900/50 flex justify-center items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Export Palette
+                    </button>
+                </div>
             </div>
             
-            <div class="glass-dark p-4 rounded-xl">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Histori Palet</h4>
-                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+            <div class="glass-dark p-5 rounded-2xl">
+                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <svg class="w-3 h-3 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    Palette History
+                </h4>
+                <div id="historyList" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-sm font-mono"></div>
             </div>
         </div>
 
-        <!-- KANAN: HASIL PREVIEW & WARNA -->
-        <div class="w-full lg:w-2/3 glass-dark rounded-3xl p-6 md:p-10 flex flex-col items-center">
+        <!-- KANAN: WORKSPACE DRAFTING BOARD -->
+        <div class="w-full lg:w-[70%] glass-dark rounded-3xl p-6 md:p-8 flex flex-col relative overflow-hidden">
             
-            <div id="emptyState" class="h-full flex flex-col items-center justify-center opacity-30">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                <p class="font-mono text-sm">Waiting for the Picture...</p>
+            <div id="emptyState" class="absolute inset-0 flex flex-col items-center justify-center opacity-30 z-10 pointer-events-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mb-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <p class="font-mono text-sm tracking-widest uppercase">Waiting for Workspace Drop</p>
             </div>
 
-            <div id="resultArea" class="hidden w-full flex flex-col items-center">
-                <!-- Gambar Preview -->
-                <img id="sourceImage" class="max-h-[300px] rounded-xl shadow-2xl mb-8 object-contain bg-black" crossorigin="anonymous">
-
-                <!-- Palette Colors -->
-                <div class="w-full">
-                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 text-center">Click the color to copy the HEX Code</p>
-                    <div id="paletteContainer" class="flex flex-wrap justify-center gap-4">
-                        <!-- Warna akan di-generate via JS -->
+            <div id="resultArea" class="hidden w-full flex-col h-full z-20">
+                
+                <!-- Eyedropper Canvas Area -->
+                <div class="w-full flex justify-center mb-8 bg-[#020617] p-4 rounded-2xl border border-slate-800">
+                    <div id="canvasContainer" onmousemove="handleEyedropperMove(event)" onmouseleave="hideLoupe()" onclick="pickColorFromCanvas()">
+                        <canvas id="imageCanvas"></canvas>
+                        <div id="loupe"></div>
                     </div>
                 </div>
 
-                <button onclick="saveAndRedirect()" class="mt-12 w-full max-w-sm bg-rose-600 hover:bg-rose-500 text-white py-3 rounded-xl font-black uppercase tracking-widest transition shadow-lg shadow-rose-900/50">
-                    Export Palette to TXT
-                </button>
-            </div>
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full">
+                    
+                    <!-- Extracted Dominant Palette -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xs font-black text-slate-200 uppercase tracking-widest border-l-2 border-fuchsia-500 pl-2">Dominant Colors</h3>
+                            <span class="text-[10px] text-slate-500 font-mono">Click to Copy</span>
+                        </div>
+                        <div id="paletteContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
 
+                    <!-- Picked / Custom Colors -->
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-xs font-black text-slate-200 uppercase tracking-widest border-l-2 border-teal-500 pl-2">Eyedropper Picks</h3>
+                            <button onclick="clearCustomPicks()" class="text-[10px] text-rose-500 hover:text-rose-400 font-bold uppercase tracking-wider">Clear</button>
+                        </div>
+                        <div id="customPicksContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                            <div class="border border-dashed border-slate-700 rounded-xl h-20 flex items-center justify-center text-slate-600 text-[10px] uppercase font-bold text-center p-2">Click Canvas<br>to Pick</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Tailwind Shade Generator (Derived from Most Dominant) -->
+                <div class="mt-8 pt-6 border-t border-slate-800 w-full">
+                    <h3 class="text-xs font-black text-slate-200 uppercase tracking-widest mb-4">Generated Tailwind Shades (Base: <span id="baseShadeHex" class="text-fuchsia-400 font-mono">#000</span>)</h3>
+                    <div id="shadesContainer" class="flex flex-wrap lg:flex-nowrap w-full h-16 rounded-xl overflow-hidden shadow-2xl">
+                        <!-- Injected via JS -->
+                    </div>
+                </div>
+
+            </div>
         </div>
     </main>
 
     <script>
+        // INIT
         window.onload = () => { if(typeof renderHistoryUI === 'function') renderHistoryUI('Color Palette'); };
         
-        let currentPalette =[];
+        let dominantColors = [];
+        let customPicks = [];
+        let generatedShades = {};
+        
+        const canvas = document.getElementById('imageCanvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        const loupe = document.getElementById('loupe');
+        let imgElement = new Image();
+        let currentHoverHex = "#000000";
 
+        // NOTIFICATION SYSTEM
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.className = 'fixed bottom-5 right-5 bg-fuchsia-600 text-white px-4 py-2 rounded-lg shadow-xl font-mono text-xs font-bold z-50 transform translate-y-10 opacity-0 transition-all duration-300';
+            toast.innerText = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 50);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 2000);
+        }
+
+        // IMAGE PROCESSING & CANVAS RENDER
         function processImage(input) {
             if (!input.files[0]) return;
-            const img = document.getElementById('sourceImage');
             const reader = new FileReader();
             
             reader.onload = function(e) {
-                img.src = e.target.result;
-                document.getElementById('emptyState').classList.add('hidden');
-                document.getElementById('resultArea').classList.remove('hidden');
+                imgElement.crossOrigin = "Anonymous";
+                imgElement.src = e.target.result;
                 
-                img.onload = () => extractColors(img);
+                document.getElementById('emptyState').classList.add('hidden');
+                const resultArea = document.getElementById('resultArea');
+                resultArea.classList.remove('hidden');
+                resultArea.classList.add('flex');
+                
+                document.getElementById('exportSection').classList.remove('hidden');
+                setTimeout(() => document.getElementById('exportSection').classList.remove('opacity-0'), 100);
+
+                imgElement.onload = () => {
+                    // Responsive Canvas Sizing
+                    const MAX_WIDTH = 800;
+                    let scale = 1;
+                    if(imgElement.width > MAX_WIDTH) {
+                        scale = MAX_WIDTH / imgElement.width;
+                    }
+                    
+                    canvas.width = imgElement.width * scale;
+                    canvas.height = imgElement.height * scale;
+                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+                    
+                    extractColors(imgElement);
+                };
             };
             reader.readAsDataURL(input.files[0]);
         }
 
-        function extractColors(imgElement) {
+        // COLOR THIEF EXTRACTION
+        function extractColors(imgObj) {
             const colorThief = new ColorThief();
-            
-            // Ambil 5 warna dominan
-            const palette = colorThief.getPalette(imgElement, 5);
-            currentPalette =[];
+            try {
+                // Get 6 dominant colors
+                const palette = colorThief.getPalette(imgObj, 6);
+                dominantColors = palette.map(rgb => rgbToHex(rgb[0], rgb[1], rgb[2]));
+                
+                renderPalette(dominantColors, 'paletteContainer');
+                
+                // Generate Shades based on the most dominant color (index 0)
+                if(dominantColors.length > 0) {
+                    generateTailwindShades(dominantColors[0]);
+                }
+            } catch (err) {
+                console.error("ColorThief Error:", err);
+            }
+        }
 
-            const container = document.getElementById('paletteContainer');
+        // UI RENDERERS
+        function renderPalette(hexArray, containerId) {
+            const container = document.getElementById(containerId);
             container.innerHTML = "";
 
-            palette.forEach(rgb => {
-                const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
-                currentPalette.push(hex);
+            if(hexArray.length === 0 && containerId === 'customPicksContainer') {
+                container.innerHTML = `<div class="border border-dashed border-slate-700 rounded-xl h-20 flex items-center justify-center text-slate-600 text-[10px] uppercase font-bold text-center p-2 col-span-2 sm:col-span-3">Click Canvas<br>to Pick</div>`;
+                return;
+            }
+
+            hexArray.forEach(hex => {
+                const rgb = hexToRgb(hex);
+                const isDark = (rgb.r * 0.299 + rgb.g * 0.587 + rgb.b * 0.114) > 186 ? false : true;
+                const textColor = isDark ? 'text-white' : 'text-slate-900';
 
                 const div = document.createElement('div');
-                div.className = "color-box flex flex-col items-center gap-2";
+                div.className = "color-card group relative h-20 rounded-xl overflow-hidden border border-slate-700 flex flex-col justify-end p-2";
+                div.style.backgroundColor = hex;
+                div.onclick = () => copyColor(hex);
+                
                 div.innerHTML = `
-                    <div class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 border-slate-800 shadow-lg" style="background-color: ${hex}" onclick="copyColor('${hex}')"></div>
-                    <span class="font-mono text-xs text-slate-300 font-bold">${hex}</span>
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                    <div class="relative z-10 flex flex-col">
+                        <span class="font-mono text-[11px] font-bold ${textColor}">${hex}</span>
+                        <span class="font-mono text-[9px] opacity-70 ${textColor}">${rgb.r},${rgb.g},${rgb.b}</span>
+                    </div>
                 `;
                 container.appendChild(div);
             });
         }
 
+        // EYEDROPPER LOGIC
+        function handleEyedropperMove(e) {
+            loupe.style.display = 'flex';
+            const rect = canvas.getBoundingClientRect();
+            
+            // Adjust coordinates based on internal canvas resolution vs displayed size
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            
+            const x = (e.clientX - rect.left) * scaleX;
+            const y = (e.clientY - rect.top) * scaleY;
+
+            // Ensure within bounds
+            if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
+
+            const pixelData = ctx.getImageData(x, y, 1, 1).data;
+            const hex = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
+            currentHoverHex = hex;
+
+            // Update Loupe Position & Color
+            loupe.style.left = (e.clientX - rect.left - 30) + 'px';
+            loupe.style.top = (e.clientY - rect.top - 30) + 'px';
+            loupe.style.backgroundColor = hex;
+        }
+
+        function hideLoupe() {
+            loupe.style.display = 'none';
+        }
+
+        function pickColorFromCanvas() {
+            if(!currentHoverHex) return;
+            if(!customPicks.includes(currentHoverHex)) {
+                if(customPicks.length >= 6) customPicks.shift(); // Max 6 picks
+                customPicks.push(currentHoverHex);
+                renderPalette(customPicks, 'customPicksContainer');
+                showToast(`Picked: ${currentHoverHex}`);
+            }
+        }
+
+        function clearCustomPicks() {
+            customPicks = [];
+            renderPalette(customPicks, 'customPicksContainer');
+        }
+
+        // TINT & SHADE ALGORITHM (Tailwind 50-900 Math)
+        function generateTailwindShades(baseHex) {
+            document.getElementById('baseShadeHex').innerText = baseHex;
+            const rgb = hexToRgb(baseHex);
+            generatedShades = {};
+            const container = document.getElementById('shadesContainer');
+            container.innerHTML = "";
+
+            // Weights for tints (mix with white) and shades (mix with black)
+            const stops = [
+                { id: '50', weight: 0.95, mix: 'white' },
+                { id: '100', weight: 0.90, mix: 'white' },
+                { id: '200', weight: 0.75, mix: 'white' },
+                { id: '300', weight: 0.60, mix: 'white' },
+                { id: '400', weight: 0.30, mix: 'white' },
+                { id: '500', weight: 0.00, mix: 'none' }, // Base
+                { id: '600', weight: 0.15, mix: 'black' },
+                { id: '700', weight: 0.35, mix: 'black' },
+                { id: '800', weight: 0.55, mix: 'black' },
+                { id: '900', weight: 0.75, mix: 'black' }
+            ];
+
+            stops.forEach(stop => {
+                let r, g, b;
+                if(stop.mix === 'white') {
+                    r = Math.round(rgb.r + (255 - rgb.r) * stop.weight);
+                    g = Math.round(rgb.g + (255 - rgb.g) * stop.weight);
+                    b = Math.round(rgb.b + (255 - rgb.b) * stop.weight);
+                } else if(stop.mix === 'black') {
+                    r = Math.round(rgb.r * (1 - stop.weight));
+                    g = Math.round(rgb.g * (1 - stop.weight));
+                    b = Math.round(rgb.b * (1 - stop.weight));
+                } else {
+                    r = rgb.r; g = rgb.g; b = rgb.b;
+                }
+
+                const shadeHex = rgbToHex(r, g, b);
+                generatedShades[stop.id] = shadeHex;
+
+                const isDark = (r * 0.299 + g * 0.587 + b * 0.114) > 186 ? false : true;
+                const textColor = isDark ? 'text-white' : 'text-slate-900';
+
+                const div = document.createElement('div');
+                div.className = "flex-1 flex flex-col items-center justify-center cursor-pointer hover:flex-[1.5] transition-all duration-300";
+                div.style.backgroundColor = shadeHex;
+                div.onclick = () => copyColor(shadeHex);
+                div.innerHTML = `
+                    <span class="font-bold text-[10px] ${textColor} opacity-80">${stop.id}</span>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // UTILITIES
         function rgbToHex(r, g, b) {
             return "#" + (1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1).toUpperCase();
         }
 
-        function copyColor(hex) {
-            navigator.clipboard.writeText(hex);
-            alert(`Copied: ${hex}`);
+        function hexToRgb(hex) {
+            let c;
+            if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+                c= hex.substring(1).split('');
+                if(c.length== 3){ c= [c[0], c[0], c[1], c[1], c[2], c[2]]; }
+                c= '0x'+c.join('');
+                return { r: (c>>16)&255, g: (c>>8)&255, b: c&255 };
+            }
+            return {r:0,g:0,b:0};
         }
 
+        function copyColor(hex) {
+            navigator.clipboard.writeText(hex);
+            showToast(`${hex} copied!`);
+        }
+
+        // ADVANCED EXPORT FUNCTIONALITY
         async function saveAndRedirect() {
-            if (currentPalette.length === 0) return;
+            if (dominantColors.length === 0) {
+                alert("Please upload an image and extract colors first.");
+                return;
+            }
             
-            const textContent = `Dominant Colors Extracted:\n\n${currentPalette.join('\n')}`;
-            const blob = new Blob([textContent], { type: 'text/plain' });
-            const fileName = `Color_Palette_${Date.now()}.txt`;
+            const format = document.getElementById('exportFormat').value;
+            let fileContent = "";
+            let fileExt = "";
+            let mimeType = "";
+
+            const allColors = {
+                dominant: dominantColors,
+                custom: customPicks,
+                shades: generatedShades
+            };
+
+            if(format === 'css') {
+                fileExt = '.css';
+                mimeType = 'text/css';
+                fileContent += `/* Extracted by MARK_Tools Color Engine */\n:root {\n`;
+                dominantColors.forEach((c, i) => fileContent += `  --color-dominant-${i+1}: ${c};\n`);
+                customPicks.forEach((c, i) => fileContent += `  --color-custom-${i+1}: ${c};\n`);
+                if(Object.keys(generatedShades).length) {
+                    fileContent += `\n  /* Tailwind Style Shades */\n`;
+                    for(const [key, val] of Object.entries(generatedShades)) {
+                        fileContent += `  --color-primary-${key}: ${val};\n`;
+                    }
+                }
+                fileContent += `}\n`;
+            } 
+            else if(format === 'tailwind') {
+                fileExt = '.js';
+                mimeType = 'text/javascript';
+                fileContent += `/** @type {import('tailwindcss').Config} */\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        brand: {\n`;
+                for(const [key, val] of Object.entries(generatedShades)) {
+                    fileContent += `          '${key}': '${val}',\n`;
+                }
+                fileContent += `        },\n        dominant: [\n`;
+                dominantColors.forEach(c => fileContent += `          '${c}',\n`);
+                fileContent += `        ]\n      }\n    }\n  }\n}\n`;
+            }
+            else if(format === 'json') {
+                fileExt = '.json';
+                mimeType = 'application/json';
+                fileContent = JSON.stringify(allColors, null, 2);
+            }
+
+            const blob = new Blob([fileContent], { type: mimeType });
+            const fileName = `MARK_Palette_${Date.now()}${fileExt}`;
             
+            // Bypass Direct Download Compliance
             if (typeof addToHistory === 'function') {
                 const historyId = await addToHistory('Color Palette', fileName, blob);
                 await downloadFromHistory(historyId);
+                showToast(`Palette Exported Successfully!`);
             } else {
-                saveFile(URL.createObjectURL(blob), fileName);
+                // Fallback if history.js is missing
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             }
         }
     </script>
@@ -166,8 +462,8 @@
             <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="css-gradient.html">
-                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-fuchsia-500 transition-all shadow-sm" href="css-gradient.html">
+                <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
                     CSS
                 </div>
                 <div>
@@ -175,8 +471,8 @@
                     <p class="text-[10px] text-slate-500 leading-tight">Create beautiful linear and radial gradients with exportable code.</p>
                 </div>
             </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="compressor.html">
-                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-fuchsia-500 transition-all shadow-sm" href="compressor.html">
+                <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                 </div>
                 <div>
@@ -184,8 +480,8 @@
                     <p class="text-[10px] text-slate-500 leading-tight">Shrink large UI assets and photos without losing visual quality.</p>
                 </div>
             </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="social-resizer.html">
-                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-fuchsia-500 transition-all shadow-sm" href="social-resizer.html">
+                <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
                 </div>
                 <div>
@@ -201,12 +497,9 @@
     <!-- ========================================== -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            
-            <!-- Ornamen Background Subtle -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+            <div class="absolute -left-20 -top-20 w-48 h-48 bg-fuchsia-500/10 rounded-full blur-3xl group-hover:bg-fuchsia-500/20 transition-colors duration-500"></div>
             
-            <!-- Teks Kiri -->
             <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
@@ -217,26 +510,24 @@
                 </div>
             </div>
             
-            <!-- Tombol Kanan -->
             <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-fuchsia-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(217,70,239,0.15)]">
+                    <svg class="w-4 h-4 text-fuchsia-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Contact Developer
                 </a>
             </div>
-
         </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
+    <!-- SEO CONTENT AREA (YAPPING ZONE)            -->
     <!-- ========================================== -->
     <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
             <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">The Definitive Guide to Extracting Dominant Colors from Images</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Every great brand identity and website design begins with a foundational color palette. Often, designers find inspiration in the real world—a breathtaking sunset, a vintage photograph, or a competitor's aesthetic mood board. However, manually using an eyedropper tool in Photoshop to guess which colors are mathematically dominant is tedious and inaccurate. 
+                Every great brand identity and website design begins with a foundational color palette. Often, designers find inspiration in the real world—a breathtaking sunset, a vintage photograph, or a competitor's aesthetic mood board. However, manually using an eyedropper tool in standard editing software to guess which colors are mathematically dominant is tedious and inaccurate. 
             </p>
             <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
                 The <strong>MARK_Tools Color Palette Generator</strong> automates this workflow. By uploading an image, our tool utilizes advanced algorithmic color quantization to group millions of pixels into their core dominant color clusters. Best of all, because this is an offline client-side tool, uploading your unreleased corporate branding assets or private photography is 100% secure.
@@ -244,15 +535,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-teal-600">How the Extraction Engine Works</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-fuchsia-600">Advanced Canvas Eyedropper</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        When you drop an image, the tool renders it onto an invisible HTML5 Canvas. A JavaScript algorithm then scans the image array, looking at the RGB data of every single pixel. By using techniques similar to K-Means Clustering, it groups colors that are visually close to each other, ultimately spitting out the 5 to 6 most dominant and contrasting hues that make up the image.
+                        While our artificial intelligence algorithms extract the broader theme automatically, sometimes you need granular control. We integrated an HTML5 Canvas-based eyedropper with a built-in magnifying loupe. You can hover precisely over a single pixel to capture its exact HEX value, bypassing the dominant extraction entirely.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">HEX vs. RGB Exporting</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Tailwind CSS Export Pipeline</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        To streamline your development process, our tool outputs color codes in the exact formats developers and designers need. You can instantly click to copy the <strong>HEX code</strong> (e.g., <code>#1E293B</code>) for use in CSS, Tailwind, and Figma, or grab the <strong>RGB format</strong> for programmatic manipulation and opacity adjustments.
+                        Say goodbye to plain text files. Our engine processes the dominant colors and mathematically calculates a complete 50-900 shade spectrum. You can directly export the generated data as a standard CSS variable list or as a perfectly formatted Tailwind configuration Javascript object.
                     </p>
                 </div>
             </div>
@@ -260,11 +551,11 @@
             <h3 class="text-2xl font-bold text-slate-800 mb-4">Why Color Theory Matters in UI/UX</h3>
             <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
                 <li class="flex items-start gap-3">
-                    <span class="text-teal-500 font-bold">1.</span> 
+                    <span class="text-fuchsia-500 font-bold">1.</span> 
                     <span><strong>Visual Hierarchy:</strong> Extracted palettes usually consist of a dominant base color and several vibrant accent colors. You can use the dominant darks/lights for your backgrounds, and the vibrant contrasting extracted colors for your Call-to-Action (CTA) buttons.</span>
                 </li>
                 <li class="flex items-start gap-3">
-                    <span class="text-teal-500 font-bold">2.</span> 
+                    <span class="text-fuchsia-500 font-bold">2.</span> 
                     <span><strong>Brand Cohesion:</strong> If a client gives you a hero image for their website banner, generating a UI color scheme directly from that image guarantees that the entire website will look harmoniously integrated with the photography.</span>
                 </li>
             </ul>
@@ -273,7 +564,7 @@
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">Why does the generated palette ignore small bright details?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Dominant color extraction calculates algorithms based on the <em>volume</em> of pixels. If an image is 95% dark blue ocean with a tiny 5% bright red boat, the red might be mathematically omitted because its pixel count is too low compared to the blues and cyans dominating the canvas.</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">Dominant color extraction calculates algorithms based on the <em>volume</em> of pixels. If an image is 95% dark blue ocean with a tiny 5% bright red boat, the red might be mathematically omitted because its pixel count is too low compared to the blues and cyans dominating the canvas. Use our manual eyedropper tool for precise pinpointing.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">Are my photos uploaded to your server to analyze the colors?</h4>

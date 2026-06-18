@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Converter & ICO Generator</title>
-    <meta name="description" content="Bulk convert images between JPG, PNG, and WebP formats instantly. A free, lightning-fast image converter running safely on your browser.">
+    <title>Universal Image Converter & ICO Engine | MARK_Tools</title>
+    <meta name="description" content="Bulk convert images between JPG, PNG, and WebP formats instantly. A free, lightning-fast image converter running safely on your browser memory.">
     <link rel="icon" type="image/png" href="../favicon.png">
+    <link rel="apple-touch-icon" href="../favicon.png">
+    <meta property="og:image" content="https://marktoolbox.com/favicon.png">
     
     <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,132 +15,271 @@
     <script src="../js/main.js"></script>
     <script src="../js/history.js?v=2.0"></script>
 
-    <script>
-        tailwind.config = { 
-            darkMode: 'class', 
-            theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } 
-        }
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s; }
-        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-    </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
-</head>
-<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300 min-h-screen">
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;600;700;900&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
 
-    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
-        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-7xl">
-            <a href="../index.html" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg flex items-center justify-center shadow-md">
-                    <span class="text-white font-black text-sm">M</span>
-                </div>
-                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK<span class="text-orange-600">_Tools</span></h1>
-            </a>
-            <a class="text-xs font-bold text-slate-500 dark:text-slate-400" href="../index.html">← BACK</a>
+        /* Input Select Custom Styling */
+        .converter-select {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            color: #f8fafc;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            appearance: none;
+        }
+        .converter-select:focus, .converter-select:hover { border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.15); }
+
+        /* Custom Slider (Cyber Range) */
+        .cyber-range { -webkit-appearance: none; background: transparent; width: 100%; }
+        .cyber-range::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #1e293b; border-radius: 4px; border: 1px solid #334155; }
+        .cyber-range::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 16px; width: 16px; border-radius: 50%;
+            background: #f97316; margin-top: -6px; cursor: pointer;
+            box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); transition: transform 0.1s;
+        }
+        .cyber-range::-webkit-slider-thumb:active { transform: scale(1.3); }
+
+        /* Drag & Drop Hover State */
+        .drag-over { background-color: rgba(249, 115, 22, 0.1) !important; border-color: #f97316 !important; border-style: solid !important; }
+        
+        /* Custom Checkbox */
+        .cyber-checkbox {
+            appearance: none; width: 16px; height: 16px; border: 2px solid #334155;
+            border-radius: 4px; background: #0f172a; cursor: pointer; position: relative;
+            transition: all 0.2s;
+        }
+        .cyber-checkbox:checked { background: #f97316; border-color: #f97316; }
+        .cyber-checkbox:checked::after {
+            content: '✔'; position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%); color: white; font-size: 10px; font-weight: black;
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
+</head>
+<body class="bg-[#0b1120] text-slate-300 min-h-screen flex flex-col selection:bg-orange-500/30 selection:text-white">
+
+    <!-- Navbar Dark -->
+    <nav class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800 shadow-xl shrink-0">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-orange-500 font-black text-xl tracking-tighter hover:opacity-80 transition-opacity">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] px-2 py-0.5 rounded-md font-bold tracking-widest hidden sm:inline-block">MEDIA ENGINE</span>
+            </div>
+            <a href="/" class="text-[10px] font-bold text-slate-400 hover:text-orange-400 transition uppercase tracking-widest bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">Back to Home</a>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 max-w-7xl flex flex-col lg:flex-row gap-8">
+    <main class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-6 flex-grow min-h-0">
         
-        <!-- SIDEBAR: SETTINGS -->
-        <div class="w-full lg:w-80 flex flex-col gap-6 shrink-0">
-            <div class="bg-white dark:bg-darkCard p-8 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder">
-                <h2 class="text-xl font-black mb-6 uppercase tracking-tight">Converter</h2>
+        <!-- SIDEBAR: SETTINGS & UPLOAD -->
+        <div class="w-full xl:w-[350px] flex flex-col gap-5 shrink-0 order-1">
+            
+            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-orange-500 shadow-2xl">
+                <div class="mb-6 flex items-center gap-3">
+                    <div class="w-10 h-10 bg-orange-500/10 text-orange-400 rounded-xl flex items-center justify-center border border-orange-500/20 shadow-inner">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-black text-white tracking-tight leading-none">Format Converter</h1>
+                        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-mono mt-1">Lossless Data Engine</p>
+                    </div>
+                </div>
 
-                <label id="uploadBox" class="w-full h-32 border-2 border-dashed border-orange-300 dark:border-orange-500/50 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-orange-50 dark:bg-orange-500/10 hover:bg-orange-100 transition-all mb-6">
-                    <span class="text-2xl mb-1">📷</span>
-                    <span class="text-[10px] font-bold text-orange-600 dark:text-orange-400 uppercase">Add Images</span>
-                    <input accept="image/*" class="hidden" id="imageInput" type="file" multiple onchange="handleFiles(this)"/>
+                <!-- Drag & Drop Upload Zone -->
+                <label id="uploadZone" class="w-full h-32 border-2 border-dashed border-slate-600 hover:border-orange-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-[#020617] hover:bg-orange-900/10 transition-all mb-6 group">
+                    <span class="text-3xl mb-2 text-slate-500 group-hover:text-orange-400 group-hover:scale-110 transition-all">📥</span>
+                    <span class="text-[10px] font-bold text-slate-400 group-hover:text-orange-400 uppercase tracking-widest">Drop Images Here</span>
+                    <span class="text-[9px] text-slate-500 font-mono mt-1">or click to browse</span>
+                    <input accept="image/*" class="hidden" id="imageInput" type="file" multiple onchange="handleFiles(this.files)"/>
                 </label>
 
-                <div id="settingsArea" class="hidden space-y-6 animate-fade-in">
-                    <div>
-                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Target Format</label>
-                        <select id="targetFormat" onchange="toggleIcoSettings()" class="w-full p-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-bold outline-none focus:ring-2 focus:ring-orange-500">
-                            <option value="image/png">PNG (.png)</option>
-                            <option value="image/jpeg">JPG (.jpg)</option>
-                            <option value="image/webp">WebP (.webp)</option>
-                            <option value="image/x-icon">Icon (.ico)</option>
-                            <option value="image/bmp">Windows Bitmap (.bmp)</option>
+                <!-- Configuration Panel -->
+                <div id="settingsArea" class="hidden space-y-5 animate-fade-in">
+                    
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex justify-between">
+                            Target Format
+                            <span class="text-orange-400" id="extPreview">.png</span>
+                        </label>
+                        <select id="targetFormat" onchange="toggleFormatSettings()" class="converter-select w-full bg-[#020617]">
+                            <option value="image/png">PNG (Preserve Transparency)</option>
+                            <option value="image/jpeg">JPG / JPEG (Standard)</option>
+                            <option value="image/webp">WebP (Optimized Web)</option>
+                            <option value="image/x-icon">ICO (Windows Icon Pack)</option>
+                            <option value="image/bmp">BMP (Raw Bitmap)</option>
                         </select>
                     </div>
 
-                    <!-- ICO SPECIFIC SETTINGS -->
-                    <div id="icoSettings" class="hidden p-4 bg-orange-500/5 border border-orange-500/20 rounded-2xl space-y-3">
-                        <label class="text-[9px] font-black text-orange-500 uppercase tracking-widest">ICO Size Options</label>
-                        <div class="grid grid-cols-2 gap-2">
-                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
-                                <input type="checkbox" class="ico-size" value="16" checked> 16x16
-                            </label>
-                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
-                                <input type="checkbox" class="ico-size" value="32" checked> 32x32
-                            </label>
-                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
-                                <input type="checkbox" class="ico-size" value="48" checked> 48x48
-                            </label>
-                            <label class="flex items-center gap-2 text-[10px] cursor-pointer">
-                                <input type="checkbox" class="ico-size" value="256" checked> 256x256
-                            </label>
+                    <!-- JPG / WEBP QUALITY SLIDER -->
+                    <div id="qualitySettings" class="hidden flex-col gap-2 bg-[#020617] p-4 rounded-xl border border-slate-800">
+                        <div class="flex justify-between items-center">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Output Quality</label>
+                            <span class="text-xs font-mono text-orange-400 font-bold" id="qualityVal">90%</span>
                         </div>
-                        <p class="text-[8px] text-slate-400 italic leading-tight">*Multiple sizes will be packed into a single .ico file.</p>
+                        <input type="range" id="compressionQuality" min="10" max="100" value="90" class="cyber-range" oninput="document.getElementById('qualityVal').innerText = this.value + '%'">
+                        <p class="text-[9px] text-slate-500 leading-tight">Lower quality creates smaller file sizes but introduces pixel artifacts.</p>
                     </div>
 
-                    <button onclick="startConversion()" id="btnConvert" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-2xl font-black uppercase text-xs tracking-widest shadow-lg shadow-orange-900/30">
-                        Convert (<span id="queueCount">0</span>) Files
+                    <!-- ICO SPECIFIC SETTINGS -->
+                    <div id="icoSettings" class="hidden flex-col gap-3 bg-orange-500/5 p-4 rounded-xl border border-orange-500/20">
+                        <label class="text-[10px] font-black text-orange-500 uppercase tracking-widest border-b border-orange-500/20 pb-2">ICO Multi-Size Packaging</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-white cursor-pointer">
+                                <input type="checkbox" class="cyber-checkbox ico-size" value="16" checked> 16x16
+                            </label>
+                            <label class="flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-white cursor-pointer">
+                                <input type="checkbox" class="cyber-checkbox ico-size" value="32" checked> 32x32
+                            </label>
+                            <label class="flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-white cursor-pointer">
+                                <input type="checkbox" class="cyber-checkbox ico-size" value="48" checked> 48x48
+                            </label>
+                            <label class="flex items-center gap-2 text-xs font-mono text-slate-300 hover:text-white cursor-pointer">
+                                <input type="checkbox" class="cyber-checkbox ico-size" value="256" checked> 256x256
+                            </label>
+                        </div>
+                        <p class="text-[9px] text-orange-400/70 italic leading-tight">*Select multiple sizes to build a responsive app icon.</p>
+                    </div>
+
+                    <button onclick="startConversion()" id="btnConvert" class="w-full bg-orange-600 hover:bg-orange-500 text-white py-3.5 rounded-xl font-black uppercase text-xs tracking-widest transition-all shadow-[0_0_20px_rgba(249,115,22,0.3)] hover:shadow-[0_0_30px_rgba(249,115,22,0.5)] flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Compile (<span id="queueCount">0</span>) Files
                     </button>
                     
-                    <button onclick="clearQueue()" class="w-full text-[9px] font-bold text-slate-400 hover:text-red-500 uppercase tracking-[0.2em] mt-2 transition-colors">
-                        Clear All
+                    <button onclick="clearQueue()" class="w-full text-[9px] font-bold text-slate-500 hover:text-red-400 uppercase tracking-[0.2em] transition-colors mt-2 text-center flex justify-center items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Clear Workspace
                     </button>
                 </div>
             </div>
 
-            <div class="bg-white dark:bg-darkCard p-6 rounded-3xl border border-slate-200 dark:border-darkBorder shadow-sm">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase mb-4 tracking-widest text-center">Recent History</h4>
-                <div id="historyList" class="space-y-2 max-h-60 overflow-y-auto"></div>
+            <!-- NORDVPN SIDEBAR BANNER (AFFILIATE) -->
+            <div class="glass-dark border border-slate-800 p-5 rounded-2xl shadow-inner relative overflow-hidden group hidden xl:block">
+                <div class="absolute -right-10 -top-10 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-colors"></div>
+                <h5 class="text-xs font-black text-teal-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                    </span>
+                    Network Privacy
+                </h5>
+                <p class="text-[10px] text-slate-400 leading-relaxed mb-4">
+                    Your unreleased assets are converted locally on your device. Ensure your uploads to client servers stay encrypted from ISPs with <strong>NordVPN</strong>.
+                </p>
+                <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=148983&url_id=902" target="_blank" class="w-full text-center block bg-teal-600/20 hover:bg-teal-600 border border-teal-600/50 hover:border-teal-500 text-teal-400 hover:text-white py-2.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all">
+                    Secure Connection →
+                </a>
             </div>
+
         </div>
 
-        <!-- MAIN QUEUE AREA -->
-        <div class="flex-grow flex flex-col gap-6 min-w-0">
-            <div id="emptyState" class="bg-white dark:bg-darkCard rounded-3xl p-20 border border-slate-200 dark:border-darkBorder shadow-sm h-full flex flex-col items-center justify-center text-center opacity-30 italic">
-                <p class="font-mono text-sm tracking-widest uppercase">Select images to start conversion...</p>
+        <!-- MAIN QUEUE WORKSPACE -->
+        <div class="flex-grow flex flex-col gap-4 order-2 min-w-0">
+            
+            <!-- Asset Manager Header -->
+            <div class="bg-[#020617] border border-slate-800 rounded-2xl p-4 flex items-center justify-between shrink-0 shadow-lg">
+                <h2 class="text-xs font-black text-slate-300 uppercase tracking-widest border-l-2 border-orange-500 pl-3">Asset Manager</h2>
+                <div class="text-[10px] text-slate-500 font-mono">
+                    <span id="queueSizeText">0 KB</span> Total Ready
+                </div>
             </div>
 
-            <div id="queueArea" class="hidden grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 animate-fade-in">
-                <!-- List thumbnails di-generate di sini -->
+            <div id="emptyState" class="glass-dark rounded-2xl border border-slate-800 border-dashed h-full min-h-[400px] flex flex-col items-center justify-center text-center opacity-30">
+                <svg class="w-20 h-20 mb-4 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                <p class="font-mono text-sm tracking-widest uppercase">Workspace is Empty</p>
             </div>
+
+            <div id="queueArea" class="hidden grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 content-start gap-4 h-full overflow-y-auto pb-4">
+                <!-- List thumbnails di-generate via JS -->
+            </div>
+            
         </div>
     </main>
 
+    <!-- JS Logic -->
     <script>
         let fileQueue = [];
 
-        window.onload = () => { if(typeof renderHistoryUI === 'function') renderHistoryUI('Image Converter'); };
+        window.onload = () => { 
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('Image Converter');
+            setupDragAndDrop();
+        };
 
-        function handleFiles(input) {
-            if (!input.files.length) return;
-            const files = Array.from(input.files);
+        // NOTIFICATION SYSTEM
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-5 right-5 ${isError ? 'bg-red-600' : 'bg-orange-600'} text-white px-4 py-2 rounded-lg shadow-xl font-mono text-xs font-bold z-[100] transform translate-y-10 opacity-0 transition-all duration-300`;
+            toast.innerText = message;
+            document.body.appendChild(toast);
             
-            files.forEach(file => {
+            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 50);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // DRAG & DROP LOGIC
+        function setupDragAndDrop() {
+            const dropZone = document.getElementById('uploadZone');
+            
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+                document.body.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.add('drag-over'), false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, () => dropZone.classList.remove('drag-over'), false);
+            });
+
+            dropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                handleFiles(dt.files);
+            }, false);
+        }
+
+        function handleFiles(files) {
+            if (!files.length) return;
+            const validFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
+            
+            if (validFiles.length === 0) {
+                showToast("Only image files are allowed!", true);
+                return;
+            }
+
+            validFiles.forEach(file => {
                 const id = 'img_' + Math.random().toString(36).substr(2, 9);
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    fileQueue.push({ id, file, dataUrl: e.target.result });
+                    fileQueue.push({ id, file, dataUrl: e.target.result, size: file.size });
                     renderQueue();
                 };
                 reader.readAsDataURL(file);
             });
-            input.value = "";
+            document.getElementById('imageInput').value = "";
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
         function renderQueue() {
@@ -146,27 +287,34 @@
             const empty = document.getElementById('emptyState');
             const settings = document.getElementById('settingsArea');
             const countSpan = document.getElementById('queueCount');
+            const sizeText = document.getElementById('queueSizeText');
 
             if (fileQueue.length === 0) {
                 area.classList.add('hidden');
                 empty.classList.remove('hidden');
                 settings.classList.add('hidden');
+                sizeText.innerText = "0 KB";
                 return;
             }
 
             area.classList.remove('hidden');
-            area.classList.add('grid');
             empty.classList.add('hidden');
             settings.classList.remove('hidden');
             countSpan.innerText = fileQueue.length;
 
-            area.innerHTML = fileQueue.map((item, index) => `
-                <div class="bg-white dark:bg-darkCard p-3 rounded-2xl border border-slate-200 dark:border-darkBorder shadow-sm relative group animate-fade-in">
-                    <button onclick="removeFile('${item.id}')" class="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full shadow-lg flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all z-10">✕</button>
-                    <div class="h-32 bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden mb-2">
-                        <img src="${item.dataUrl}" class="w-full h-full object-contain">
+            let totalBytes = fileQueue.reduce((acc, curr) => acc + curr.size, 0);
+            sizeText.innerText = formatBytes(totalBytes);
+
+            area.innerHTML = fileQueue.map(item => `
+                <div class="bg-[#0f172a] p-3 rounded-2xl border border-slate-700 shadow-sm relative group overflow-hidden transition-transform hover:-translate-y-1">
+                    <button onclick="removeFile('${item.id}')" class="absolute top-2 right-2 bg-red-600 hover:bg-red-500 text-white w-6 h-6 rounded-full shadow-lg flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-all z-10">✕</button>
+                    <div class="h-28 bg-[#020617] rounded-xl overflow-hidden mb-3 border border-slate-800 flex items-center justify-center bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')]">
+                        <img src="${item.dataUrl}" class="max-w-full max-h-full object-contain">
                     </div>
-                    <p class="text-[9px] font-bold text-slate-500 dark:text-slate-400 truncate px-1 uppercase">${item.file.name}</p>
+                    <div class="flex flex-col">
+                        <p class="text-[10px] font-bold text-slate-300 truncate mb-0.5">${item.file.name}</p>
+                        <p class="text-[9px] font-mono text-slate-500">${formatBytes(item.size)}</p>
+                    </div>
                 </div>
             `).join('');
         }
@@ -181,32 +329,47 @@
             renderQueue();
         }
 
-        function toggleIcoSettings() {
+        function toggleFormatSettings() {
             const format = document.getElementById('targetFormat').value;
-            document.getElementById('icoSettings').classList.toggle('hidden', format !== 'image/x-icon');
+            const extPreview = document.getElementById('extPreview');
+            const icoSettings = document.getElementById('icoSettings');
+            const qualitySettings = document.getElementById('qualitySettings');
+
+            // Extension Badge
+            if(format === 'image/x-icon') extPreview.innerText = '.ico';
+            else if(format === 'image/jpeg') extPreview.innerText = '.jpg';
+            else extPreview.innerText = '.' + format.split('/')[1];
+
+            // Toggle Panels
+            icoSettings.classList.toggle('hidden', format !== 'image/x-icon');
+            qualitySettings.classList.toggle('hidden', !(format === 'image/jpeg' || format === 'image/webp'));
         }
 
-        // --- HANYA ADA 1 FUNGSI START CONVERSION SEKARANG ---
+        // --- CONVERSION ENGINE ---
         async function startConversion() {
             const btn = document.getElementById('btnConvert');
             const targetFormat = document.getElementById('targetFormat').value;
             const ext = targetFormat === 'image/x-icon' ? 'ico' : targetFormat.split('/')[1];
             
             btn.disabled = true;
-            btn.innerText = "Processing...";
+            const originalText = btn.innerHTML;
+            btn.innerHTML = `<div class="w-4 h-4 border-2 border-slate-300 border-t-white rounded-full animate-spin"></div> Processing...`;
 
             try {
                 const zip = new JSZip();
                 
+                // Get Settings
                 const sizes = Array.from(document.querySelectorAll('.ico-size:checked')).map(cb => parseInt(cb.value));
-                if (sizes.length === 0) sizes.push(256);
+                if (targetFormat === 'image/x-icon' && sizes.length === 0) sizes.push(256);
+                
+                const qualityValue = parseInt(document.getElementById('compressionQuality').value) / 100;
 
                 for (let item of fileQueue) {
                     let blob;
                     if (ext === 'ico') {
                         blob = await generateTrueIcoBlob(item.dataUrl, sizes);
                     } else {
-                        blob = await convertWithCanvas(item.dataUrl, targetFormat);
+                        blob = await convertWithCanvas(item.dataUrl, targetFormat, qualityValue);
                     }
                     
                     const fileName = item.file.name.split('.')[0] + "." + ext;
@@ -214,32 +377,30 @@
                 }
 
                 const zipContent = await zip.generateAsync({ type: "blob" });
-                const finalFileName = `Converted_Images_${Date.now()}.zip`;
+                const finalFileName = `MARK_Images_${Date.now()}.zip`;
 
-                // PERBAIKAN FATAL: Memanggil fungsi direct download dengan benar
                 if (typeof processDirectDownload === 'function') {
                     await processDirectDownload('Image Converter', finalFileName, zipContent);
+                    showToast("Conversion & Export Successful!");
                 } else {
-                    // Fallback Anti-Gagal jika file history.js telat dimuat
                     const url = URL.createObjectURL(zipContent);
                     const link = document.createElement('a');
-                    link.href = url;
-                    link.download = finalFileName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    link.href = url; link.download = finalFileName;
+                    document.body.appendChild(link); link.click(); link.remove();
+                    URL.revokeObjectURL(url);
                 }
 
             } catch (error) {
                 console.error(error);
-                alert("Conversion failed: " + error.message);
+                showToast("Error: " + error.message, true);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `Convert (<span id="queueCount">${fileQueue.length}</span>) Files`;
+                btn.innerHTML = originalText;
+                document.getElementById('queueCount').innerText = fileQueue.length;
             }
         }
 
-        function convertWithCanvas(dataUrl, format) {
+        function convertWithCanvas(dataUrl, format, quality) {
             return new Promise((resolve) => {
                 const img = new Image();
                 img.onload = () => {
@@ -247,13 +408,21 @@
                     canvas.width = img.width;
                     canvas.height = img.height;
                     const ctx = canvas.getContext('2d');
+                    
+                    // Fill white background if transparent PNG to JPG conversion
+                    if(format === 'image/jpeg' || format === 'image/bmp') {
+                        ctx.fillStyle = "#FFFFFF";
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+                    
                     ctx.drawImage(img, 0, 0);
-                    canvas.toBlob(resolve, format, 0.9);
+                    canvas.toBlob(resolve, format, quality);
                 };
                 img.src = dataUrl;
             });
         }
 
+        // COMPLEX ICO MULTI-SIZE PACKER
         async function generateTrueIcoBlob(dataUrl, sizes) {
             const pngBuffers = [];
             for (let size of sizes) {
@@ -322,13 +491,14 @@
             });
         }
     </script>
+
     <!-- ========================================== -->
     <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
     <!-- ========================================== -->
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Other Media Tools</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Media Suite</h3>
             <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -338,7 +508,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image Compressor</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Reduce massive image files before converting formats.</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Reduce massive image files before converting their formats.</p>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="color-palette.html">
@@ -347,7 +517,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Color Palette Extractor</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Analyze the dominant HEX and RGB colors in your photos.</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Analyze the dominant HEX and RGB matrices in your photos.</p>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="social-resizer.html">
@@ -356,7 +526,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Social Media Resizer</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Auto-crop any format into standard Instagram or YouTube sizes.</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Auto-crop any format into standard strict media blueprints.</p>
                 </div>
             </a>
         </div>
@@ -367,35 +537,30 @@
     <!-- ========================================== -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            
-            <!-- Ornamen Background Subtle -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+            <div class="absolute -left-20 -top-20 w-48 h-48 bg-orange-500/10 rounded-full blur-3xl group-hover:bg-orange-500/20 transition-colors duration-500"></div>
             
-            <!-- Teks Kiri -->
             <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
+                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Discovered a system anomaly?</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve the MARK_Tools ecosystem. Report a glitch or submit a module request.</p>
                 </div>
             </div>
             
-            <!-- Tombol Kanan -->
             <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-orange-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(249,115,22,0.15)]">
+                    <svg class="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Contact Developer
                 </a>
             </div>
-
         </div>
     </section>
 
     <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
+    <!-- SEO CONTENT AREA (ZERO PRO RULE)           -->
     <!-- ========================================== -->
     <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
@@ -405,7 +570,7 @@
                 As a web developer or graphic designer, you are constantly juggling different image formats. You might download an asset from Google Images in the highly efficient <strong>WebP format</strong>, only to realize that older versions of Adobe Photoshop or legacy CMS platforms absolutely refuse to open it. The <strong>MARK_Tools Universal Image Converter</strong> is your bridge between modern web standards and legacy software compatibility.
             </p>
             <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
-                Our engine utilizes the HTML5 Canvas API to read the pixel array of your uploaded image and flawlessly transcode it into your desired format. Whether you need to convert an uneditable WebP into a universally accepted JPG, or preserve a logo's transparent background by exporting it to PNG, our client-side processor handles it securely in your browser.
+                Our advanced engine utilizes the HTML5 Canvas API to read the pixel array of your uploaded image and flawlessly transcode it into your desired format. Whether you need to convert an uneditable WebP into a universally accepted JPG, or preserve a logo's transparent background by exporting it to PNG, our client-side processor handles it securely in your browser.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -423,6 +588,11 @@
                 </div>
             </div>
 
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Advanced ICO Multi-Size Generation</h3>
+            <p class="text-sm md:text-base text-slate-600 mb-8 leading-relaxed">
+                Standard image converters simply rename a `.png` file to `.ico`, which often corrupts the file and causes Windows to reject the icon. Our tool behaves like a true compiler. If you choose the ICO format, we mathematically resize your logo into multiple dimensions (16x16, 32x32, 48x48, and 256x256) and pack them into a single, valid Windows Icon structure. This guarantees your favicon or app icon will look perfectly sharp on any monitor scale.
+            </p>
+
             <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
@@ -431,7 +601,11 @@
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
                     <h4 class="font-bold text-slate-800 mb-2">Will converting a JPG to PNG make the quality better?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">No. You cannot magically add visual data that doesn't exist. Converting a highly compressed, pixelated JPG into a PNG format will only create a larger file size holding the exact same pixelated image. Format conversion is about software compatibility, not AI upscaling.</p>
+                    <p class="text-sm text-slate-600 leading-relaxed">No. You cannot magically add visual data that doesn't exist. Converting a highly compressed, pixelated JPG into a PNG format will only create a larger file size holding the exact same pixelated image. Format conversion is about software compatibility, not algorithmic upscaling.</p>
+                </div>
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
+                    <h4 class="font-bold text-slate-800 mb-2">How does the Output Quality slider work?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">When converting to lossy formats like JPG or WebP, the engine applies an algorithm that discards microscopic details invisible to the human eye. Lowering the slider to 60% will drastically reduce your file size (ideal for web loading speeds) but may introduce minor blocky artifacts around sharp edges.</p>
                 </div>
             </div>
 

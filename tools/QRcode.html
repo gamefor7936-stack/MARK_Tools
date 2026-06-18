@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
-    <title>Advanced QR Code Generator | MARK_Tools</title>
-    <meta name="description" content="Generate high-definition QR Codes for links or text with a custom center logo. Free, secure, and ready for professional printing.">
+    <title>Advanced QR Code Matrix Engine | MARK_Tools</title>
+    <meta name="description" content="Generate high-definition QR Codes for links, Wi-Fi, or Emails with custom colors and center logos. Free, secure, and ready for professional printing.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
     
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="../js/main.js"></script>
@@ -18,139 +19,301 @@
         body { font-family: 'Inter', sans-serif; }
         .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        .term-input { background: #0f172a; border: 1px solid #334155; color: #f97316; transition: all 0.3s; }
-        .term-input:focus { border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); outline: none; }
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        
+        /* Inputs & Selects */
+        .term-input { background: #020617; border: 1px solid #334155; color: #f97316; transition: all 0.3s; width: 100%; outline: none; }
+        .term-input:focus { border-color: #f97316; box-shadow: 0 0 15px rgba(249, 115, 22, 0.2); }
+        
+        /* Custom Color Picker */
+        input[type="color"] { -webkit-appearance: none; border: none; width: 32px; height: 32px; border-radius: 8px; cursor: pointer; padding: 0; background: transparent; }
+        input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+        input[type="color"]::-webkit-color-swatch { border: 2px solid #334155; border-radius: 8px; }
+
+        /* Payload Tabs */
+        .payload-tab { transition: all 0.3s; border-bottom: 2px solid transparent; }
+        .payload-tab.active { color: #f97316; border-bottom-color: #f97316; font-weight: 800; background: rgba(249, 115, 22, 0.1); }
     </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#0b1120] text-slate-300 min-h-screen flex flex-col">
+<body class="bg-[#0b1120] text-slate-300 min-h-screen flex flex-col selection:bg-orange-500/30 selection:text-white">
 
     <!-- Navbar -->
-    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
+    <nav class="bg-[#0f172a]/95 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800 shadow-xl shrink-0">
+        <div class="container mx-auto px-4 h-16 flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <a href="/" class="text-orange-500 font-black text-xl tracking-tighter hover:opacity-80 transition">MARK_Tools</a>
+                <a href="/" class="text-orange-500 font-black text-xl tracking-tighter hover:opacity-80 transition-opacity">MARK_Tools</a>
                 <span class="text-slate-600">|</span>
-                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Image / Media</span>
+                <span class="bg-orange-500/10 border border-orange-500/30 text-orange-400 text-[10px] px-2 py-0.5 rounded-md font-bold tracking-widest hidden sm:inline-block">MEDIA ENGINE</span>
             </div>
-            <a href="/" class="text-xs font-bold text-slate-400 hover:text-orange-500 transition">BACK TO HOME</a>
+            <a href="/" class="text-[10px] font-bold text-slate-400 hover:text-orange-400 transition uppercase tracking-widest bg-slate-800/50 px-3 py-1.5 rounded-lg border border-slate-700">Back to Home</a>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6 max-w-7xl">
+    <main class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-6 flex-grow min-h-0 max-w-7xl">
         
-        <!-- LEFT: CONTROLS -->
-        <div class="w-full lg:w-1/3 flex flex-col gap-6 shrink-0">
-            <div class="glass-dark p-6 rounded-3xl shadow-2xl border-t-4 border-t-orange-500">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-14 h-14 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded-2xl flex items-center justify-center font-black">
-                        QR
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-black text-white tracking-tight">QR Code Generator</h1>
-                        <p class="text-[11px] text-slate-400 uppercase tracking-widest mt-1">High-Res & Custom Logo</p>
+        <!-- LEFT: BUILDER & SETTINGS -->
+        <div class="w-full xl:w-[450px] flex flex-col gap-5 shrink-0 order-1">
+            <div class="glass-dark rounded-3xl shadow-2xl border-t-4 border-t-orange-500 overflow-hidden flex flex-col">
+                
+                <div class="p-6 border-b border-slate-800">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-orange-500/10 text-orange-500 border border-orange-500/20 rounded-xl flex items-center justify-center shadow-inner shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-black text-white tracking-tight">QR Matrix Builder</h1>
+                            <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Live Vector Generation</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-6">
-                    <!-- Text Input -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">URL or Text Payload</label>
-                        <textarea id="qrText" class="w-full p-4 rounded-xl term-input text-sm resize-none font-mono" rows="3" placeholder="https://example.com" oninput="generateQR()"></textarea>
+                <!-- Type Selector Tabs -->
+                <div class="flex bg-[#020617] border-b border-slate-800 overflow-x-auto hide-scrollbar">
+                    <button onclick="switchTab('url')" id="tab-url" class="payload-tab active flex-1 py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">URL / Text</button>
+                    <button onclick="switchTab('wifi')" id="tab-wifi" class="payload-tab flex-1 py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Wi-Fi</button>
+                    <button onclick="switchTab('email')" id="tab-email" class="payload-tab flex-1 py-3 px-4 text-xs font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Email</button>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    
+                    <!-- Payload Inputs -->
+                    <div id="input-url" class="space-y-4">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">Link or Plain Text</label>
+                        <textarea id="valUrl" class="term-input p-4 rounded-xl text-sm resize-none font-mono" rows="3" placeholder="https://example.com" oninput="buildPayload()"></textarea>
+                    </div>
+
+                    <div id="input-wifi" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Network Name (SSID)</label>
+                            <input type="text" id="valWifiSsid" class="term-input p-3 rounded-lg text-sm" placeholder="My Wi-Fi Network" oninput="buildPayload()">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Password</label>
+                                <input type="text" id="valWifiPass" class="term-input p-3 rounded-lg text-sm" placeholder="SecretPass123" oninput="buildPayload()">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Encryption</label>
+                                <select id="valWifiEnc" class="term-input p-3 rounded-lg text-sm font-bold" onchange="buildPayload()">
+                                    <option value="WPA">WPA / WPA2</option>
+                                    <option value="WEP">WEP</option>
+                                    <option value="nopass">None (Open)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="input-email" class="space-y-4 hidden">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Recipient Email</label>
+                            <input type="email" id="valEmailTo" class="term-input p-3 rounded-lg text-sm" placeholder="contact@example.com" oninput="buildPayload()">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Subject</label>
+                            <input type="text" id="valEmailSub" class="term-input p-3 rounded-lg text-sm" placeholder="Hello there!" oninput="buildPayload()">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5">Message Body</label>
+                            <textarea id="valEmailBody" class="term-input p-3 rounded-lg text-sm resize-none" rows="2" placeholder="I am interested in your services..." oninput="buildPayload()"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Appearance Settings -->
+                    <div class="pt-4 border-t border-slate-800 grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Matrix Color</label>
+                            <div class="flex items-center gap-3 bg-[#020617] border border-slate-700 p-2 rounded-xl">
+                                <input type="color" id="qrColorDark" value="#000000" oninput="buildPayload()">
+                                <input type="color" id="qrColorLight" value="#ffffff" oninput="buildPayload()">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Error Correction</label>
+                            <select id="qrECLevel" class="term-input p-3 rounded-xl text-sm font-bold text-center h-[50px]" onchange="buildPayload()">
+                                <option value="L">L (7%) - Simple</option>
+                                <option value="M">M (15%) - Standard</option>
+                                <option value="Q">Q (25%) - Advanced</option>
+                                <option value="H" selected>H (30%) - For Logos</option>
+                            </select>
+                        </div>
                     </div>
 
                     <!-- Logo Upload -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Center Logo (Optional)</label>
-                        <label class="w-full py-6 border-2 border-dashed border-slate-600 hover:border-orange-500 rounded-xl flex flex-col items-center justify-center cursor-pointer bg-slate-800/30 hover:bg-orange-900/10 transition-all group">
-                            <svg class="w-6 h-6 text-slate-500 group-hover:text-orange-400 mb-2 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest group-hover:text-orange-300" id="logoLabel">Select Logo Image</span>
+                    <div class="pt-2">
+                        <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Brand Overlay (Center Logo)</label>
+                        <label class="w-full py-4 border-2 border-dashed border-slate-600 hover:border-orange-500 rounded-xl flex items-center justify-center gap-3 cursor-pointer bg-[#020617] hover:bg-orange-900/10 transition-all group">
+                            <svg class="w-5 h-5 text-slate-500 group-hover:text-orange-400 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest group-hover:text-orange-300" id="logoLabel">Upload PNG/JPG</span>
                             <input accept="image/*" class="hidden" id="qrLogoInput" type="file" onchange="handleLogoChange()"/>
                         </label>
+                        <button onclick="clearLogo()" id="btnClearLogo" class="hidden w-full mt-2 text-[9px] text-red-400 hover:text-red-300 font-bold uppercase tracking-widest text-center">Remove Logo</button>
                     </div>
 
-                    <button onclick="generateQR()" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-3.5 rounded-xl font-bold uppercase text-xs tracking-widest transition shadow-sm border border-slate-700">
-                        Force Refresh
-                    </button>
                 </div>
             </div>
 
-            <div class="glass-dark p-6 rounded-3xl hidden lg:block border border-slate-800">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    Recent History
-                </h4>
-                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
+            <!-- NORDVPN SIDEBAR BANNER (AFFILIATE) -->
+            <div class="glass-dark border border-slate-800 p-5 rounded-2xl shadow-inner relative overflow-hidden group hidden xl:block">
+                <div class="absolute -right-10 -top-10 w-24 h-24 bg-teal-500/10 rounded-full blur-2xl group-hover:bg-teal-500/20 transition-colors"></div>
+                <h5 class="text-xs font-black text-teal-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
+                    </span>
+                    Zero-Trust Privacy
+                </h5>
+                <p class="text-[10px] text-slate-400 leading-relaxed mb-4">
+                    Your QR Codes are generated locally. Secure your live connection from ISP tracking with <strong>NordVPN</strong>.
+                </p>
+                <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=148983&url_id=902" target="_blank" class="w-full text-center block bg-teal-600/20 hover:bg-teal-600 border border-teal-600/50 hover:border-teal-500 text-teal-400 hover:text-white py-2.5 rounded-lg font-bold text-[10px] uppercase tracking-widest transition-all">
+                    Activate Shield →
+                </a>
             </div>
+
         </div>
 
-        <!-- RIGHT: PREVIEW WORKSPACE -->
-        <div class="w-full lg:w-2/3 glass-dark rounded-3xl p-6 md:p-12 flex flex-col items-center justify-center relative border border-slate-800 shadow-2xl min-h-[400px]">
+        <!-- RIGHT: LIVE PREVIEW & EXPORT -->
+        <div class="flex-grow flex flex-col gap-5 order-2 min-w-0">
             
-            <div id="emptyState" class="text-center opacity-30">
-                <svg class="w-20 h-20 mx-auto text-slate-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
-                <p class="font-mono text-xs uppercase tracking-widest text-slate-400">QR Output will appear here</p>
-            </div>
-
-            <!-- QR Display Container -->
-            <div id="qrContainer" class="hidden flex-col items-center animate-fade-in w-full">
-                <!-- Outer padding white frame for scan reliability -->
-                <div class="bg-white p-4 rounded-xl shadow-[0_0_30px_rgba(249,115,22,0.15)] mb-8">
-                    <div id="qrcode" class="flex justify-center"></div>
+            <div class="glass-dark rounded-3xl p-6 md:p-12 flex flex-col items-center justify-center relative border border-slate-800 shadow-2xl h-[500px] xl:h-full">
+                
+                <div id="emptyState" class="text-center opacity-30 flex flex-col items-center">
+                    <svg class="w-20 h-20 text-slate-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1z"></path></svg>
+                    <p class="font-mono text-sm tracking-widest uppercase">Awaiting Payload Input</p>
                 </div>
 
-                <button id="dlQR" onclick="downloadQR()" class="w-full max-w-sm bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest transition shadow-lg shadow-orange-900/50 flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                    Download HD PNG
-                </button>
-            </div>
+                <!-- Live Preview Display -->
+                <div id="qrContainer" class="hidden flex-col items-center animate-fade-in w-full h-full justify-center">
+                    
+                    <div class="relative group mb-8">
+                        <div class="absolute -inset-2 bg-gradient-to-r from-orange-500 to-amber-600 rounded-2xl blur-lg opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                        
+                        <!-- The padding box for scanner reliability -->
+                        <div id="qrBoxOuter" class="relative bg-white p-4 md:p-6 rounded-2xl shadow-2xl border border-slate-700 transition-colors">
+                            <div id="qrcode" class="flex justify-center items-center"></div>
+                        </div>
+                    </div>
 
+                    <button id="dlQR" onclick="downloadQR()" class="w-full max-w-sm bg-orange-600 hover:bg-orange-500 text-white py-4 rounded-xl font-black uppercase text-xs tracking-widest transition-all shadow-[0_0_20px_rgba(249,115,22,0.4)] hover:shadow-[0_0_30px_rgba(249,115,22,0.6)] flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                        Export Ultra-HD Render
+                    </button>
+                    
+                    <p class="text-[9px] text-slate-500 font-mono mt-3 uppercase tracking-widest text-center">Resolution: 1024 x 1024 px</p>
+                </div>
+
+            </div>
         </div>
     </main>
 
+    <!-- UI & LOGIC SCRIPT -->
     <script>
+        let currentPayloadStr = "";
+        let activeTab = "url";
+
         window.onload = () => {
-            if(typeof renderHistoryUI === 'function') renderHistoryUI('QR Code Generator');
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('QR Generator');
         };
 
-        function handleLogoChange() {
-            const file = document.getElementById('qrLogoInput').files[0];
-            const label = document.getElementById('logoLabel');
-            if (file) {
-                label.innerText = file.name;
-                label.classList.add('text-orange-400');
+        // TAB SWITCHER
+        function switchTab(tabId) {
+            activeTab = tabId;
+            document.querySelectorAll('.payload-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+
+            document.getElementById('input-url').classList.add('hidden');
+            document.getElementById('input-wifi').classList.add('hidden');
+            document.getElementById('input-email').classList.add('hidden');
+
+            document.getElementById(`input-${tabId}`).classList.remove('hidden');
+            buildPayload();
+        }
+
+        // PAYLOAD BUILDER
+        function buildPayload() {
+            let str = "";
+            if (activeTab === "url") {
+                str = document.getElementById('valUrl').value.trim();
+            } else if (activeTab === "wifi") {
+                const ssid = document.getElementById('valWifiSsid').value.trim();
+                const pass = document.getElementById('valWifiPass').value.trim();
+                const enc = document.getElementById('valWifiEnc').value;
+                if (ssid) str = `WIFI:T:${enc};S:${ssid};P:${pass};;`;
+            } else if (activeTab === "email") {
+                const to = document.getElementById('valEmailTo').value.trim();
+                const sub = document.getElementById('valEmailSub').value.trim();
+                const body = document.getElementById('valEmailBody').value.trim();
+                if (to) str = `mailto:${to}?subject=${encodeURIComponent(sub)}&body=${encodeURIComponent(body)}`;
             }
+
+            currentPayloadStr = str;
             generateQR();
         }
 
+        // LOGO HANDLERS
+        function handleLogoChange() {
+            const file = document.getElementById('qrLogoInput').files[0];
+            const label = document.getElementById('logoLabel');
+            const btnClear = document.getElementById('btnClearLogo');
+            
+            if (file) {
+                label.innerText = file.name.substring(0, 20) + (file.name.length > 20 ? '...' : '');
+                label.classList.add('text-orange-400');
+                btnClear.classList.remove('hidden');
+                
+                // Force EC level to H (High) to compensate for Logo occlusion
+                document.getElementById('qrECLevel').value = 'H';
+            }
+            buildPayload();
+        }
+
+        function clearLogo() {
+            document.getElementById('qrLogoInput').value = "";
+            document.getElementById('logoLabel').innerText = "Upload PNG/JPG";
+            document.getElementById('logoLabel').classList.remove('text-orange-400');
+            document.getElementById('btnClearLogo').classList.add('hidden');
+            buildPayload();
+        }
+
+        // QR GENERATOR CORE
         let qrTimeout;
         function generateQR() {
-            // Debounce to prevent lag while typing
             clearTimeout(qrTimeout);
             qrTimeout = setTimeout(() => {
-                const text = document.getElementById('qrText').value.trim();
-                const logoInput = document.getElementById('qrLogoInput');
                 const container = document.getElementById('qrcode');
+                const emptyState = document.getElementById('emptyState');
+                const qrWrapper = document.getElementById('qrContainer');
                 
-                if (!text) {
-                    document.getElementById('emptyState').classList.remove('hidden');
-                    document.getElementById('qrContainer').classList.add('hidden');
+                if (!currentPayloadStr) {
+                    emptyState.classList.remove('hidden');
+                    qrWrapper.classList.add('hidden');
                     return;
                 }
 
-                document.getElementById('emptyState').classList.add('hidden');
-                document.getElementById('qrContainer').classList.remove('hidden');
+                emptyState.classList.add('hidden');
+                qrWrapper.classList.remove('hidden');
+                qrWrapper.classList.add('flex');
                 container.innerHTML = "";
 
-                // Generate raw QR
+                // Get Settings
+                const fgColor = document.getElementById('qrColorDark').value;
+                const bgColor = document.getElementById('qrColorLight').value;
+                const ecLevel = document.getElementById('qrECLevel').value;
+                const logoInput = document.getElementById('qrLogoInput');
+                
+                // Set Outer Box background to match Light Color so it blends
+                document.getElementById('qrBoxOuter').style.backgroundColor = bgColor;
+
+                // Internal High-Res Render (1024x1024)
                 const tempDiv = document.createElement('div');
                 new QRCode(tempDiv, { 
-                    text: text, 
-                    width: 512, 
-                    height: 512,
-                    colorDark : "#000000",
-                    colorLight : "#ffffff",
-                    correctLevel : QRCode.CorrectLevel.H // High Error Correction for Logo
+                    text: currentPayloadStr, 
+                    width: 1024, 
+                    height: 1024,
+                    colorDark : fgColor,
+                    colorLight : bgColor,
+                    correctLevel : QRCode.CorrectLevel[ecLevel] 
                 });
 
                 setTimeout(() => {
@@ -158,63 +321,87 @@
                     if(!qrImg || !qrImg.src) return;
 
                     const canvas = document.createElement('canvas');
-                    canvas.width = 512; canvas.height = 512;
+                    canvas.width = 1024; canvas.height = 1024;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(qrImg, 0, 0);
 
-                    // Add Logo logic
+                    // Add Logo Logic if uploaded
                     if (logoInput.files[0]) {
                         const reader = new FileReader();
                         reader.onload = (e) => {
                             const logo = new Image();
                             logo.src = e.target.result;
                             logo.onload = () => {
-                                const size = 120;
-                                // White background behind logo
-                                ctx.fillStyle = "white";
-                                ctx.fillRect(256 - size/2 - 10, 256 - size/2 - 10, size + 20, size + 20);
-                                // Draw logo
-                                ctx.drawImage(logo, 256 - size/2, 256 - size/2, size, size);
+                                // Draw white padding box behind logo to ensure contrast
+                                const logoSize = 256; // 25% of 1024
+                                const pad = 20;
+                                const center = 512;
                                 
-                                const finalImg = document.createElement('img');
-                                finalImg.src = canvas.toDataURL();
-                                finalImg.className = "w-full max-w-[250px] md:max-w-[300px] h-auto";
-                                container.appendChild(finalImg);
+                                ctx.fillStyle = bgColor;
+                                ctx.fillRect(center - logoSize/2 - pad, center - logoSize/2 - pad, logoSize + (pad*2), logoSize + (pad*2));
+                                
+                                // Draw logo
+                                ctx.drawImage(logo, center - logoSize/2, center - logoSize/2, logoSize, logoSize);
+                                
+                                appendFinalCanvas(canvas);
                             }
                         }
                         reader.readAsDataURL(logoInput.files[0]);
                     } else {
-                        qrImg.className = "w-full max-w-[250px] md:max-w-[300px] h-auto";
-                        container.appendChild(qrImg);
+                        appendFinalCanvas(canvas);
                     }
-                }, 100);
-            }, 300);
+                }, 150); // small delay to let QRCode library finish base64 encoding
+            }, 300); // 300ms debounce
         }
 
+        function appendFinalCanvas(canvas) {
+            const container = document.getElementById('qrcode');
+            const finalImg = document.createElement('img');
+            finalImg.src = canvas.toDataURL("image/png");
+            // Scale visually for preview, but real file remains 1024x1024
+            finalImg.className = "w-full max-w-[200px] md:max-w-[280px] h-auto shadow-sm"; 
+            
+            // Fix alpha/rendering artifact glitch
+            finalImg.style.imageRendering = "crisp-edges";
+            
+            container.appendChild(finalImg);
+        }
+
+        // DOWNLOAD LOGIC
         async function downloadQR() {
             const img = document.querySelector('#qrcode img');
             if(!img) return;
 
-            const text = document.getElementById('qrText').value.trim();
-            const cleanName = text.replace(/[^a-zA-Z0-9]/g, '_').substring(0, 15) || 'Output';
-            const fileName = `QR_${cleanName}.png`;
+            let identifier = "Output";
+            if (activeTab === "url") identifier = document.getElementById('valUrl').value.replace(/[^a-zA-Z0-9]/g, '').substring(0, 10);
+            if (activeTab === "wifi") identifier = document.getElementById('valWifiSsid').value.replace(/[^a-zA-Z0-9]/g, '').substring(0, 10) || 'WIFI';
+            if (activeTab === "email") identifier = 'EMAIL';
+            
+            const fileName = `MARK_QR_${identifier || 'Matrix'}.png`;
             
             const response = await fetch(img.src);
             const blob = await response.blob();
 
+            // AdSense compliant direct download
             if (typeof processDirectDownload === 'function') {
                 await processDirectDownload('QR Code Generator', fileName, blob);
             } else {
-                saveFile(URL.createObjectURL(blob), fileName);
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url; a.download = fileName;
+                document.body.appendChild(a); a.click(); a.remove();
+                URL.revokeObjectURL(url);
             }
         }
     </script>
 
-    <!-- INTERNAL LINKING -->
+    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
+    <!-- ========================================== -->
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Image & Media Tools</h3>
+            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Media Suite</h3>
             <div class="h-px bg-slate-800 flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -224,7 +411,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image Compressor</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Shrink JPG and WebP file sizes locally with an interactive slider.</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Shrink massive JPG files heavily before rendering them to clients.</p>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="social-resizer.html">
@@ -233,7 +420,7 @@
                 </div>
                 <div>
                     <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Social Media Resizer</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Auto-crop your photos for IG, YouTube, and Facebook instantly.</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Auto-crop your branded graphics for strict media blueprints.</p>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-orange-500 transition-all shadow-sm" href="color-palette.html">
@@ -241,8 +428,8 @@
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Color Palette Generator</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Extract HEX and RGB colors directly from your uploaded images.</p>
+                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Color Palette Extractor</h4>
+                    <p class="text-[10px] text-slate-500 leading-tight">Extract raw HEX data from physical company branding assets.</p>
                 </div>
             </a>
         </div>
@@ -258,8 +445,8 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 </div>
                 <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
+                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Discovered an anomaly?</h3>
+                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve the MARK_Tools ecosystem. Report a glitch or submit a module request.</p>
                 </div>
             </div>
             <div class="relative z-10 w-full md:w-auto shrink-0">
@@ -276,52 +463,41 @@
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">The Professional Guide to QR Code Generation</h2>
             <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Quick Response (QR) codes have revolutionized the way businesses connect physical environments with digital content. Whether you are designing restaurant menus, printing real estate brochures, or creating a digital vCard for a networking event, a customized QR code bridges the gap instantly. However, using commercial QR generators online comes with a massive hidden trap: <strong>Dynamic Trackers and Expirations</strong>.
+                Quick Response (QR) codes have revolutionized the way businesses connect physical environments with digital content. Whether you are designing restaurant menus, printing real estate brochures, or creating a digital network access point for your office, a customized QR matrix bridges the gap instantly. However, using commercial web generators comes with a massive hidden trap: <strong>Dynamic Trackers and Expirations</strong>.
             </p>
             <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
-                Many online platforms trick users into generating "Dynamic" QR codes that redirect through their ad-servers. Months later, they demand a monthly subscription fee, and if you refuse, they break your QR code—ruining thousands of printed posters. The <strong>MARK_Tools Advanced QR Generator</strong> creates 100% Static, permanent, and locally generated QR codes. What you create here belongs to you forever, without any expiration dates or hidden redirects.
+                Many online platforms trick users into generating "Dynamic" QR codes that redirect through their ad-servers. Months later, they demand a monthly subscription fee, and if you refuse, they break your link—ruining thousands of printed posters. The <strong>MARK_Tools Advanced QR Generator</strong> compiles 100% Static, permanent, and locally encrypted QR codes. What you create here belongs to you forever, completely free of hidden redirects.
             </p>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-orange-600">Error Correction Limits</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-orange-600">Complex Payload Building</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        QR Codes have built-in redundancy known as Error Correction Levels (L, M, Q, H). When you choose to embed a custom center logo into your QR code using our tool, we automatically increase the Error Correction to Level H (High). This ensures that even though the logo obscures the center pixels, modern smartphone cameras can still scan and reconstruct the data perfectly.
+                        Beyond simple web URLs, our builder tabs allow you to construct complex payload strings automatically. Select the <strong>Wi-Fi</strong> tab to input your SSID and WPA password; visitors can then simply scan the code to join your network without typing a thing. The <strong>Email</strong> tab constructs an encrypted `mailto:` protocol linking directly into their mail client.
                     </p>
                 </div>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">High-Resolution Vector Export</h3>
+                    <h3 class="text-xl font-bold text-slate-800 mb-3">Ultra-HD Canvas Export</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Blurry QR codes fail to scan under poor lighting conditions. Our engine leverages the HTML5 Canvas API to render the QR code cleanly. We highly recommend downloading the exported image and placing it in Illustrator or Canva to ensure professional-grade sharpness for large physical prints.
+                        Blurry QR codes fail to scan under poor lighting conditions. Our engine leverages the HTML5 Canvas API to render the QR structure internally at a massive <strong>1024x1024 pixel resolution</strong>. Regardless of how small it appears on your preview screen, the downloaded PNG file will be razor-sharp and ready for massive banner printing.
                     </p>
                 </div>
             </div>
 
-            <h3 class="text-2xl font-bold text-slate-800 mb-4">Best Practices for Maximum Scannability</h3>
-            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
-                <li class="flex items-start gap-3">
-                    <span class="text-orange-500 font-bold">✓</span> 
-                    <span><strong>Keep URLs Short:</strong> The longer the web address or text payload you insert, the more "dense" and complex the QR pixels become. If you have a massive URL, consider using a safe URL shortener first. Less dense QR codes scan much faster.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-orange-500 font-bold">✓</span> 
-                    <span><strong>Maintain Contrast:</strong> While you can customize colors, always ensure the foreground (pixels) is significantly darker than the background. A light-gray QR code on a white background will fail to scan on older phone models.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-orange-500 font-bold">✓</span> 
-                    <span><strong>Quiet Zone:</strong> Always leave a blank border (padding) around the QR code when you print it. This helps the camera's auto-focus separate the barcode from surrounding text or graphics.</span>
-                </li>
-            </ul>
+            <h3 class="text-2xl font-bold text-slate-800 mb-4">Error Correction Limits & Brand Logos</h3>
+            <p class="text-sm md:text-base text-slate-600 mb-8 leading-relaxed">
+                QR Codes possess a built-in redundancy algorithm known as Error Correction. If a portion of the QR code is damaged or obscured, scanners can still reconstruct the mathematical data. When you upload a custom Brand Logo using our tool, we highly recommend setting the Error Correction Level to <strong>H (30% Redundancy)</strong>. This guarantees that even though your logo covers the exact center of the matrix, modern smartphone optics will successfully read the perimeter data points.
+            </p>
 
             <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
             <div class="space-y-4">
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Will these QR codes ever expire?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Never. Because our tool generates "Static" QR codes, the actual data (URL or text) is mathematically encoded directly into the pixel pattern. There is no middle-man server involved. As long as the physical printed code is visible, it will work forever.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Will these generated codes ever expire?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Never. Because our client-side architecture generates strictly "Static" arrays, the actual data (URL or Wi-Fi credentials) is mathematically encoded directly into the pixel structure. There is no server intermediary. As long as the physical printed code is visible, it will function endlessly.</p>
                 </div>
                 <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Can I embed a Wi-Fi password into a QR code?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Yes! You can use specific text formatting to create a Wi-Fi auto-connect code. Simply enter this exact text string into our generator: <code>WIFI:S:YourNetworkName;T:WPA;P:YourPassword;;</code>. When guests scan it, their phones will connect automatically.</p>
+                    <h4 class="font-bold text-slate-800 mb-2">Why does my dark-colored background fail to scan?</h4>
+                    <p class="text-sm text-slate-600 leading-relaxed">Optics physics requires high contrast for laser and camera readers. You must always ensure the foreground (the matrix pixels) is significantly darker than the background canvas. A light-gray pattern on a black background creates an "inverted" code which older smartphone models cannot process.</p>
                 </div>
             </div>
         </div>

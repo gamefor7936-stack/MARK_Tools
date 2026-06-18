@@ -1,260 +1,296 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Customable Invoice Generator</title>
+    <title>Customizable Invoice Generator | MARK_Tools</title>
     <meta name="description" content="Create professional, customized invoices online for free. Auto-calculate taxes, discounts, and totals, then download as a secure PDF.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
+    
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/main.js"></script>
     <script src="../js/history.js?v=2.0"></script>
-    <!-- Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&display=swap');
         body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
         .paper-canvas { min-height: 1000px; transition: all 0.3s ease; }
-        .input-minimal { border-bottom: 1px solid transparent; background: transparent; }
-        .input-minimal:hover { border-bottom-color: #e2e8f0; }
-        .input-minimal:focus { border-bottom-color: #6366f1; outline: none; background: #fdfeff; }
-        .sidebar-glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
+        
+        /* Minimalist Paper Input Styling */
+        .input-minimal { border-bottom: 1px solid transparent; background: transparent; transition: all 0.2s; }
+        .input-minimal:hover { border-bottom-color: #cbd5e1; }
+        .input-minimal:focus { border-bottom-color: #6366f1; outline: none; background: #f8fafc; }
+        
+        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .term-input { background: #0f172a; border: 1px solid #334155; color: #e2e8f0; font-family: 'JetBrains Mono', monospace; outline: none; }
+        .term-input:focus { border-color: #6366f1; }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
      crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#f3f4f9] text-slate-900">
-<!-- Global Header -->
-<header class="bg-indigo-700 text-white px-6 py-4 flex justify-between items-center shadow-lg shadow-indigo-200">
-<div class="flex items-center gap-3">
-<a class="font-black text-xl tracking-tighter" href="/">MARK_Tools</a>
-<span class="bg-indigo-500 text-[10px] px-2 py-0.5 rounded-full font-bold">PRO SUITE</span>
-</div>
-<div class="flex items-center gap-4">
-<a class="bg-indigo-600 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-indigo-500 transition-all flex items-center gap-2" href="/">
-<svg class="h-4 w-4" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-<path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
-</svg>
-                Back
-            </a>
-<div class="text-[10px] bg-indigo-600 px-3 py-1 rounded-full border border-indigo-400 font-medium" id="statusBadge">MODE: LIVE EDIT</div>
-<button class="bg-white text-indigo-700 px-5 py-2 rounded-lg text-sm font-bold shadow-md hover:bg-indigo-50 transition-all flex items-center gap-2" id="dlBtn" onclick="downloadInvoice()">
-                Save &amp; download
-            </button>
-</div>
-</header>
-<div class="flex flex-col lg:flex-row min-h-screen">
-<aside class="w-full lg:w-80 p-6 sidebar-glass border-r border-slate-200 flex-shrink-0">
-<div class="sticky top-24 space-y-8">
-<div>
-<h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Document settings</h4>
-<div class="space-y-4">
-<div>
-<label class="text-[10px] font-bold text-slate-500 block mb-1">Currency</label>
-<select class="w-full p-3 bg-white border border-slate-200 rounded-xl text-sm shadow-sm focus:ring-2 focus:ring-indigo-400 outline-none" id="currency" onchange="calcTotal()">
-<option data-symbol="$" value="USD">USD ($)</option>
-<option data-symbol="Rp" value="IDR">IDR (Rp)</option>
-<option data-symbol="€" value="EUR">EUR (€)</option>
-<option data-symbol="£" value="GBP">GBP (£)</option>
-<option data-symbol="¥" value="JPY">JPY (¥)</option>
-<option data-symbol="A$" value="AUD">AUD (A$)</option>
-<option data-symbol="C$" value="CAD">CAD (C$)</option>
-<option data-symbol="S$" value="SGD">SGD (S$)</option>
-<option data-symbol="¥" value="CNY">CNY (¥)</option>
-<option data-symbol="₹" value="INR">INR (₹)</option>
-<option data-symbol="₩" value="KRW">KRW (₩)</option>
-<option data-symbol="R$" value="BRL">BRL (R$)</option>
-<option data-symbol="R" value="ZAR">ZAR (R)</option>
-<option data-symbol="RM" value="MYR">MYR (RM)</option>
-<option data-symbol="฿" value="THB">THB (฿)</option>
-<option data-symbol="₱" value="PHP">PHP (₱)</option>
-<option data-symbol="₫" value="VND">VND (₫)</option>
-<option data-symbol="₺" value="TRY">TRY (₺)</option>
-</select>
-</div>
-<div>
-<label class="text-[10px] font-bold text-slate-500 block mb-1">Accent color</label>
-<input class="w-full h-10 p-1 bg-white border border-slate-200 rounded-xl cursor-pointer" id="themeColor" onchange="updateTheme()" type="color" value="#4338ca"/>
-</div>
-<div class="hidden space-y-3 pt-4 border-t border-slate-200" id="logoControls">
-<h5 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Logo</h5>
-<div class="space-y-3">
-<div>
-<label class="text-[10px] font-bold text-slate-500 block mb-1">Logo scale</label>
-<div class="flex items-center gap-2">
-<input class="flex-grow h-2 bg-indigo-100 rounded-lg appearance-none cursor-pointer" id="logoScale" max="2" min="0.5" oninput="updateLogoScale(this.value)" step="0.1" type="range" value="1"/>
-<span class="text-[10px] font-bold text-slate-600 min-w-[35px]" id="scaleVal">100%</span>
-</div>
-</div>
-<button class="w-full bg-red-500 text-white py-2 rounded-lg text-[10px] font-bold hover:bg-red-600 transition" onclick="removeLogo()">Remove logo</button>
-</div>
-</div>
-</div>
-</div>
-<div>
-<h4 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">This session</h4>
-<div class="space-y-2" id="historyList">
-</div>
-</div>
-</div>
-</aside>
-<main class="flex-grow p-4 md:p-12 overflow-y-auto">
-<div class="max-w-[850px] mx-auto bg-white shadow-2xl rounded-lg paper-canvas p-12 border border-slate-100 relative">
-<!-- Invoice Header -->
-<div class="flex justify-between items-start mb-16">
-<div class="w-48">
-<div class="group relative border-2 border-dashed border-slate-100 rounded-xl p-4 hover:border-indigo-300 transition-all text-center">
-<input accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" id="logoInput" onchange="previewLogo(this)" type="file"/>
-<img class="hidden max-h-24 mx-auto mb-2 object-contain" id="logoPreview" style="transform: scale(1);"/>
-<div id="logoPlaceholder">
-<div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-2 text-slate-300">
-<svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4v16m8-8H4" stroke-width="2"></path></svg>
-</div>
-<span class="text-[10px] font-bold text-slate-400 uppercase">Upload Logo</span>
-</div>
-</div>
-</div>
-<div class="text-right">
-<h2 class="text-4xl font-black text-indigo-700 tracking-tighter mb-2" contenteditable="true" id="themeText" spellcheck="false">INVOICE</h2>
-<div class="flex items-center justify-end gap-2">
-<span class="text-slate-400 font-bold text-sm">NO.</span>
-<input class="text-right font-bold text-slate-700 border-b border-slate-100 focus:border-indigo-500 outline-none w-32" id="invNumber" type="text" value="INV-001"/>
-</div>
-</div>
-</div>
-<!-- Sender & Recipient -->
-<div class="grid grid-cols-2 gap-16 mb-16">
-<div>
-<label class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2 block">From (your business)</label>
-<textarea class="w-full text-sm leading-relaxed input-minimal" id="fromInfo" placeholder="Company name
-Full address
-Email / phone" rows="4"></textarea>
-</div>
-<div class="space-y-4">
-<div class="flex justify-between border-b border-slate-50 pb-1">
-<span class="text-[10px] font-bold text-slate-400 uppercase">Date</span>
-<input class="text-xs font-bold text-slate-700 outline-none" id="invDate" type="date"/>
-</div>
-<div class="flex justify-between border-b border-slate-50 pb-1">
-<span class="text-[10px] font-bold text-slate-400 uppercase">Due date</span>
-<input class="text-xs font-bold text-slate-700 outline-none" id="dueDate" type="date"/>
-</div>
-</div>
-</div>
-<div class="mb-12">
-<label class="text-[10px] font-black text-indigo-500 uppercase tracking-widest mb-2 block">Bill to</label>
-<textarea class="w-full text-lg font-semibold input-minimal" id="billTo" placeholder="Client or company name" rows="2"></textarea>
-</div>
-<table class="w-full mb-8">
-<thead>
-<tr class="bg-slate-900 text-white" id="tableHead">
-<th class="p-4 text-left text-[10px] font-bold uppercase rounded-l-lg">Description</th>
-<th class="p-4 text-center text-[10px] font-bold uppercase w-24">Qty</th>
-<th class="p-4 text-center text-[10px] font-bold uppercase w-32">Rate</th>
-<th class="p-4 text-right text-[10px] font-bold uppercase rounded-r-lg w-32">Total</th>
-</tr>
-</thead>
-<tbody id="itemBody">
-<tr class="item-row border-b border-slate-50 group">
-<td class="py-4 pr-4 relative">
-<button class="absolute -left-8 top-5 text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition" onclick="removeRow(this)">✕</button>
-<input class="w-full font-medium text-sm input-minimal item-desc" placeholder="Item description…" type="text"/>
-</td>
-<td class="py-4 px-2"><input class="w-full text-center text-sm input-minimal item-qty" min="1" oninput="calcTotal()" type="number" value="1"/></td>
-<td class="py-4 px-2"><input class="w-full text-center text-sm input-minimal item-rate" oninput="calcTotal()" type="number" value="0"/></td>
-<td class="py-4 pl-4 text-right text-sm font-bold item-total text-slate-700">$0.00</td>
-</tr>
-</tbody>
-</table>
-<button class="flex items-center gap-2 text-indigo-600 font-bold text-xs hover:text-indigo-800 transition mb-20" onclick="addRow()">
-<span class="w-6 h-6 bg-indigo-50 rounded-full flex items-center justify-center">+</span>
-                    Add line item
+<body class="bg-[#0b1120] text-slate-300 min-h-screen flex flex-col">
+
+    <!-- Navbar (Aksen Ungu/Indigo Mewah) -->
+    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
+        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-7xl">
+            <div class="flex items-center gap-3">
+                <a href="/" class="text-indigo-400 font-black text-xl tracking-tighter hover:opacity-80 transition">MARK_Tools</a>
+                <span class="text-slate-600">|</span>
+                <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Finance Suite</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <a class="text-xs font-bold text-slate-400 hover:text-indigo-400 transition hidden sm:block" href="/">← BACK TO HOME</a>
+                <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition shadow-lg shadow-indigo-900/50 flex items-center gap-2" id="dlBtn" onclick="downloadInvoice()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    Save &amp; Download
                 </button>
-<div class="flex flex-col md:flex-row justify-between gap-16 mt-16 border-t border-slate-100 pt-12">
-<div class="flex-grow space-y-8">
-<div>
-<input class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block bg-transparent outline-none focus:text-indigo-600 w-full" type="text" value="Notes"/>
-<textarea class="w-full text-sm input-minimal p-2 border border-dashed border-transparent hover:border-slate-200 rounded-lg" id="notes" placeholder="Notes - any relevant information not already covered" rows="2"></textarea>
-</div>
-<div>
-<input class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 block bg-transparent outline-none focus:text-indigo-600 w-full" type="text" value="Terms"/>
-<textarea class="w-full text-sm input-minimal p-2 border border-dashed border-transparent hover:border-slate-200 rounded-lg" id="terms" placeholder="Terms and conditions - late fees, payment methods, delivery schedule" rows="2"></textarea>
-</div>
-</div>
-<div class="w-full md:w-80 space-y-2">
-<div class="flex justify-between items-center h-10 px-2">
-<input class="text-right text-slate-500 bg-transparent outline-none w-32 pr-4 text-sm font-medium" type="text" value="Subtotal"/>
-<span class="font-semibold text-slate-700 text-sm" id="subtotalVal">0.00</span>
-</div>
-<div class="flex justify-end items-center gap-2 group h-10 px-2" id="rowTax">
-<button class="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition pr-2" onclick="toggleRow('tax', false)">✕</button>
-<input class="text-right text-slate-500 bg-transparent outline-none w-24 pr-2 text-sm" type="text" value="Tax"/>
-<div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32">
-<input class="w-full p-2 text-right outline-none no-spinner text-sm" id="taxInput" oninput="calcTotal()" type="number" value="0"/>
-<div class="bg-slate-50 flex items-center h-full border-l border-slate-200">
-<span class="px-2 text-[10px] font-bold text-slate-400 min-w-[25px] text-center" id="taxUnitLabel">%</span>
-<button class="p-1.5 hover:bg-slate-200 text-slate-400 border-l border-slate-100" onclick="toggleUnit('tax')">
-<svg class="h-3 w-3" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
-</button>
-</div>
-</div>
-</div>
-<div class="hidden flex justify-end items-center gap-2 group h-10 px-2 animate-fade-in" id="rowDiscount">
-<button class="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition pr-2" onclick="toggleRow('discount', false)">✕</button>
-<input class="text-right text-slate-500 bg-transparent outline-none w-24 pr-2 text-sm" type="text" value="Discount"/>
-<div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32">
-<input class="w-full p-2 text-right outline-none no-spinner text-sm" id="discountInput" oninput="calcTotal()" type="number" value="0"/>
-<div class="bg-slate-50 flex items-center h-full border-l border-slate-200">
-<span class="px-2 text-[10px] font-bold text-slate-400 min-w-[25px] text-center" id="discountUnitLabel">%</span>
-<button class="p-1.5 hover:bg-slate-200 text-slate-400 border-l border-slate-100" onclick="toggleUnit('discount')">
-<svg class="h-3 w-3" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
-</button>
-</div>
-</div>
-</div>
-<div class="hidden flex justify-end items-center gap-2 group h-10 px-2 animate-fade-in" id="rowShipping">
-<button class="text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition pr-2" onclick="toggleRow('shipping', false)">✕</button>
-<input class="text-right text-slate-500 bg-transparent outline-none w-24 pr-2 text-sm" type="text" value="Shipping"/>
-<div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32">
-<span class="bg-slate-50 px-2 text-[10px] font-bold text-slate-400 border-r border-slate-200 curr-symbol">$</span>
-<input class="w-full p-2 text-right outline-none no-spinner text-sm" id="shippingInput" oninput="calcTotal()" type="number" value="0"/>
-</div>
-</div>
-<div class="flex justify-end gap-3 py-2 pr-2">
-<button class="text-[10px] font-bold text-emerald-600 hover:underline" id="addDiscountBtn" onclick="toggleRow('discount', true)">+ DISCOUNT</button>
-<button class="hidden text-[10px] font-bold text-emerald-600 hover:underline" id="addTaxBtn" onclick="toggleRow('tax', true)">+ TAX</button>
-<button class="text-[10px] font-bold text-emerald-600 hover:underline" id="addShippingBtn" onclick="toggleRow('shipping', true)">+ SHIPPING</button>
-</div>
-<!-- Total -->
-<div class="flex justify-between items-center pt-4 border-t border-slate-200 h-14 px-2">
-<input class="text-right text-slate-500 font-bold bg-transparent outline-none w-32 pr-4 text-sm" type="text" value="Total"/>
-<span class="text-xl font-black text-indigo-700 tracking-tighter" id="totalVal">0.00</span>
-</div>
-<!-- Amount Paid -->
-<div class="flex justify-end items-center gap-2 h-10 px-2">
-<input class="text-right text-slate-500 bg-transparent outline-none w-32 pr-2 text-sm" type="text" value="Amount Paid"/>
-<div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32 bg-white">
-<span class="bg-slate-50 px-2 text-[10px] font-bold text-slate-400 border-r border-slate-200 curr-symbol">$</span>
-<input class="w-full p-2 text-right outline-none no-spinner font-bold text-slate-700 text-sm" id="amountPaid" oninput="calcTotal()" type="number" value="0"/>
-</div>
-</div>
-<!-- Balance Due -->
-<div class="flex justify-between items-center pt-2 h-10 px-2 border-t border-slate-50">
-<input class="text-right text-slate-500 bg-transparent outline-none w-32 pr-4 text-sm font-bold" type="text" value="Balance Due"/>
-<span class="font-black text-slate-800 text-sm" id="balanceVal">0.00</span>
-</div>
-</div>
-</div>
-</div>
-</main>
-</div>
-<script>
+            </div>
+        </div>
+    </nav>
+
+    <!-- WORKSPACE CONTAINER -->
+    <div class="flex flex-col lg:flex-row flex-grow min-h-0">
+        
+        <!-- SIDEBAR SETTINGS (DARK THEME) -->
+        <aside class="w-full lg:w-80 p-6 bg-[#0f172a] border-b lg:border-b-0 lg:border-r border-slate-800 flex-shrink-0">
+            <div class="sticky top-24 space-y-8">
+                <div>
+                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">Document Settings</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 block mb-1.5 uppercase tracking-widest">Currency</label>
+                            <select class="w-full p-3 term-input rounded-xl text-sm font-bold appearance-none text-center cursor-pointer shadow-inner" id="currency" onchange="calcTotal()">
+                                <option data-symbol="$" value="USD">USD ($)</option>
+                                <option data-symbol="Rp" value="IDR">IDR (Rp)</option>
+                                <option data-symbol="€" value="EUR">EUR (€)</option>
+                                <option data-symbol="£" value="GBP">GBP (£)</option>
+                                <option data-symbol="¥" value="JPY">JPY (¥)</option>
+                                <option data-symbol="A$" value="AUD">AUD (A$)</option>
+                                <option data-symbol="C$" value="CAD">CAD (C$)</option>
+                                <option data-symbol="S$" value="SGD">SGD (S$)</option>
+                                <option data-symbol="¥" value="CNY">CNY (¥)</option>
+                                <option data-symbol="₹" value="INR">INR (₹)</option>
+                                <option data-symbol="₩" value="KRW">KRW (₩)</option>
+                                <option data-symbol="R$" value="BRL">BRL (R$)</option>
+                                <option data-symbol="R" value="ZAR">ZAR (R)</option>
+                                <option data-symbol="RM" value="MYR">MYR (RM)</option>
+                                <option data-symbol="฿" value="THB">THB (฿)</option>
+                                <option data-symbol="₱" value="PHP">PHP (₱)</option>
+                                <option data-symbol="₫" value="VND">VND (₫)</option>
+                                <option data-symbol="₺" value="TRY">TRY (₺)</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="text-[10px] font-bold text-slate-400 block mb-1.5 uppercase tracking-widest">Accent Color</label>
+                            <input class="w-full h-10 p-1 bg-[#0f172a] border border-slate-700 rounded-xl cursor-pointer" id="themeColor" onchange="updateTheme()" type="color" value="#6366f1"/>
+                        </div>
+                        
+                        <div class="hidden space-y-3 pt-4 border-t border-slate-800" id="logoControls">
+                            <h5 class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Logo Controls</h5>
+                            <div class="space-y-3">
+                                <div>
+                                    <label class="text-[10px] font-bold text-slate-400 block mb-1">Logo Scale</label>
+                                    <div class="flex items-center gap-2">
+                                        <input class="flex-grow h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-indigo-500" id="logoScale" max="2" min="0.5" oninput="updateLogoScale(this.value)" step="0.1" type="range" value="1"/>
+                                        <span class="text-[10px] font-bold text-slate-300 min-w-[35px]" id="scaleVal">100%</span>
+                                    </div>
+                                </div>
+                                <button class="w-full bg-red-600 hover:bg-red-500 text-white py-2 rounded-xl text-[10px] font-bold transition" onclick="removeLogo()">Remove Logo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="border-t border-slate-800 pt-6">
+                    <h4 class="text-xs font-black text-slate-500 uppercase tracking-widest mb-4">This Session</h4>
+                    <div class="space-y-2 max-h-40 overflow-y-auto pr-1" id="historyList">
+                        <!-- History renders here -->
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN PAPER CANVAS (DRAFT BOARD EFFECT) -->
+        <main class="flex-grow p-4 md:p-12 overflow-y-auto bg-[#0b1120] flex justify-center items-center">
+            
+            <div class="w-full max-w-[850px] bg-white shadow-[0_0_50px_rgba(0,0,0,0.3)] rounded-3xl paper-canvas p-8 md:p-14 relative text-slate-800 border border-slate-100">
+                
+                <!-- Invoice Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-8 mb-16">
+                    <div class="w-full sm:w-48">
+                        <div class="group relative border-2 border-dashed border-slate-200 rounded-2xl p-4 hover:border-indigo-400 transition-all text-center cursor-pointer">
+                            <input accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" id="logoInput" onchange="previewLogo(this)" type="file"/>
+                            <img class="hidden max-h-24 mx-auto mb-2 object-contain" id="logoPreview" style="transform: scale(1);"/>
+                            <div id="logoPlaceholder">
+                                <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-2 text-slate-400 border border-slate-100">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="2.5" stroke-linecap="round"></path></svg>
+                                </div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Upload Logo</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-left sm:text-right w-full sm:w-auto">
+                        <h2 class="text-4xl font-black text-indigo-600 tracking-tighter mb-2 outline-none" contenteditable="true" id="themeText" spellcheck="false">INVOICE</h2>
+                        <div class="flex items-center sm:justify-end gap-2">
+                            <span class="text-slate-400 font-bold text-sm">NO.</span>
+                            <input class="text-left sm:text-right font-bold text-slate-700 border-b border-slate-200 focus:border-indigo-500 outline-none w-32" id="invNumber" type="text" value="INV-001"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sender & Recipient -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+                    <div>
+                        <label class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-2 block">From (Your Business)</label>
+                        <textarea class="w-full text-sm leading-relaxed input-minimal" id="fromInfo" placeholder="Company Name&#10;Full Address&#10;Email / Phone" rows="4"></textarea>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Date</span>
+                            <input class="text-xs font-bold text-slate-700 outline-none bg-transparent cursor-pointer" id="invDate" type="date"/>
+                        </div>
+                        <div class="flex justify-between border-b border-slate-100 pb-1.5">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase">Due Date</span>
+                            <input class="text-xs font-bold text-slate-700 outline-none bg-transparent cursor-pointer" id="dueDate" type="date"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-12">
+                    <label class="text-[10px] font-black text-indigo-600 uppercase tracking-widest mb-2 block font-bold">Bill To</label>
+                    <textarea class="w-full text-lg font-bold input-minimal" id="billTo" placeholder="Client or Company Name" rows="2"></textarea>
+                </div>
+
+                <!-- Main Items Table -->
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full min-w-[500px]">
+                        <thead>
+                            <tr class="bg-indigo-600 text-white" id="tableHead">
+                                <th class="p-4 text-left text-[10px] font-bold uppercase rounded-l-xl">Description</th>
+                                <th class="p-4 text-center text-[10px] font-bold uppercase w-24">Qty</th>
+                                <th class="p-4 text-center text-[10px] font-bold uppercase w-32">Rate</th>
+                                <th class="p-4 text-right text-[10px] font-bold uppercase rounded-r-xl w-32">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemBody">
+                            <tr class="item-row border-b border-slate-100 group">
+                                <td class="py-4 pr-4 relative">
+                                    <button class="absolute -left-6 top-5 text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition font-bold" onclick="removeRow(this)">✕</button>
+                                    <input class="w-full font-semibold text-sm input-minimal item-desc" placeholder="Item description…" type="text"/>
+                                </td>
+                                <td class="py-4 px-2"><input class="w-full text-center text-sm input-minimal item-qty font-bold" min="1" oninput="calcTotal()" type="number" value="1"/></td>
+                                <td class="py-4 px-2"><input class="w-full text-center text-sm input-minimal item-rate font-bold" oninput="calcTotal()" type="number" value="0"/></td>
+                                <td class="py-4 pl-4 text-right text-sm font-bold item-total text-slate-700">$0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <button class="flex items-center gap-2 text-indigo-600 font-bold text-xs hover:text-indigo-800 transition mb-16" onclick="addRow()">
+                    <span class="w-6 h-6 bg-indigo-50 rounded-full flex items-center justify-center font-bold text-sm">+</span>
+                    Add Line Item
+                </button>
+
+                <!-- Footer Summary Blocks -->
+                <div class="flex flex-col md:flex-row justify-between gap-12 mt-12 border-t border-slate-100 pt-8">
+                    <div class="flex-grow space-y-6">
+                        <div>
+                            <input class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block bg-transparent outline-none focus:text-indigo-600 w-full font-bold" type="text" value="Notes"/>
+                            <textarea class="w-full text-xs input-minimal p-3 border border-dashed border-transparent hover:border-slate-200 rounded-xl" id="notes" placeholder="Notes - payment details, Bank transfer info, etc." rows="2"></textarea>
+                        </div>
+                        <div>
+                            <input class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1.5 block bg-transparent outline-none focus:text-indigo-600 w-full font-bold" type="text" value="Terms"/>
+                            <textarea class="w-full text-xs input-minimal p-3 border border-dashed border-transparent hover:border-slate-200 rounded-xl" id="terms" placeholder="Terms and conditions - late fees, payment deadline, etc." rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-80 space-y-2.5">
+                        <div class="flex justify-between items-center h-10 px-2">
+                            <input class="text-right text-slate-400 bg-transparent outline-none w-32 pr-4 text-xs font-bold uppercase tracking-wider" type="text" value="Subtotal" readonly/>
+                            <span class="font-bold text-slate-700 text-sm" id="subtotalVal">0.00</span>
+                        </div>
+                        
+                        <div class="flex justify-end items-center gap-2 group h-10 px-2" id="rowTax">
+                            <button class="text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition pr-2" onclick="toggleRow('tax', false)">✕</button>
+                            <input class="text-right text-slate-400 bg-transparent outline-none w-24 pr-2 text-xs font-bold uppercase tracking-wider" type="text" value="Tax" readonly/>
+                            <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32 bg-white">
+                                <input class="w-full p-2 text-right outline-none no-spinner text-sm font-bold" id="taxInput" oninput="calcTotal()" type="number" value="0"/>
+                                <div class="bg-slate-50 flex items-center h-full border-l border-slate-200">
+                                    <span class="px-2 text-[10px] font-bold text-slate-400 min-w-[25px] text-center" id="taxUnitLabel">%</span>
+                                    <button class="p-1.5 hover:bg-slate-200 text-slate-400 border-l border-slate-100" onclick="toggleUnit('tax')">
+                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden flex justify-end items-center gap-2 group h-10 px-2 animate-fade-in" id="rowDiscount">
+                            <button class="text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition pr-2" onclick="toggleRow('discount', false)">✕</button>
+                            <input class="text-right text-slate-400 bg-transparent outline-none w-24 pr-2 text-xs font-bold uppercase tracking-wider" type="text" value="Discount" readonly/>
+                            <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32 bg-white">
+                                <input class="w-full p-2 text-right outline-none no-spinner text-sm font-bold" id="discountInput" oninput="calcTotal()" type="number" value="0"/>
+                                <div class="bg-slate-50 flex items-center h-full border-l border-slate-200">
+                                    <span class="px-2 text-[10px] font-bold text-slate-400 min-w-[25px] text-center" id="discountUnitLabel">%</span>
+                                    <button class="p-1.5 hover:bg-slate-200 text-slate-400 border-l border-slate-100" onclick="toggleUnit('discount')">
+                                        <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hidden flex justify-end items-center gap-2 group h-10 px-2 animate-fade-in" id="rowShipping">
+                            <button class="text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition pr-2" onclick="toggleRow('shipping', false)">✕</button>
+                            <input class="text-right text-slate-400 bg-transparent outline-none w-24 pr-2 text-xs font-bold uppercase tracking-wider" type="text" value="Shipping" readonly/>
+                            <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32 bg-white">
+                                <span class="bg-slate-50 px-2 text-[10px] font-bold text-slate-400 border-r border-slate-200 curr-symbol">$</span>
+                                <input class="w-full p-2 text-right outline-none no-spinner text-sm font-bold" id="shippingInput" oninput="calcTotal()" type="number" value="0"/>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end gap-3 py-2 pr-2">
+                            <button class="text-[10px] font-bold text-emerald-600 hover:underline" id="addDiscountBtn" onclick="toggleRow('discount', true)">+ DISCOUNT</button>
+                            <button class="hidden text-[10px] font-bold text-emerald-600 hover:underline" id="addTaxBtn" onclick="toggleRow('tax', true)">+ TAX</button>
+                            <button class="text-[10px] font-bold text-emerald-600 hover:underline" id="addShippingBtn" onclick="toggleRow('shipping', true)">+ SHIPPING</button>
+                        </div>
+
+                        <!-- Total (Theme Color Sync) -->
+                        <div class="flex justify-between items-center pt-4 border-t border-slate-200 h-14 px-2">
+                            <input class="text-right text-slate-500 font-bold bg-transparent outline-none w-32 pr-4 text-sm uppercase tracking-wider" type="text" value="Total" readonly/>
+                            <span class="text-xl font-black text-indigo-700 tracking-tighter" id="totalVal">0.00</span>
+                        </div>
+
+                        <!-- Amount Paid -->
+                        <div class="flex justify-end items-center gap-2 h-10 px-2">
+                            <input class="text-right text-slate-400 bg-transparent outline-none w-32 pr-2 text-xs font-bold uppercase tracking-wider" type="text" value="Amount Paid" readonly/>
+                            <div class="flex items-center border border-slate-200 rounded-lg overflow-hidden h-9 w-32 bg-white">
+                                <span class="bg-slate-50 px-2 text-[10px] font-bold text-slate-400 border-r border-slate-200 curr-symbol">$</span>
+                                <input class="w-full p-2 text-right outline-none no-spinner font-bold text-slate-700 text-sm" id="amountPaid" oninput="calcTotal()" type="number" value="0"/>
+                            </div>
+                        </div>
+
+                        <!-- Balance Due -->
+                        <div class="flex justify-between items-center pt-2 h-10 px-2 border-t border-slate-50">
+                            <input class="text-right text-slate-500 bg-transparent outline-none w-32 pr-4 text-xs font-bold uppercase tracking-wider" type="text" value="Balance Due" readonly/>
+                            <span class="font-black text-slate-800 text-sm" id="balanceVal">0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
         window.onload = () => {
-            renderHistoryUI('Invoice Generator');
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('Invoice Generator');
             document.getElementById('invDate').valueAsDate = new Date();
             updateTheme();
             calcTotal();
@@ -299,14 +335,14 @@ Email / phone" rows="4"></textarea>
         function addRow() {
             const tbody = document.getElementById('itemBody');
             const row = document.createElement('tr');
-            row.className = "item-row border-b border-slate-50 group animate-fade-in";
+            row.className = "item-row border-b border-slate-100 group animate-fade-in";
             row.innerHTML = `
                 <td class="py-4 pr-4 relative">
-                    <button onclick="removeRow(this)" class="absolute -left-8 top-5 text-red-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">✕</button>
-                    <input type="text" placeholder="Item description…" class="w-full font-medium text-sm input-minimal item-desc">
+                    <button onclick="removeRow(this)" class="absolute -left-6 top-5 text-red-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition font-bold">✕</button>
+                    <input type="text" placeholder="Item description…" class="w-full font-semibold text-sm input-minimal item-desc">
                 </td>
-                <td class="py-4 px-2"><input type="number" value="1" min="1" class="w-full text-center text-sm input-minimal item-qty" oninput="calcTotal()"></td>
-                <td class="py-4 px-2"><input type="number" value="0" class="w-full text-center text-sm input-minimal item-rate" oninput="calcTotal()"></td>
+                <td class="py-4 px-2"><input type="number" value="1" min="1" class="w-full text-center text-sm input-minimal item-qty font-bold" oninput="calcTotal()"></td>
+                <td class="py-4 px-2"><input type="number" value="0" class="w-full text-center text-sm input-minimal item-rate font-bold" oninput="calcTotal()"></td>
                 <td class="py-4 pl-4 text-right text-sm font-bold item-total text-slate-700">$0.00</td>
             `;
             tbody.appendChild(row);
@@ -401,7 +437,6 @@ Email / phone" rows="4"></textarea>
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
 
-                // Custom PDF Generation with Theme Color
                 const logo = document.getElementById('logoPreview');
                 if(!logo.classList.contains('hidden')) {
                     doc.addImage(logo.src, 'PNG', 14, 15, 35, 25);
@@ -417,7 +452,6 @@ Email / phone" rows="4"></textarea>
                 doc.setTextColor(100);
                 doc.text(document.getElementById('invNumber').value, 196, 38, { align: 'right' });
 
-                // Content PDF
                 doc.setTextColor(40);
                 doc.text("FROM:", 14, 55);
                 doc.setFont("helvetica", "normal");
@@ -428,7 +462,6 @@ Email / phone" rows="4"></textarea>
                 doc.setFontSize(14);
                 doc.text(document.getElementById('billTo').value, 14, 98);
 
-                // Meta Dates
                 doc.setFontSize(10);
                 doc.text("DATE: " + document.getElementById('invDate').value, 196, 62, { align: 'right' });
                 doc.text("DUE: " + document.getElementById('dueDate').value, 196, 68, { align: 'right' });
@@ -458,18 +491,12 @@ Email / phone" rows="4"></textarea>
                 const blob = doc.output('blob');
                 const name = `Invoice_${document.getElementById('invNumber').value}.pdf`;
 
-                if (typeof addToHistory === 'function') {
-                    const historyId = await addToHistory('Invoice Generator', name, blob);
-                    await downloadFromHistory(historyId);
+                if (typeof processDirectDownload === 'function') {
+                    await processDirectDownload('Invoice Generator', name, blob);
+                } else if (typeof processRedirect === 'function') {
+                    await processRedirect('Invoice Generator', name, blob);
                 } else {
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = name;
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
+                    saveFile(URL.createObjectURL(blob), name);
                 }
 
                 btn.disabled = false; btn.innerText = "Save & download";
@@ -479,46 +506,8 @@ Email / phone" rows="4"></textarea>
             }
         }
     </script>
-<footer class="bg-slate-50 border-t border-slate-200 pt-16 pb-12 mt-20">
-<div class="container mx-auto px-6">
-<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-<div>
-<h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-4"></h4>
-<ul class="space-y-2">
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-</ul>
-</div>
-<div>
-<h4 class="text-[10px] font-black text-slate-900 uppercase tracking-widest mb-4"></h4>
-<ul class="space-y-2">
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-</ul>
-</div>
-<div class="flex flex-col items-start md:items-end text-left md:text-right">
-<p class="text-[10px] text-slate-400 font-medium mb-4">© 2024-2026 marktoolbox.com</p>
-<div class="flex gap-3 mb-6">
-<div class="w-5 h-5 bg-slate-200 rounded cursor-pointer hover:bg-slate-300 transition"></div>
-<div class="w-5 h-5 bg-slate-200 rounded cursor-pointer hover:bg-slate-300 transition"></div>
-<div class="w-5 h-5 bg-slate-200 rounded cursor-pointer hover:bg-slate-300 transition"></div>
-<div class="w-5 h-5 bg-slate-200 rounded cursor-pointer hover:bg-slate-300 transition"></div>
-</div>
-<ul class="space-y-2">
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="../terms.html">Terms of Service</a></li>
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="../privacy.html">Privacy Policy</a></li>
-<li><a class="text-xs text-slate-500 hover:text-indigo-600 transition" href="#"></a></li>
-</ul>
-</div>
-</div>
-</div>
-</footer>
 
-    <!-- ========================================== -->
-    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
-    <!-- ========================================== -->
+    <!-- SUGGESTED TOOLS SECTION -->
     <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
             <div class="h-px bg-slate-800 flex-grow"></div>
@@ -545,7 +534,7 @@ Email / phone" rows="4"></textarea>
                 </div>
             </a>
             <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-teal-500 transition-all shadow-sm" href="caseandwordcount.html">
-                <div class="w-12 h-12 bg-teal-500/10 text-teal-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
+                <div class="w-12 h-12 bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300">
                     <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
                 </div>
                 <div>
@@ -556,17 +545,11 @@ Email / phone" rows="4"></textarea>
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CONTACT & BUG REPORT CTA                   -->
-    <!-- ========================================== -->
+    <!-- CONTACT CTA -->
     <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
         <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            
-            <!-- Ornamen Background Subtle -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
             <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
-            
-            <!-- Teks Kiri -->
             <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
                 <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
@@ -576,21 +559,16 @@ Email / phone" rows="4"></textarea>
                     <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
                 </div>
             </div>
-            
-            <!-- Tombol Kanan -->
             <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-purple-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+                    <svg class="w-4 h-4 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
                     Contact Developer
                 </a>
             </div>
-
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
-    <!-- ========================================== -->
+    <!-- SEO CONTENT AREA -->
     <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
         <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
             
@@ -612,7 +590,7 @@ Email / phone" rows="4"></textarea>
                 <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <h3 class="text-xl font-bold text-slate-800 mb-3">Automated Tax & Math Logic</h3>
                     <p class="text-sm text-slate-600 leading-relaxed">
-                        Making a calculation error on an invoice is embarrassing. Our integrated JavaScript engine automatically calculates item subotals, applies your custom tax rate (VAT, GST, etc.), factors in discounts, and produces a mathematically flawless grand total ready for export.
+                        Making a calculation error on an invoice is embarrassing. Our integrated JavaScript engine automatically calculates item subotals, applies your custom tax rate (VAT, GST, etc.), factors in discounts, and produces a mathematically flawed grand total ready for export.
                     </p>
                 </div>
             </div>
@@ -631,6 +609,5 @@ Email / phone" rows="4"></textarea>
 
         </div>
     </section>
-
 </body>
 </html>
