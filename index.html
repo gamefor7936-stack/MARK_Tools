@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>MARK_Tools | The Local-First Utility Suite</title>
-    <meta name="description" content="A comprehensive digital toolkit running entirely in your browser. Merge PDFs, compress images, calculate subnets, and more with zero server uploads.">
+    <title>MARK_Tools - Free PDF, Image & Network Tools (100% Offline)</title>
+    <meta name="description" content="A fast, free, and secure digital toolkit. Merge PDFs, compress images, and calculate subnets locally in your browser. No server uploads, no watermarks.">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
@@ -18,17 +18,17 @@
             theme: {
                 extend: {
                     colors: {
-                        darkBg: '#0b1120',    // Hacker theme deep blue-black
-                        darkCard: '#0f172a',  // Slightly lighter card
-                        darkBorder: '#1e293b' // Subtle border
+                        darkBg: '#0a0a0a',     // Pure dark Vercel style
+                        darkCard: '#111111',   // Slightly elevated dark
+                        darkBorder: '#27272a'  // Neutral gray border
                     }
                 }
             }
         }
     </script>
 
-    <!-- Prevent FOUC -->
     <script>
+        // Prevent FOUC (Flash of Unstyled Content)
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
         } else {
@@ -37,46 +37,40 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&family=Inter:wght@400;500;600;700;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
         
-        /* Subtle Tech Grid Pattern */
-        .bg-grid-pattern { 
-            background-image: linear-gradient(rgba(148, 163, 184, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 163, 184, 0.1) 1px, transparent 1px);
-            background-size: 32px 32px; 
-        }
-        .dark .bg-grid-pattern { 
-            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-        }
+        /* Clean Utility Classes */
+        .tool-card { transition: all 0.15s ease; }
+        .tool-card:hover { transform: translateY(-2px); }
         
-        .tool-card { transition: all 0.2s ease-out; }
-        .category-tab { transition: all 0.2s ease; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
     <meta name='impact-site-verification' value='c95c14e8-dc7e-4e18-928e-6b53215e28b5'>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
 </head>
-<body class="bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-300 selection:bg-blue-200 selection:text-blue-900 dark:selection:bg-blue-900 dark:selection:text-blue-200">
+<body class="bg-[#fafafa] dark:bg-darkBg text-slate-800 dark:text-slate-300 selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder transition-colors duration-200">
-        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-7xl">
+    <!-- Minimalist Navbar -->
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder">
+        <div class="container mx-auto px-4 h-14 flex justify-between items-center max-w-[1200px]">
             
-            <a href="index.html" class="flex items-center gap-2.5 group">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm group-hover:bg-blue-500 transition-colors">
-                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-black dark:bg-white rounded-md flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white dark:text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
                 </div>
-                <h1 class="text-xl font-black tracking-tight text-slate-900 dark:text-white">MARK<span class="text-blue-600 dark:text-blue-500">_Tools</span></h1>
+                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MARK_Tools</h1>
             </a>
 
-            <div class="flex items-center gap-2 md:gap-6">
-                <div class="hidden md:flex gap-6 mr-2">
-                    <a class="text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition" href="about.html">About</a>
-                    <a class="text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition" href="privacy.html">Privacy</a>
-                </div>
+            <div class="flex items-center gap-2">
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3" href="about.html">About</a>
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3 hidden sm:block" href="privacy.html">Privacy</a>
+
+                <div class="w-px h-4 bg-slate-200 dark:bg-darkBorder mx-2"></div>
 
                 <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" class="p-2 rounded-xl bg-slate-100 dark:bg-darkCard hover:bg-slate-200 dark:hover:bg-slate-800 border border-transparent dark:border-darkBorder text-slate-500 dark:text-slate-400 transition-all focus:outline-none" aria-label="Toggle Theme">
+                <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-darkCard text-slate-500 dark:text-slate-400 transition-colors focus:outline-none" aria-label="Toggle Theme">
                     <svg id="moon-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
                     <svg id="sun-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                 </button>
@@ -84,399 +78,383 @@
         </div>
     </nav>
 
-    <!-- Header / Hero Search -->
-    <header class="relative pt-20 pb-16 overflow-hidden border-b border-slate-200 dark:border-darkBorder transition-colors">
-        <div class="absolute inset-0 bg-grid-pattern opacity-50 dark:opacity-100"></div>
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-64 bg-blue-500/10 dark:bg-blue-500/5 rounded-[100%] blur-[80px] pointer-events-none"></div>
-
-        <div class="container mx-auto px-4 text-center relative z-10 max-w-3xl">
-            <h2 class="text-3xl md:text-5xl font-black mb-4 tracking-tight text-slate-900 dark:text-white">
-                The Local-First <span class="text-blue-600 dark:text-blue-500">Utility Suite</span>
+    <!-- Clinical Hero Section -->
+    <header class="pt-20 pb-12">
+        <div class="container mx-auto px-4 text-center max-w-3xl">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight text-slate-900 dark:text-white leading-tight">
+                Free utility tools. <br/>
+                <span class="text-slate-500 dark:text-slate-400">Processed completely offline.</span>
             </h2>
-            <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base mb-10 leading-relaxed font-medium">
-                A collection of developer and media tools that run entirely inside your browser. No server uploads, zero waiting times, strict privacy.
+            <p class="text-slate-500 dark:text-slate-500 text-sm md:text-base mb-10 max-w-xl mx-auto">
+                No server uploads, no watermarks, and no sign-ups. Your files are processed securely inside your browser using WebAssembly.
             </p>
             
-            <div class="relative group max-w-2xl mx-auto shadow-sm hover:shadow-md transition-shadow rounded-2xl">
-                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-slate-400 group-focus-within:text-blue-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+            <div class="relative max-w-xl mx-auto group">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 </div>
-                <input class="w-full py-4 pl-14 pr-16 rounded-2xl bg-white dark:bg-darkCard border border-slate-300 dark:border-darkBorder text-slate-900 dark:text-white focus:border-blue-500 dark:focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none text-sm font-medium transition-all" id="mainSearch" placeholder="Search tools (e.g., Subnet, PDF, JSON)..." type="text" autocomplete="off" spellcheck="false"/>
-                <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                    <kbd class="hidden sm:inline-block px-2 py-1 bg-slate-100 dark:bg-[#1e293b] border border-slate-200 dark:border-slate-700 rounded text-[10px] font-mono text-slate-400 font-bold">Ctrl K</kbd>
+                <input class="w-full py-3.5 pl-11 pr-16 rounded-xl bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder text-slate-900 dark:text-white focus:border-slate-400 dark:focus:border-slate-500 outline-none text-sm transition-all shadow-sm focus:shadow-md" id="mainSearch" placeholder="Search for a tool (e.g., Merge PDF, Compress Image)..." type="text" autocomplete="off" spellcheck="false"/>
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                    <span class="hidden sm:flex items-center justify-center px-2 h-6 bg-slate-100 dark:bg-darkBg border border-slate-200 dark:border-darkBorder rounded text-[10px] text-slate-400 font-medium">Ctrl K</span>
                 </div>
             </div>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-12 max-w-7xl">
+    <main class="container mx-auto px-4 py-8 max-w-[1200px]">
         
-        <!-- FEATURED APP: MARKSNIP -->
-        <div class="mb-12">
-            <a href="MarkSnip.html" class="block bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-3xl p-6 md:p-8 hover:border-blue-400 dark:hover:border-blue-500/50 transition-colors group relative overflow-hidden">
-                <div class="absolute right-0 top-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl group-hover:bg-blue-500/10 transition-colors pointer-events-none"></div>
-                
-                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                    <div class="flex items-center gap-5">
-                        <div class="w-14 h-14 shrink-0 bg-blue-600 rounded-2xl p-0.5 shadow-sm group-hover:scale-105 transition-transform">
-                            <div class="w-full h-full bg-white dark:bg-darkCard rounded-[14px] flex items-center justify-center overflow-hidden">
-                                <img src="image/T.png" alt="MarkSnip Logo" class="w-8 h-8 object-contain">
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center gap-2 mb-1.5 flex-wrap">
-                                <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">MarkSnip Toolkit</h3>
-                                <span class="bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-widest">v1.1.1 Update</span>
-                                <span class="border border-slate-200 dark:border-slate-700 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-widest hidden sm:block">Windows App</span>
-                            </div>
-                            <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xl">
-                                The ultimate offline OCR & snipping client. Now featuring Stealth Capture and Smart Adaptive Toolbar to extract text or scan QR codes instantly from your desktop.
-                            </p>
-                        </div>
+        <!-- FEATURED APP: MARKSNIP (Clean Professional Banner) -->
+        <div class="mb-10">
+            <a href="MarkSnip.html" class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-2xl p-6 hover:border-slate-300 dark:hover:border-slate-600 transition-colors">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 shrink-0 bg-slate-100 dark:bg-darkBg border border-slate-200 dark:border-darkBorder rounded-xl flex items-center justify-center overflow-hidden">
+                        <img src="image/T.png" alt="MarkSnip Logo" class="w-6 h-6 object-contain">
                     </div>
-                    <div class="w-full md:w-auto mt-2 md:mt-0 pt-4 md:pt-0 border-t border-slate-100 dark:border-darkBorder md:border-none shrink-0">
-                        <div class="inline-flex items-center justify-center bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-2.5 rounded-xl font-bold text-xs group-hover:bg-blue-600 dark:group-hover:bg-blue-500 dark:group-hover:text-white transition-colors">
-                            View Showcase
-                            <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="text-base font-bold text-slate-900 dark:text-white">MarkSnip Windows App</h3>
+                            <span class="bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wide">v1.1.1</span>
                         </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-xl">
+                            Our desktop utility for offline OCR, stealth capturing, and reading QR codes directly from your screen.
+                        </p>
                     </div>
+                </div>
+                <div class="text-xs font-semibold text-slate-900 dark:text-white flex items-center shrink-0">
+                    Download Free <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
                 </div>
             </a>
         </div>
 
-        <!-- CATEGORY TABS -->
-        <div class="flex flex-wrap justify-center sm:justify-start gap-2 mb-8 border-b border-slate-200 dark:border-darkBorder pb-4">
-            <button class="category-tab bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg text-xs font-bold" onclick="filterCategory('all', this)">All Modules</button>
-            <button class="category-tab text-slate-500 hover:text-slate-900 dark:hover:text-white px-4 py-2 rounded-lg text-xs font-semibold" onclick="filterCategory('pdf', this)">PDF Utility</button>
-            <button class="category-tab text-slate-500 hover:text-slate-900 dark:hover:text-white px-4 py-2 rounded-lg text-xs font-semibold" onclick="filterCategory('image', this)">Media & Image</button>
-            <button class="category-tab text-slate-500 hover:text-slate-900 dark:hover:text-white px-4 py-2 rounded-lg text-xs font-semibold" onclick="filterCategory('text', this)">Dev & Text</button>
-            <button class="category-tab text-slate-500 hover:text-slate-900 dark:hover:text-white px-4 py-2 rounded-lg text-xs font-semibold" onclick="filterCategory('devnet', this)">Network</button>
+        <!-- MINIMALIST CATEGORY TABS -->
+        <div class="flex overflow-x-auto gap-2 mb-8 border-b border-slate-200 dark:border-darkBorder pb-3 hide-scrollbar">
+            <button class="category-tab shrink-0 px-3 py-1.5 rounded-md text-sm font-medium bg-slate-900 dark:bg-white text-white dark:text-slate-900" onclick="filterCategory('all', this)">All Tools</button>
+            <button class="category-tab shrink-0 px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" onclick="filterCategory('pdf', this)">PDF Documents</button>
+            <button class="category-tab shrink-0 px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" onclick="filterCategory('image', this)">Image Processing</button>
+            <button class="category-tab shrink-0 px-3 py-1.5 rounded-md text-sm font-medium text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white transition-colors" onclick="filterCategory('devnet', this)">Developer & Network</button>
         </div>
 
         <!-- EMPTY SEARCH STATE -->
-        <div id="searchEmptyState" class="hidden py-20 text-center">
-            <svg class="w-16 h-16 mx-auto text-slate-300 dark:text-slate-700 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            <h3 class="text-lg font-bold text-slate-800 dark:text-slate-300 mb-1">No tools found</h3>
-            <p class="text-sm text-slate-500">Try adjusting your search keywords.</p>
+        <div id="searchEmptyState" class="hidden py-16 text-center">
+            <svg class="w-12 h-12 mx-auto text-slate-300 dark:text-slate-700 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+            <h3 class="text-sm font-medium text-slate-900 dark:text-white mb-1">No tools matched your search</h3>
+            <p class="text-xs text-slate-500">Please try checking your spelling or use different keywords.</p>
         </div>
 
-        <!-- TOOL GRID -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5" id="toolGrid">
+        <!-- TOOL GRID (Uniform, Clinical, and Flat) -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="toolGrid">
 
-            <!-- PDF TOOLS (Purple) -->
-            <div class="tool-card-container" data-category="pdf" data-name="merge pdf combine join">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-[0_8px_30px_rgba(168,85,247,0.1)] transition-all" href="tools/mergePDF.html">
-                    <div class="w-10 h-10 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+            <!-- ================= PDF TOOLS ================= -->
+            <div class="tool-card-container" data-category="pdf" data-name="merge pdf combine join document files">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/mergePDF.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Merge PDF</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Stitch multiple PDF documents into a single file while preserving original vector quality.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Merge PDF</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Combine multiple PDF documents into a single file while preserving formatting.</p>
                 </a>
             </div>
 
             <div class="tool-card-container" data-category="pdf" data-name="pdf to image extract convert jpg png">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-[0_8px_30px_rgba(168,85,247,0.1)] transition-all" href="tools/PDFtoimage.html">
-                    <div class="w-10 h-10 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/PDFtoimage.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">PDF to Image</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Extract and render PDF pages into separate high-resolution JPG or PNG assets.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">PDF to Image</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Extract and convert PDF pages into high-resolution JPG or PNG images.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="pdf" data-name="split pdf pages extract">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-[0_8px_30px_rgba(168,85,247,0.1)] transition-all" href="tools/splitPDF.html">
-                    <div class="w-10 h-10 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758L5 19m0-14l4.121 4.121" /></svg>
+            <div class="tool-card-container" data-category="pdf" data-name="split pdf pages extract divide">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/splitPDF.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758L5 19m0-14l4.121 4.121" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Split PDF</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Extract pages or divide complex PDF files into multiple smaller segments.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Split PDF</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Extract specific pages or divide a large PDF file into multiple smaller documents.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="pdf" data-name="image to pdf pictures photos">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-[0_8px_30px_rgba(168,85,247,0.1)] transition-all" href="tools/Image to PDF.html">
-                    <div class="w-10 h-10 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <div class="tool-card-container" data-category="pdf" data-name="image to pdf convert pictures photos">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/Image to PDF.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Image to PDF</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Bundle multiple graphics, pictures, or scans into a single PDF document.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Image to PDF</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Compile multiple JPG or PNG images into a single, organized PDF file.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="pdf" data-name="pdf watermark add text image">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-purple-400 dark:hover:border-purple-500 hover:shadow-[0_8px_30px_rgba(168,85,247,0.1)] transition-all" href="tools/PDFwatermark.html">
-                    <div class="w-10 h-10 bg-purple-50 dark:bg-purple-500/10 text-purple-600 dark:text-purple-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            <div class="tool-card-container" data-category="pdf" data-name="pdf watermark add text image stamp">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/PDFwatermark.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">PDF Watermark</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Imprint customized text or transparency image watermarks across your pages.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Add Watermark</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Apply customized text or transparent image stamps across your PDF pages.</p>
                 </a>
             </div>
 
-            <!-- IMAGE & MEDIA TOOLS (Orange) -->
-            <div class="tool-card-container" data-category="image" data-name="compress image shrink size">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.1)] transition-all" href="tools/compressor.html">
-                    <div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            <!-- ================= IMAGE TOOLS ================= -->
+            <div class="tool-card-container" data-category="image" data-name="compress image shrink size optimize">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/compressor.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Image Compressor</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Optimize JPEG, PNG, and WebP dimensions to significantly reduce file size locally.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Image Compressor</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Reduce the file size of your JPEG, PNG, and WebP images without losing quality.</p>
                 </a>
             </div>
 
             <div class="tool-card-container" data-category="image" data-name="convert image format ico webp png jpg bmp">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.1)] transition-all" href="tools/ImageConverter.html">
-                    <div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/ImageConverter.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Format Converter</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Transcode photos safely between PNG, JPG, WebP, and multi-size ICO formats.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Image Converter</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Convert images between PNG, JPG, WebP, and multi-resolution ICO formats.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="image" data-name="qr code generator wifi link email">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.1)] transition-all" href="tools/QRcode.html">
-                    <div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 rounded-xl flex items-center justify-center mb-4 font-mono font-black text-[10px]">
-                        QR
+            <div class="tool-card-container" data-category="image" data-name="qr code generator link email wifi logo">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/QRcode.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">QR Matrix Builder</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Create HD static QR codes for Wi-Fi, links, or texts with custom center logos.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">QR Code Generator</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Create static HD QR codes for URLs, Wi-Fi, and texts. Supports custom center logos.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="image" data-name="youtube thumbnail download cover grabber">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.1)] transition-all" href="tools/YTthumbdown.html">
-                    <div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            <div class="tool-card-container" data-category="image" data-name="youtube thumbnail download grabber">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/YTthumbdown.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">YT Thumbnail Grabber</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Fetch and export original high-resolution cover assets directly from video URLs.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">YouTube Thumbnail Grabber</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Fetch and download original high-resolution cover images directly from video URLs.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="image" data-name="color palette generator hex rgb scheme">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.1)] transition-all" href="tools/color-palette.html">
-                    <div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+            <div class="tool-card-container" data-category="image" data-name="color palette generator hex rgb extract">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/color-palette.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Color Palette Extractor</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Analyze dominant HEX arrays via pixel eyedropper and export to Tailwind config.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Color Palette Extractor</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Extract dominant HEX and RGB colors automatically from uploaded images.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="image" data-name="remove exif metadata privacy gps date">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-orange-400 dark:hover:border-orange-500 hover:shadow-[0_8px_30px_rgba(249,115,22,0.1)] transition-all" href="tools/exifremover.html">
-                    <div class="w-10 h-10 bg-orange-50 dark:bg-orange-500/10 text-orange-500 dark:text-orange-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.882 9.882L4.99 4.99m14.122 14.122l-4.99-4.99" /></svg>
+            <div class="tool-card-container" data-category="image" data-name="remove exif metadata privacy gps date wiper">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/exifremover.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.882 9.882L4.99 4.99m14.122 14.122l-4.99-4.99" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">EXIF Data Stripper</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Wipe hidden metadata tags (GPS, camera info, dates) to protect your online privacy.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">EXIF Metadata Remover</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Protect your privacy by stripping GPS, camera info, and dates from your photos.</p>
                 </a>
             </div>
 
-            <!-- TEXT & DEV (Teal/Cyan) -->
-            <div class="tool-card-container" data-category="text" data-name="json formatter beautify minifier">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-[0_8px_30px_rgba(20,184,166,0.1)] transition-all" href="tools/JSONformatter.html">
-                    <div class="w-10 h-10 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center mb-4 font-mono font-black text-sm">
+            <div class="tool-card-container" data-category="image" data-name="social media resizer crop instagram facebook">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/social-resizer.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+                    </div>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Social Media Resizer</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Automatically crop your photos to fit exact dimensions for major social platforms.</p>
+                </a>
+            </div>
+
+            <!-- ================= DEV & TEXT TOOLS ================= -->
+            <div class="tool-card-container" data-category="devnet" data-name="json formatter beautify minifier">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/JSONformatter.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-sm">
                         { }
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">JSON Formatter</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Validate structure, prettify, or minify complex JSON schemas in a sandbox UI.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">JSON Formatter</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Validate, prettify, or minify JSON data securely in a local sandbox.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="text" data-name="base64 encoder decoder decode encode">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-[0_8px_30px_rgba(20,184,166,0.1)] transition-all" href="tools/base64.html">
-                    <div class="w-10 h-10 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center mb-4 font-mono font-black text-[10px]">
+            <div class="tool-card-container" data-category="devnet" data-name="base64 encoder decoder decode encode">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/base64.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
                         B64
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Base64 Encoder/Decoder</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Convert raw text or file inputs into ASCII strings, and decode them back safely.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Base64 Encoder/Decoder</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Convert plain text or files into ASCII strings and decode them offline.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="text" data-name="password generator random secure pass">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-[0_8px_30px_rgba(20,184,166,0.1)] transition-all" href="tools/PWgenerator.html">
-                    <div class="w-10 h-10 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
+            <div class="tool-card-container" data-category="devnet" data-name="password generator random secure pass">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/PWgenerator.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Password Generator</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Generate cryptographically secure passwords utilizing hardware-level entropy.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Password Generator</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Create strong, cryptographically secure passwords using browser entropy.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="text" data-name="case converter word count uppercase lowercase">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-[0_8px_30px_rgba(20,184,166,0.1)] transition-all" href="tools/caseandwordcount.html">
-                    <div class="w-10 h-10 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
+            <div class="tool-card-container" data-category="devnet" data-name="case converter word count uppercase lowercase text">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/caseandwordcount.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Case & Word Counter</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Format letter capitalization cases, and analyze string character limits instantly.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Case & Word Counter</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Instantly change text capitalization and analyze character/word limits.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="text" data-name="invoice generator receipt maker pdf">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-[0_8px_30px_rgba(20,184,166,0.1)] transition-all" href="tools/invoice-generator.html">
-                    <div class="w-10 h-10 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+            <div class="tool-card-container" data-category="devnet" data-name="seo word counter keyword density readability text">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/seo-word-counter.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
+                        SEO
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Invoice Generator</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Draft structured bills, estimate tax fees, and download a professional PDF receipt.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">SEO Text Analyzer</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Audit content blocks for keyword density, n-grams, and reading scores.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="text" data-name="scanner document scan perspective deskew">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-teal-400 dark:hover:border-teal-500 hover:shadow-[0_8px_30px_rgba(20,184,166,0.1)] transition-all" href="tools/doc-scanner.html">
-                    <div class="w-10 h-10 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <div class="tool-card-container" data-category="devnet" data-name="invoice generator receipt maker pdf bill">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/invoice-generator.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Document Scanner</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Utilize Computer Vision to deskew perspectives and apply B&W scan filters to photos.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Invoice Generator</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Draft structured bills, calculate taxes, and download a professional PDF receipt.</p>
                 </a>
             </div>
 
-            <!-- NETWORK & DEV (Emerald) -->
-            <div class="tool-card-container" data-category="devnet" data-name="ip subnet calc calculator cidr mask ipv4">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/ip-subnet-calc.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
+            <div class="tool-card-container" data-category="pdf" data-name="scanner document scan perspective deskew">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/doc-scanner.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                    </div>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Document Scanner</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Fix perspectives and apply B&W scanning filters to your photos via WebAssembly.</p>
+                </a>
+            </div>
+
+            <!-- ================= NETWORK TOOLS ================= -->
+            <div class="tool-card-container" data-category="devnet" data-name="ip subnet calc calculator cidr mask ipv4 network">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/ip-subnet-calc.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
                         NET
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">IP Subnet Calc</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Analyze IPv4/IPv6 CIDR routing parameters, wildcard masks, and usable host maps.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">IP Subnet Calculator</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Calculate IPv4/IPv6 CIDR routing blocks, subnet masks, and usable host limits.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="devnet" data-name="dns lookup resolver dig records mx txt">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/dns-lookup.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
+            <div class="tool-card-container" data-category="devnet" data-name="dns lookup resolver dig records mx txt domain">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/dns-lookup.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
                         DNS
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">DNS Resolver</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Query global propagation records (A, MX, TXT) via dual-node DNS-over-HTTPS.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">DNS Resolver</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Query global domain records (A, MX, TXT) securely via DNS-over-HTTPS.</p>
                 </a>
             </div>
 
             <div class="tool-card-container" data-category="devnet" data-name="file integrity checker hash md5 sha256 checksum">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/hash-generator.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/hash-generator.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
                         HASH
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Integrity Checker</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Generate cryptographic checksums (MD5, SHA-256) to verify downloaded files.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Integrity Checker</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Generate cryptographic checksums (MD5, SHA) to verify file authenticity.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="devnet" data-name="bandwidth calculator download transfer speed">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/bandwidth-calc.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+            <div class="tool-card-container" data-category="devnet" data-name="bandwidth calculator download transfer speed network">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/bandwidth-calc.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Bandwidth Calc</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Estimate file transfer times factoring in TCP overhead and theoretical max limits.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Bandwidth Calculator</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Estimate exact file transfer times factoring in realistic TCP network overhead.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="devnet" data-name="seo word counter keyword density readability">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/seo-word-counter.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
-                        SEO
-                    </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">SEO Text Analyzer</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Audit text blocks for n-gram density, spam alerts, and Flesch readability scores.</p>
-                </a>
-            </div>
-
-            <div class="tool-card-container" data-category="devnet" data-name="css gradient generator web design">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/css-gradient.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
+            <div class="tool-card-container" data-category="devnet" data-name="css gradient generator web design color">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/css-gradient.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
                         CSS
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">CSS Gradient</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Design custom linear or radial gradients, and copy production-ready stylesheet code.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">CSS Gradient</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Visually design complex linear or radial backgrounds and copy the code.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="devnet" data-name="video to gif converter animated">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/video-to-gif.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
+            <div class="tool-card-container" data-category="image" data-name="video to gif converter animated trim mp4">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/video-to-gif.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4 font-mono font-bold text-[10px]">
                         GIF
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Video to GIF</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Transcode heavy mp4 files into lightweight, looping animated GIF formats.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Video to GIF</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Trim and transcode heavy MP4 videos into looping animated GIFs offline.</p>
                 </a>
             </div>
 
-            <div class="tool-card-container" data-category="devnet" data-name="omni converter universal converter size metrics">
-                <a class="tool-card group h-full flex flex-col bg-white dark:bg-darkCard p-5 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-emerald-400 dark:hover:border-emerald-500 hover:shadow-[0_8px_30px_rgba(16,185,129,0.1)] transition-all" href="tools/universal-converter.html">
-                    <div class="w-10 h-10 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 rounded-xl flex items-center justify-center mb-4">
-                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+            <div class="tool-card-container" data-category="devnet" data-name="omni converter universal converter size metrics hex binary">
+                <a class="tool-card flex flex-col bg-white dark:bg-darkCard p-5 rounded-xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm" href="tools/universal-converter.html">
+                    <div class="w-10 h-10 bg-slate-50 dark:bg-darkBg border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                     </div>
-                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-1.5">Universal Converter</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed flex-grow">Convert physical metrics, system values, time, and computer byte standards.</p>
+                    <h3 class="text-sm font-semibold text-slate-900 dark:text-white mb-1.5">Universal Converter</h3>
+                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Convert physical metrics, system values, byte sizes, and numeral bases.</p>
                 </a>
             </div>
 
         </div>
     </main>
 
-    <!-- QoS & Community Section -->
-    <section class="bg-white dark:bg-[#0f172a] py-20 mt-12 border-y border-slate-200 dark:border-darkBorder relative overflow-hidden">
-        <div class="container mx-auto px-4 max-w-5xl relative z-10">
-            
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-black mb-3 text-slate-900 dark:text-white tracking-tight">Built for <span class="text-blue-600 dark:text-blue-500">Performance</span></h2>
-                <p class="text-slate-500 dark:text-slate-400 text-sm md:text-base">Why thousands of developers and professionals trust the MARK_Tools ecosystem.</p>
+    <!-- TRUST & VALUE PROPOSITION -->
+    <section class="mt-12 py-20 border-y border-slate-200 dark:border-darkBorder bg-white dark:bg-darkCard">
+        <div class="container mx-auto px-4 max-w-5xl">
+            <div class="text-center mb-16">
+                <h2 class="text-2xl md:text-3xl font-bold mb-3 text-slate-900 dark:text-white">Why use MARK_Tools?</h2>
+                <p class="text-slate-500 text-sm md:text-base">We prioritize your workflow efficiency and data privacy over aggressive monetization.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6 mb-16">
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1120] border border-slate-200 dark:border-slate-800">
-                    <div class="text-2xl mb-4">🔒</div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900 dark:text-white">Zero-Trust Architecture</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Files never leave your hardware. All encryption, parsing, and rendering are executed via client-side WebAssembly and JS.</p>
+            <div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+                <div>
+                    <div class="w-10 h-10 mx-auto md:mx-0 bg-slate-100 dark:bg-darkBg border border-slate-200 dark:border-darkBorder rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-base mb-2 text-slate-900 dark:text-white">Zero Server Uploads</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Unlike other platforms, your files are never uploaded to a cloud. Processing happens strictly within your browser's local memory.</p>
                 </div>
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1120] border border-slate-200 dark:border-slate-800">
-                    <div class="text-2xl mb-4">⚡</div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900 dark:text-white">Zero Latency Exec</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">Skip the queue. Because no payloads are uploaded to a remote server, execution speed is bound only by your local CPU.</p>
+                <div>
+                    <div class="w-10 h-10 mx-auto md:mx-0 bg-slate-100 dark:bg-darkBg border border-slate-200 dark:border-darkBorder rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-base mb-2 text-slate-900 dark:text-white">Instant Execution</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">Skip the server queues. Utilizing modern JavaScript and WebAssembly, conversion speeds are limited only by your device's hardware.</p>
                 </div>
-                <div class="p-6 rounded-2xl bg-slate-50 dark:bg-[#0b1120] border border-slate-200 dark:border-slate-800">
-                    <div class="text-2xl mb-4">💎</div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-900 dark:text-white">Unrestricted Access</h3>
-                    <p class="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">No premium paywalls. No document watermarking. No credit card required. Use the full power user suite endlessly.</p>
+                <div>
+                    <div class="w-10 h-10 mx-auto md:mx-0 bg-slate-100 dark:bg-darkBg border border-slate-200 dark:border-darkBorder rounded-lg flex items-center justify-center mb-4">
+                        <svg class="w-5 h-5 text-slate-600 dark:text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="font-semibold text-base mb-2 text-slate-900 dark:text-white">100% Free</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed">No paywalls, no forced subscriptions, and absolutely no watermarks injected into your output documents.</p>
                 </div>
             </div>
-
-            <!-- Minimalist CTA -->
-            <div class="bg-blue-600 rounded-3xl p-8 md:p-10 text-center flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl shadow-blue-900/10">
-                <div class="text-left">
-                    <h3 class="text-xl font-black text-white mb-1">Missing a specific utility?</h3>
-                    <p class="text-blue-100 text-sm">Submit a module request or report an anomaly in our system.</p>
-                </div>
-                <a href="contact.html" class="shrink-0 inline-flex items-center gap-2 bg-white text-blue-700 px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs shadow-md hover:bg-slate-50 transition-colors">
-                    Contact Developer
-                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                </a>
-            </div>
-
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-white dark:bg-[#0b1120] text-slate-500 dark:text-slate-400 py-12 border-t border-slate-200 dark:border-slate-800">
+    <!-- Minimalist Footer -->
+    <footer class="bg-white dark:bg-darkBg text-slate-500 dark:text-slate-400 py-10">
         <div class="container mx-auto px-4 flex flex-col items-center">
-            <div class="flex items-center gap-2 mb-6">
-                <div class="w-6 h-6 bg-slate-200 dark:bg-slate-800 rounded flex items-center justify-center">
-                    <svg class="w-3 h-3 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
-                </div>
-                <span class="text-slate-800 dark:text-white font-black tracking-tight text-lg">MARK_Tools</span>
+            <div class="flex flex-wrap justify-center gap-6 text-sm font-medium mb-4">
+                <a class="hover:text-slate-900 dark:hover:text-white transition" href="about.html">About Framework</a>
+                <a class="hover:text-slate-900 dark:hover:text-white transition" href="privacy.html">Privacy Policy</a>
+                <a class="hover:text-slate-900 dark:hover:text-white transition" href="terms.html">Terms of Service</a>
+                <a class="hover:text-slate-900 dark:hover:text-white transition" href="contact.html">Contact Support</a>
             </div>
-            <div class="flex flex-wrap justify-center gap-6 text-xs font-semibold mb-6">
-                <a class="hover:text-blue-600 dark:hover:text-blue-400 transition" href="about.html">About Framework</a>
-                <a class="hover:text-blue-600 dark:hover:text-blue-400 transition" href="privacy.html">Privacy Policy</a>
-                <a class="hover:text-blue-600 dark:hover:text-blue-400 transition" href="terms.html">Terms of Service</a>
-            </div>
-            <p class="text-[10px] font-mono">&copy; 2024-2026 MARK_Tools Ecosystem. Deployed securely.</p>
+            <p class="text-xs">&copy; 2024-2026 MARK_Tools Ecosystem.</p>
         </div>
     </footer>
 
@@ -494,7 +472,6 @@
                 e.preventDefault();
                 const searchInput = document.getElementById('mainSearch');
                 searchInput.focus();
-                // Select text if already populated
                 if(searchInput.value.length > 0) searchInput.select();
             }
         });
@@ -528,7 +505,7 @@
             document.getElementById('searchEmptyState').classList.toggle('hidden', visibleCount > 0);
         }
 
-        // 4. Search Live Filtering with Empty State
+        // 4. Search Live Filtering
         document.getElementById('mainSearch').addEventListener('input', (e) => {
             const keyword = e.target.value.toLowerCase().trim();
             const cards = document.querySelectorAll('.tool-card-container');
@@ -547,6 +524,7 @@
 
             cards.forEach(card => {
                 const searchString = card.getAttribute('data-name') || '';
+                // Check if card title or tags match keyword
                 if (searchString.includes(keyword)) {
                     card.style.display = 'block';
                     visibleCount++;
@@ -558,7 +536,7 @@
             document.getElementById('searchEmptyState').classList.toggle('hidden', visibleCount > 0);
         });
 
-        // Initialize "All Modules" tab state safely on load
+        // Initialize state safely on load
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('mainSearch').value = '';
         });
