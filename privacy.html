@@ -1,80 +1,110 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Privacy Policy — MARK_Tools</title>
+    <title>Privacy Policy | MARK_Tools</title>
     <meta name="description" content="Read the MARK_Tools Privacy Policy. Learn how we protect your data using client-side processing and our guidelines regarding Google AdSense cookies.">
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0b1120', darkCard: '#0f172a', darkBorder: '#1e293b' } } } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { darkBg: '#0a0a0a', darkCard: '#111111', darkBorder: '#27272a' } } }
+        }
+    </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else { document.documentElement.classList.remove('dark'); }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col">
+<body class="bg-[#fafafa] dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-white">
 
-    <nav class="bg-white/80 dark:bg-darkCard/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-4xl">
-            <a href="/" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md"><span class="text-white font-black text-sm">M</span></div>
-                <h1 class="text-xl font-black tracking-tighter dark:text-white">MARK<span class="text-blue-600">_Tools</span></h1>
+    <!-- Minimalist Navbar -->
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder transition-colors">
+        <div class="container mx-auto px-4 h-14 flex justify-between items-center max-w-[1200px]">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-black dark:bg-white rounded-md flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white dark:text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
+                </div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MARK_Tools</h1>
             </a>
-            <a href="/" class="text-xs font-bold text-slate-500 hover:text-blue-600 transition uppercase tracking-widest">← Back to Home</a>
+            <div class="flex items-center gap-2">
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3 hidden sm:block" href="index.html">Back to Home</a>
+                <div class="w-px h-4 bg-slate-200 dark:bg-darkBorder mx-2"></div>
+                <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-darkCard text-slate-500 dark:text-slate-400 transition-colors focus:outline-none">
+                    <svg id="moon-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg id="sun-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-16 max-w-4xl flex-grow">
-        <div class="bg-white dark:bg-darkCard p-8 md:p-14 rounded-[2rem] shadow-xl border border-slate-200 dark:border-darkBorder leading-relaxed">
-            <h1 class="text-3xl md:text-5xl font-black text-slate-900 dark:text-white mb-4 tracking-tight">Privacy Policy</h1>
-            <p class="text-slate-400 text-sm mb-10 font-mono">Last Updated: May 2026</p>
+    <!-- Content (Optimal line length for reading) -->
+    <main class="container mx-auto px-4 py-16 flex-grow flex justify-center">
+        <div class="w-full max-w-3xl">
+            <div class="mb-12 border-b border-slate-200 dark:border-darkBorder pb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">Privacy Policy</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Effective Date: May 2026</p>
+            </div>
 
-            <section class="space-y-10">
-                <div>
+            <article class="space-y-10 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+                <section>
                     <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">1. Data Privacy & Local Processing</h2>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">At MARK_Tools, the privacy of our visitors is of extreme importance to us. Unlike traditional platforms, our tools are built on a <strong>Privacy-First, Client-Side Architecture</strong>. This means when you upload a PDF, compress an image, or format a JSON file, the processing happens locally within your web browser. <strong>We do not upload, store, view, or transmit your files to any external servers or databases.</strong> Once you close your browser tab, your data is gone.</p>
-                </div>
+                    <p>At MARK_Tools, the privacy of our visitors is of extreme importance to us. Unlike traditional platforms, our tools are built on a <strong>Privacy-First, Client-Side Architecture</strong>. This means when you upload a PDF, compress an image, or format a JSON file, the processing happens locally within your web browser.</p>
+                    <p class="mt-3"><strong>We do not upload, store, view, or transmit your files to any external servers or databases.</strong> Once you close your browser tab, your data is gone instantly.</p>
+                </section>
 
-                <div class="p-6 md:p-8 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-500/20 shadow-inner">
-                    <h2 class="text-xl font-bold text-blue-800 dark:text-blue-400 mb-3">2. Google AdSense & Cookies (Important)</h2>
-                    <p class="text-blue-900/80 dark:text-blue-200/70 text-sm leading-relaxed mb-4">MARK_Tools is a free service supported by advertising. We use <strong>Google AdSense</strong> to serve ads to our visitors. Google, as a third-party vendor, uses cookies to serve ads on our site.</p>
-                    <ul class="list-disc pl-5 text-sm text-blue-900/80 dark:text-blue-200/70 space-y-2">
-                        <li>Google's use of the <strong>DART cookie</strong> enables it to serve ads to our site's visitors based upon their visit to MARK_Tools and other sites on the Internet.</li>
-                        <li>Users may opt out of the use of the DART cookie by visiting the Google ad and content network privacy policy at the following URL: <a href="https://policies.google.com/technologies/ads" target="_blank" class="font-bold underline">https://policies.google.com/technologies/ads</a>.</li>
-                        <li>We have no access to or control over these cookies that are used by third-party advertisers.</li>
+                <section class="p-6 bg-slate-100 dark:bg-darkCard rounded-xl border border-slate-200 dark:border-darkBorder">
+                    <h2 class="text-lg font-bold text-slate-900 dark:text-white mb-3">2. Google AdSense & Cookies</h2>
+                    <p class="mb-4 text-sm">MARK_Tools is a free service supported by advertising. We use Google AdSense to serve ads to our visitors. Google uses cookies to serve ads on our site based on prior visits.</p>
+                    <ul class="list-disc pl-5 space-y-2 text-sm">
+                        <li>Google's use of advertising cookies enables it and its partners to serve ads based on your visit to our sites and/or other sites on the Internet.</li>
+                        <li>Users may opt out of personalized advertising by visiting <a href="https://myadcenter.google.com/" target="_blank" class="text-blue-600 dark:text-blue-400 hover:underline">Google Ads Settings</a>.</li>
+                        <li>We have no access to or control over these cookies used by third-party advertisers.</li>
                     </ul>
-                </div>
+                </section>
 
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">3. Log Files</h2>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">Like many other Web sites, MARK_Tools makes use of log files. The information inside the log files includes internet protocol (IP) addresses, type of browser, Internet Service Provider (ISP), date/time stamp, referring/exit pages, and number of clicks. This information is automatically collected by our hosting provider (GitHub Pages) and CDN (Cloudflare) to analyze trends, administer the site, and track user movement. <strong>IP addresses are not linked to any information that is personally identifiable.</strong></p>
-                </div>
+                <section>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">3. Standard Log Files</h2>
+                    <p>Like many other Web sites, MARK_Tools makes use of log files generated automatically by our hosting provider (GitHub Pages) and CDN (Cloudflare). The information inside the log files includes internet protocol (IP) addresses, type of browser, Internet Service Provider (ISP), date/time stamp, referring/exit pages, and number of clicks. <strong>This data is not linked to any information that is personally identifiable.</strong></p>
+                </section>
 
-                <div>
-                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">4. GDPR and CCPA Privacy Rights</h2>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-3">We respect the rights provided under the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). Because MARK_Tools does not require account registration and processes user files locally, we do not store personal profiles. However, you have the right to:</p>
-                    <ul class="list-disc pl-5 text-sm text-slate-600 dark:text-slate-400 space-y-2">
-                        <li>Request disclosure of data collection practices regarding cookies.</li>
-                        <li>Opt-out of personalized advertising via your Google Account settings.</li>
+                <section>
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">4. Your Privacy Rights (GDPR & CCPA)</h2>
+                    <p class="mb-3">We respect the rights provided under the General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA). Because MARK_Tools does not require account registration and processes user files locally, we do not store personal profiles. However, you have the right to:</p>
+                    <ul class="list-disc pl-5 space-y-1">
+                        <li>Request disclosure of data collection practices regarding technical cookies.</li>
+                        <li>Opt-out of personalized advertising via your Google Account.</li>
                         <li>Clear your browser's local storage and cache, which instantly wipes any temporary application data generated by our tools.</li>
                     </ul>
-                </div>
+                </section>
 
-                <div>
+                <section>
                     <h2 class="text-xl font-bold text-slate-900 dark:text-white mb-3">5. Consent</h2>
-                    <p class="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions. If you require any more information or have any questions about our privacy policy, please feel free to contact us via the contact page.</p>
-                </div>
-            </section>
+                    <p>By using our website, you hereby consent to our Privacy Policy and agree to its Terms and Conditions. If you require any more information or have any questions about our privacy policy, please feel free to <a href="contact.html" class="text-slate-900 dark:text-white font-semibold underline hover:text-blue-600 transition-colors">contact us</a>.</p>
+                </section>
+            </article>
         </div>
     </main>
 
-    <footer class="bg-slate-900 text-slate-500 py-10 text-center text-xs font-mono">
-        <p>&copy; 2024-2026 MARK_Tools.</p>
+    <footer class="bg-white dark:bg-darkBg border-t border-slate-200 dark:border-darkBorder py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xs text-slate-500">&copy; 2024-2026 MARK_Tools Ecosystem. All rights reserved.</p>
+        </div>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+    </script>
 </body>
 </html>

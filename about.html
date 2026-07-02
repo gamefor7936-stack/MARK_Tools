@@ -1,83 +1,110 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>About MARK_Tools — Our Mission & Technology</title>
+    <title>About The Framework | MARK_Tools</title>
     <meta name="description" content="Learn more about MARK_Tools, a privacy-focused utility suite built for developers and professionals using 100% client-side processing.">
     <link rel="icon" type="image/png" href="favicon.png">
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0b1120', darkCard: '#0f172a', darkBorder: '#1e293b' } } } }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { darkBg: '#0a0a0a', darkCard: '#111111', darkBorder: '#27272a' } } }
+        }
+    </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else { document.documentElement.classList.remove('dark'); }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .glass-dark { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
     </style>
 </head>
-<body class="bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col">
+<body class="bg-[#fafafa] dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-white">
 
-    <nav class="bg-white/80 dark:bg-darkCard/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center max-w-4xl">
-            <a href="/" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-md"><span class="text-white font-black text-sm">M</span></div>
-                <h1 class="text-xl font-black tracking-tighter dark:text-white">MARK<span class="text-blue-600">_Tools</span></h1>
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder transition-colors">
+        <div class="container mx-auto px-4 h-14 flex justify-between items-center max-w-[1200px]">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-black dark:bg-white rounded-md flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white dark:text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
+                </div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MARK_Tools</h1>
             </a>
-            <a href="/" class="text-xs font-bold text-slate-500 hover:text-blue-600 transition uppercase tracking-widest">← Back to Home</a>
+            <div class="flex items-center gap-2">
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3 hidden sm:block" href="index.html">Back to Home</a>
+                <div class="w-px h-4 bg-slate-200 dark:bg-darkBorder mx-2"></div>
+                <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-darkCard text-slate-500 dark:text-slate-400 transition-colors focus:outline-none">
+                    <svg id="moon-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg id="sun-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-16 max-w-4xl flex-grow">
-        <div class="text-center mb-16">
-            <span class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30 text-[10px] font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-6 inline-block">The Story Behind The Code</span>
-            <h1 class="text-4xl md:text-5xl font-black mb-6 tracking-tight text-slate-900 dark:text-white">Empowering the Web with <br><span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-500">Zero-Trust Utilities</span>.</h1>
-        </div>
-
-        <div class="bg-white dark:bg-darkCard p-8 md:p-12 rounded-[2rem] shadow-xl border border-slate-200 dark:border-darkBorder prose prose-slate dark:prose-invert max-w-none">
+    <main class="container mx-auto px-4 py-16 flex-grow flex justify-center">
+        <div class="w-full max-w-3xl">
             
-            <h3 class="text-2xl font-bold">Our Mission</h3>
-            <p class="leading-relaxed">
-                MARK_Tools was born out of frustration. As web developers and network engineers, we constantly found ourselves needing to quickly convert an IP subnet, compress a heavy image, or merge confidential PDF invoices. However, the internet is flooded with "free" tools that require you to upload your sensitive files to remote servers, putting your personal data and corporate intellectual property at immense risk. 
-            </p>
-            <p class="leading-relaxed">
-                Our mission is simple: <strong>To provide professional-grade utility tools that respect your privacy by design.</strong>
-            </p>
-
-            <h3 class="text-2xl font-bold mt-10">The Client-Side Revolution</h3>
-            <p class="leading-relaxed">
-                Unlike traditional platforms, MARK_Tools operates on a strict <em>Zero-Trust Architecture</em>. We leverage the power of modern web browsers—using HTML5 Web Workers, JavaScript, and WebAssembly (Wasm)—to perform heavy computational tasks directly on your local device's RAM. 
-            </p>
-            <ul>
-                <li><strong>No Uploads:</strong> Your PDFs, images, and JSON payloads never touch our servers.</li>
-                <li><strong>Unmatched Speed:</strong> By skipping the server upload/download process, conversions happen instantly.</li>
-                <li><strong>Always Free:</strong> No paywalls, no hidden premium tiers, and no watermarks on your files.</li>
-            </ul>
-
-            <div class="bg-slate-50 dark:bg-[#0b1120] p-6 rounded-2xl border border-slate-200 dark:border-slate-800 my-10 not-prose">
-                <h4 class="font-bold text-slate-800 dark:text-white mb-4 uppercase tracking-widest text-xs flex items-center gap-2">
-                    <svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                    Our Technology Stack
-                </h4>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center text-sm font-mono font-bold text-slate-500 dark:text-slate-400">
-                    <div class="p-3 bg-white dark:bg-darkCard rounded-xl border border-slate-100 dark:border-slate-800">Vanilla JS</div>
-                    <div class="p-3 bg-white dark:bg-darkCard rounded-xl border border-slate-100 dark:border-slate-800">Tailwind CSS</div>
-                    <div class="p-3 bg-white dark:bg-darkCard rounded-xl border border-slate-100 dark:border-slate-800">PDF-Lib</div>
-                    <div class="p-3 bg-white dark:bg-darkCard rounded-xl border border-slate-100 dark:border-slate-800">OpenCV.js</div>
-                </div>
+            <div class="mb-12">
+                <span class="inline-block px-3 py-1 bg-slate-100 dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-full text-xs font-semibold text-slate-600 dark:text-slate-400 mb-4">Architecture & Mission</span>
+                <h1 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white tracking-tight leading-tight">
+                    Zero-Trust Utilities <br/> for the Modern Web.
+                </h1>
             </div>
 
-            <h3 class="text-2xl font-bold mt-10">Meet the Developer</h3>
-            <p class="leading-relaxed">
-                MARK_Tools was architected and developed by <strong>Muhammad Azmi</strong>, a passionate Computer Systems & Network Engineering student. Combining deep networking knowledge with modern front-end engineering, this platform serves as both a public utility suite and a showcase of what modern web technologies can achieve without relying on heavy backends.
-            </p>
+            <div class="space-y-10 text-[15px] leading-relaxed text-slate-600 dark:text-slate-400">
+                
+                <section>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">The Problem</h3>
+                    <p>MARK_Tools was born out of developer frustration. We constantly found ourselves needing to quickly convert an IP subnet, compress a heavy image, or merge confidential PDF invoices. However, the internet is flooded with "free" tools that require you to upload your sensitive files to remote servers, putting your personal data and corporate intellectual property at immense risk.</p>
+                </section>
+
+                <section>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">The Client-Side Revolution</h3>
+                    <p class="mb-4">Unlike traditional platforms, MARK_Tools operates on a strict <strong>Zero-Trust Architecture</strong>. We leverage the power of modern web browsers—using HTML5 Web Workers, JavaScript, and WebAssembly (Wasm)—to perform heavy computational tasks directly on your local device's RAM.</p>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong>No Uploads:</strong> Your PDFs, images, and JSON payloads never touch our servers.</li>
+                        <li><strong>Unmatched Speed:</strong> By skipping the server upload/download process, conversions happen instantly.</li>
+                        <li><strong>Always Free:</strong> No paywalls, no hidden premium tiers, and no watermarks on your files.</li>
+                    </ul>
+                </section>
+
+                <!-- Clean Tech Stack Display -->
+                <section class="border-y border-slate-200 dark:border-darkBorder py-8 my-8">
+                    <h3 class="text-sm font-bold text-slate-900 dark:text-white mb-4 uppercase tracking-widest">Technology Stack</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="p-4 bg-slate-50 dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-xl text-center font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">Vanilla JS</div>
+                        <div class="p-4 bg-slate-50 dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-xl text-center font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">Tailwind CSS</div>
+                        <div class="p-4 bg-slate-50 dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-xl text-center font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">PDF-Lib</div>
+                        <div class="p-4 bg-slate-50 dark:bg-darkCard border border-slate-200 dark:border-darkBorder rounded-xl text-center font-mono text-xs font-semibold text-slate-700 dark:text-slate-300">OpenCV Wasm</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Meet the Developer</h3>
+                    <p>MARK_Tools was architected and developed by <strong>Muhammad Azmi</strong>, a Computer Systems & Network Engineering student. Combining deep networking knowledge with modern front-end engineering, this platform serves as both a public utility suite and a showcase of what modern web technologies can achieve without relying on heavy backends.</p>
+                </section>
+
+            </div>
         </div>
     </main>
 
-    <footer class="bg-slate-900 text-slate-500 py-10 text-center text-xs font-mono border-t border-slate-800">
-        <p>&copy; 2024-2026 MARK_Tools. Handcrafted for a more secure web.</p>
+    <footer class="bg-white dark:bg-darkBg border-t border-slate-200 dark:border-darkBorder py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xs text-slate-500">&copy; 2024-2026 MARK_Tools Ecosystem. Handcrafted for a secure web.</p>
+        </div>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+    </script>
 </body>
 </html>

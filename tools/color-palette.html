@@ -1,155 +1,211 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Palette Extractor & Generator - MARK_Tools</title>
+    <title>Color Palette Extractor & Generator | MARK_Tools</title>
     <meta name="description" content="Extract the dominant color palette from any image automatically, use the pixel eyedropper, and export directly to Tailwind CSS or standard CSS variables.">
-    <link rel="icon" type="image/png" href="../favicon.png">
+    <link class="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
 
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/main.js"></script>
     <script src="../js/history.js?v=2.0"></script>
     <!-- ColorThief Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js"></script>
 
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0a0a0a',     
+                        darkCard: '#111111',
+                        darkBorder: '#27272a'
+                    }
+                }
+            }
+        }
+    </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else { document.documentElement.classList.remove('dark'); }
+    </script>
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap');
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .font-sans { font-family: 'Inter', sans-serif; }
-        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
         
-        /* Interactive Color Cards */
-        .color-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
-        .color-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
-        .color-card:active { transform: translateY(0) scale(0.95); }
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Clean Inputs */
+        .clinical-input {
+            width: 100%; border-radius: 0.5rem; outline: none; transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace; text-align: center;
+        }
+        
+        /* Segmented Control Active State */
+        .tab-active { background-color: white; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .dark .tab-active { background-color: #27272a; color: white; }
 
         /* Canvas Eyedropper Overlay */
         #canvasContainer { position: relative; display: inline-block; cursor: crosshair; overflow: hidden; border-radius: 0.75rem; }
         #imageCanvas { display: block; max-width: 100%; height: auto; border-radius: 0.75rem; background: #000; }
         
-        /* Eyedropper Loupe */
+        /* Eyedropper Loupe (Clinical Style) */
         #loupe {
-            position: absolute; width: 60px; height: 60px; border-radius: 50%;
-            border: 3px solid #fff; box-shadow: 0 0 15px rgba(0,0,0,0.8), inset 0 0 5px rgba(0,0,0,0.5);
+            position: absolute; width: 64px; height: 64px; border-radius: 50%;
+            border: 2px solid #ffffff; box-shadow: 0 0 10px rgba(0,0,0,0.25), inset 0 0 4px rgba(0,0,0,0.15);
             pointer-events: none; display: none; z-index: 10;
             display: flex; align-items: center; justify-content: center;
         }
         #loupe::after {
-            content: ''; width: 4px; height: 4px; background: rgba(255,255,255,0.8);
-            border: 1px solid #000; border-radius: 50%; position: absolute;
+            content: ''; width: 6px; height: 6px; border: 1.5px solid #ffffff;
+            border-radius: 50%; position: absolute; box-shadow: 0 0 2px rgba(0,0,0,0.4);
         }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822" crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col selection:bg-fuchsia-500 selection:text-white">
+<body class="bg-[#fafafa] dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-white">
 
-    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
-            <a href="/" class="text-fuchsia-500 font-black text-xl tracking-tighter">MARK_Tools <span class="text-slate-500 font-normal">| Design</span></a>
-            <a href="/" class="text-xs font-bold text-slate-400 hover:text-fuchsia-400 transition-colors">BACK TO HOME</a>
+    <!-- Navbar -->
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder transition-colors">
+        <div class="container mx-auto px-4 h-14 flex justify-between items-center max-w-[1200px]">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-black dark:bg-white rounded-md flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white dark:text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
+                </div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MARK_Tools</h1>
+            </a>
+            <div class="flex items-center gap-2">
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3 hidden sm:block" href="index.html">Back to Home</a>
+                <div class="w-px h-4 bg-slate-200 dark:bg-darkBorder mx-2"></div>
+                <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-darkCard text-slate-500 dark:text-slate-400 transition-colors focus:outline-none">
+                    <svg id="moon-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg id="sun-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-12 flex-grow flex flex-col lg:flex-row gap-6">
+    <main class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-6 flex-grow min-h-0 max-w-[1200px]">
         
-        <!-- KIRI: CONTROLS & UPLOAD -->
-        <div class="w-full lg:w-[30%] flex flex-col gap-6 shrink-0">
-            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-fuchsia-500">
-                <div class="mb-6">
-                    <h1 class="text-2xl font-black text-white tracking-tight">Color Engine</h1>
-                    <p class="text-xs text-slate-400 mt-1">AI Extractor & Pixel Eyedropper</p>
+        <!-- LEFT COLUMN: CONTROLS & UPLOAD -->
+        <div class="w-full xl:w-80 flex flex-col gap-5 shrink-0 order-2 xl:order-1">
+            
+            <div class="bg-white dark:bg-darkCard rounded-2xl border border-slate-200 dark:border-darkBorder shadow-sm flex flex-col overflow-hidden p-6">
+                
+                <div class="mb-5 border-b border-slate-100 dark:border-slate-800 pb-4">
+                    <h1 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Color Engine</h1>
+                    <p class="text-[11px] font-medium text-slate-500 mt-1">AI Extractor & Pixel Eyedropper</p>
                 </div>
 
-                <label for="imgInput" class="w-full h-40 border-2 border-dashed border-slate-600 rounded-2xl flex flex-col items-center justify-center cursor-pointer hover:bg-slate-800/50 hover:border-fuchsia-500 transition-all group mb-6">
-                    <span class="text-4xl mb-2 group-hover:scale-110 transition-transform">📸</span>
-                    <span class="text-sm font-bold text-slate-400 group-hover:text-fuchsia-400">Upload Image to Canvas</span>
+                <!-- File Drop Zone -->
+                <label for="imgInput" class="w-full h-32 border-2 border-dashed border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 rounded-2xl flex flex-col items-center justify-center cursor-pointer bg-slate-50 dark:bg-[#0a0a0a] transition-all group mb-5">
+                    <svg class="w-8 h-8 text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300 transition-all mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    <span class="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Upload Brand Image</span>
                     <input type="file" id="imgInput" class="hidden" accept="image/*" onchange="processImage(this)">
                 </label>
 
                 <!-- Export Section -->
-                <div id="exportSection" class="hidden opacity-0 transition-opacity duration-500">
-                    <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Export Output Format</h4>
-                    <select id="exportFormat" class="w-full bg-[#0f172a] border border-slate-700 rounded-xl px-4 py-3 text-sm text-white focus:border-fuchsia-500 focus:ring-1 focus:ring-fuchsia-500 outline-none mb-4">
-                        <option value="css">CSS Variables (.css)</option>
-                        <option value="tailwind">Tailwind Config (.js)</option>
-                        <option value="json">JSON Object (.json)</option>
-                    </select>
+                <div id="exportSection" class="hidden opacity-0 transition-all duration-300 space-y-4">
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Output Format</label>
+                        <select id="exportFormat" class="clinical-input p-2.5 bg-white dark:bg-[#111111] border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold focus:border-slate-400 shadow-sm cursor-pointer">
+                            <option value="css">CSS Variables (.css)</option>
+                            <option value="tailwind">Tailwind Config (.js)</option>
+                            <option value="json">JSON Object (.json)</option>
+                        </select>
+                    </div>
                     
-                    <button onclick="saveAndRedirect()" class="w-full bg-fuchsia-600 hover:bg-fuchsia-500 text-white py-3.5 rounded-xl font-black uppercase tracking-widest text-xs transition shadow-lg shadow-fuchsia-900/50 flex justify-center items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                    <button onclick="saveAndRedirect()" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-100 py-3 rounded-lg font-semibold text-xs transition-colors flex justify-center items-center gap-2">
+                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                         Export Palette
                     </button>
                 </div>
             </div>
             
-            <div class="glass-dark p-5 rounded-2xl">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-                    <svg class="w-3 h-3 text-fuchsia-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div class="bg-white dark:bg-darkCard rounded-2xl border border-slate-200 dark:border-darkBorder p-5">
+                <h4 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Palette History
                 </h4>
-                <div id="historyList" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-sm font-mono"></div>
+                <div id="historyList" class="space-y-2 max-h-48 overflow-y-auto pr-1 text-sm font-mono custom-scroll"></div>
             </div>
         </div>
 
-        <!-- KANAN: WORKSPACE DRAFTING BOARD -->
-        <div class="w-full lg:w-[70%] glass-dark rounded-3xl p-6 md:p-8 flex flex-col relative overflow-hidden">
+        <!-- RIGHT COLUMN: WORKSPACE -->
+        <div class="w-full xl:w-[calc(100%-21rem)] flex flex-col gap-5 order-1 xl:order-2">
             
-            <div id="emptyState" class="absolute inset-0 flex flex-col items-center justify-center opacity-30 z-10 pointer-events-none">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mb-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                <p class="font-mono text-sm tracking-widest uppercase">Waiting for Workspace Drop</p>
-            </div>
-
-            <div id="resultArea" class="hidden w-full flex-col h-full z-20">
+            <div class="bg-white dark:bg-darkCard rounded-3xl p-6 md:p-8 flex flex-col relative border border-slate-200 dark:border-darkBorder shadow-sm h-full justify-center min-h-[500px]">
                 
-                <!-- Eyedropper Canvas Area -->
-                <div class="w-full flex justify-center mb-8 bg-[#020617] p-4 rounded-2xl border border-slate-800">
-                    <div id="canvasContainer" onmousemove="handleEyedropperMove(event)" onmouseleave="hideLoupe()" onclick="pickColorFromCanvas()">
-                        <canvas id="imageCanvas"></canvas>
-                        <div id="loupe"></div>
-                    </div>
+                <!-- Empty State -->
+                <div id="emptyState" class="absolute inset-0 flex flex-col items-center justify-center opacity-30 pointer-events-none transition-opacity">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-20 w-20 mb-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    <p class="font-mono text-xs uppercase tracking-widest">Waiting for Workspace Drop</p>
                 </div>
 
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8 w-full">
+                <div id="resultArea" class="hidden w-full flex-col h-full animate-fade-in">
                     
-                    <!-- Extracted Dominant Palette -->
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-xs font-black text-slate-200 uppercase tracking-widest border-l-2 border-fuchsia-500 pl-2">Dominant Colors</h3>
-                            <span class="text-[10px] text-slate-500 font-mono">Click to Copy</span>
+                    <!-- Eyedropper Canvas Area -->
+                    <div class="w-full flex justify-center mb-8 bg-slate-50 dark:bg-[#0a0a0a] p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+                        <div id="canvasContainer" onmousemove="handleEyedropperMove(event)" onmouseleave="hideLoupe()" onclick="pickColorFromCanvas()">
+                            <canvas id="imageCanvas"></canvas>
+                            <div id="loupe"></div>
                         </div>
-                        <div id="paletteContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+                        
+                        <!-- Extracted Dominant Palette -->
+                        <div>
+                            <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+                                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Dominant Colors</h3>
+                                <span class="text-[9px] text-slate-400 font-mono">Click to Copy</span>
+                            </div>
+                            <div id="paletteContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <!-- Injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Picked / Custom Colors -->
+                        <div>
+                            <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-800 pb-2">
+                                <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest">Eyedropper Picks</h3>
+                                <button onclick="clearCustomPicks()" class="text-[10px] font-bold text-red-500 hover:text-red-400 uppercase tracking-wider">Clear</button>
+                            </div>
+                            <div id="customPicksContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                                <!-- Injected via JS -->
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Tailwind Shade Generator -->
+                    <div class="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800 w-full">
+                        <h3 class="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-widest mb-4">Generated Shades (Base: <span id="baseShadeHex" class="text-indigo-600 dark:text-indigo-400 font-mono">#000</span>)</h3>
+                        <div id="shadesContainer" class="flex flex-wrap lg:flex-nowrap w-full h-12 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-800">
                             <!-- Injected via JS -->
                         </div>
                     </div>
 
-                    <!-- Picked / Custom Colors -->
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="text-xs font-black text-slate-200 uppercase tracking-widest border-l-2 border-teal-500 pl-2">Eyedropper Picks</h3>
-                            <button onclick="clearCustomPicks()" class="text-[10px] text-rose-500 hover:text-rose-400 font-bold uppercase tracking-wider">Clear</button>
-                        </div>
-                        <div id="customPicksContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                            <div class="border border-dashed border-slate-700 rounded-xl h-20 flex items-center justify-center text-slate-600 text-[10px] uppercase font-bold text-center p-2">Click Canvas<br>to Pick</div>
-                        </div>
-                    </div>
-
                 </div>
-
-                <!-- Tailwind Shade Generator (Derived from Most Dominant) -->
-                <div class="mt-8 pt-6 border-t border-slate-800 w-full">
-                    <h3 class="text-xs font-black text-slate-200 uppercase tracking-widest mb-4">Generated Tailwind Shades (Base: <span id="baseShadeHex" class="text-fuchsia-400 font-mono">#000</span>)</h3>
-                    <div id="shadesContainer" class="flex flex-wrap lg:flex-nowrap w-full h-16 rounded-xl overflow-hidden shadow-2xl">
-                        <!-- Injected via JS -->
-                    </div>
-                </div>
-
             </div>
         </div>
     </main>
 
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-lg shadow-xl font-medium text-sm z-[100] transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toastMsg">Copied!</span>
+    </div>
+
+    <!-- Script Logic -->
     <script>
         // INIT
         window.onload = () => { if(typeof renderHistoryUI === 'function') renderHistoryUI('Color Palette'); };
@@ -164,18 +220,17 @@
         let imgElement = new Image();
         let currentHoverHex = "#000000";
 
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+
         // NOTIFICATION SYSTEM
         function showToast(message) {
-            const toast = document.createElement('div');
-            toast.className = 'fixed bottom-5 right-5 bg-fuchsia-600 text-white px-4 py-2 rounded-lg shadow-xl font-mono text-xs font-bold z-50 transform translate-y-10 opacity-0 transition-all duration-300';
-            toast.innerText = message;
-            document.body.appendChild(toast);
-            
-            setTimeout(() => { toast.classList.remove('translate-y-10', 'opacity-0'); }, 50);
-            setTimeout(() => {
-                toast.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 2000);
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMsg').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 2000);
         }
 
         // IMAGE PROCESSING & CANVAS RENDER
@@ -196,7 +251,6 @@
                 setTimeout(() => document.getElementById('exportSection').classList.remove('opacity-0'), 100);
 
                 imgElement.onload = () => {
-                    // Responsive Canvas Sizing
                     const MAX_WIDTH = 800;
                     let scale = 1;
                     if(imgElement.width > MAX_WIDTH) {
@@ -217,13 +271,11 @@
         function extractColors(imgObj) {
             const colorThief = new ColorThief();
             try {
-                // Get 6 dominant colors
                 const palette = colorThief.getPalette(imgObj, 6);
                 dominantColors = palette.map(rgb => rgbToHex(rgb[0], rgb[1], rgb[2]));
                 
                 renderPalette(dominantColors, 'paletteContainer');
                 
-                // Generate Shades based on the most dominant color (index 0)
                 if(dominantColors.length > 0) {
                     generateTailwindShades(dominantColors[0]);
                 }
@@ -238,7 +290,7 @@
             container.innerHTML = "";
 
             if(hexArray.length === 0 && containerId === 'customPicksContainer') {
-                container.innerHTML = `<div class="border border-dashed border-slate-700 rounded-xl h-20 flex items-center justify-center text-slate-600 text-[10px] uppercase font-bold text-center p-2 col-span-2 sm:col-span-3">Click Canvas<br>to Pick</div>`;
+                container.innerHTML = `<div class="border border-dashed border-slate-200 dark:border-slate-800 rounded-xl h-20 flex items-center justify-center text-slate-400 text-[10px] uppercase font-bold text-center p-2 col-span-2 sm:col-span-3">Click Canvas<br>to Pick</div>`;
                 return;
             }
 
@@ -248,12 +300,12 @@
                 const textColor = isDark ? 'text-white' : 'text-slate-900';
 
                 const div = document.createElement('div');
-                div.className = "color-card group relative h-20 rounded-xl overflow-hidden border border-slate-700 flex flex-col justify-end p-2";
+                div.className = "color-card group relative h-20 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 flex flex-col justify-end p-2.5 transition-all hover:-translate-y-1";
                 div.style.backgroundColor = hex;
                 div.onclick = () => copyColor(hex);
                 
                 div.innerHTML = `
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors"></div>
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
                     <div class="relative z-10 flex flex-col">
                         <span class="font-mono text-[11px] font-bold ${textColor}">${hex}</span>
                         <span class="font-mono text-[9px] opacity-70 ${textColor}">${rgb.r},${rgb.g},${rgb.b}</span>
@@ -268,23 +320,20 @@
             loupe.style.display = 'flex';
             const rect = canvas.getBoundingClientRect();
             
-            // Adjust coordinates based on internal canvas resolution vs displayed size
             const scaleX = canvas.width / rect.width;
             const scaleY = canvas.height / rect.height;
             
             const x = (e.clientX - rect.left) * scaleX;
             const y = (e.clientY - rect.top) * scaleY;
 
-            // Ensure within bounds
             if (x < 0 || y < 0 || x >= canvas.width || y >= canvas.height) return;
 
             const pixelData = ctx.getImageData(x, y, 1, 1).data;
             const hex = rgbToHex(pixelData[0], pixelData[1], pixelData[2]);
             currentHoverHex = hex;
 
-            // Update Loupe Position & Color
-            loupe.style.left = (e.clientX - rect.left - 30) + 'px';
-            loupe.style.top = (e.clientY - rect.top - 30) + 'px';
+            loupe.style.left = (e.clientX - rect.left - 32) + 'px';
+            loupe.style.top = (e.clientY - rect.top - 32) + 'px';
             loupe.style.backgroundColor = hex;
         }
 
@@ -295,7 +344,7 @@
         function pickColorFromCanvas() {
             if(!currentHoverHex) return;
             if(!customPicks.includes(currentHoverHex)) {
-                if(customPicks.length >= 6) customPicks.shift(); // Max 6 picks
+                if(customPicks.length >= 6) customPicks.shift(); 
                 customPicks.push(currentHoverHex);
                 renderPalette(customPicks, 'customPicksContainer');
                 showToast(`Picked: ${currentHoverHex}`);
@@ -307,7 +356,7 @@
             renderPalette(customPicks, 'customPicksContainer');
         }
 
-        // TINT & SHADE ALGORITHM (Tailwind 50-900 Math)
+        // TINT & SHADE ALGORITHM
         function generateTailwindShades(baseHex) {
             document.getElementById('baseShadeHex').innerText = baseHex;
             const rgb = hexToRgb(baseHex);
@@ -315,14 +364,13 @@
             const container = document.getElementById('shadesContainer');
             container.innerHTML = "";
 
-            // Weights for tints (mix with white) and shades (mix with black)
             const stops = [
                 { id: '50', weight: 0.95, mix: 'white' },
                 { id: '100', weight: 0.90, mix: 'white' },
                 { id: '200', weight: 0.75, mix: 'white' },
                 { id: '300', weight: 0.60, mix: 'white' },
                 { id: '400', weight: 0.30, mix: 'white' },
-                { id: '500', weight: 0.00, mix: 'none' }, // Base
+                { id: '500', weight: 0.00, mix: 'none' }, 
                 { id: '600', weight: 0.15, mix: 'black' },
                 { id: '700', weight: 0.35, mix: 'black' },
                 { id: '800', weight: 0.55, mix: 'black' },
@@ -350,12 +398,10 @@
                 const textColor = isDark ? 'text-white' : 'text-slate-900';
 
                 const div = document.createElement('div');
-                div.className = "flex-1 flex flex-col items-center justify-center cursor-pointer hover:flex-[1.5] transition-all duration-300";
+                div.className = "flex-1 flex flex-col items-center justify-center cursor-pointer hover:flex-[1.3] transition-all duration-200";
                 div.style.backgroundColor = shadeHex;
                 div.onclick = () => copyColor(shadeHex);
-                div.innerHTML = `
-                    <span class="font-bold text-[10px] ${textColor} opacity-80">${stop.id}</span>
-                `;
+                div.innerHTML = `<span class="font-bold text-[9px] ${textColor} opacity-80">${stop.id}</span>`;
                 container.appendChild(div);
             });
         }
@@ -381,32 +427,22 @@
             showToast(`${hex} copied!`);
         }
 
-        // ADVANCED EXPORT FUNCTIONALITY
+        // EXPORT
         async function saveAndRedirect() {
-            if (dominantColors.length === 0) {
-                alert("Please upload an image and extract colors first.");
-                return;
-            }
+            if (dominantColors.length === 0) return;
             
             const format = document.getElementById('exportFormat').value;
-            let fileContent = "";
-            let fileExt = "";
-            let mimeType = "";
+            let fileContent = ""; let fileExt = ""; let mimeType = "";
 
-            const allColors = {
-                dominant: dominantColors,
-                custom: customPicks,
-                shades: generatedShades
-            };
+            const allColors = { dominant: dominantColors, custom: customPicks, shades: generatedShades };
 
             if(format === 'css') {
-                fileExt = '.css';
-                mimeType = 'text/css';
-                fileContent += `/* Extracted by MARK_Tools Color Engine */\n:root {\n`;
+                fileExt = '.css'; mimeType = 'text/css';
+                fileContent += `/* Extracted by MARK_Tools */\n:root {\n`;
                 dominantColors.forEach((c, i) => fileContent += `  --color-dominant-${i+1}: ${c};\n`);
                 customPicks.forEach((c, i) => fileContent += `  --color-custom-${i+1}: ${c};\n`);
                 if(Object.keys(generatedShades).length) {
-                    fileContent += `\n  /* Tailwind Style Shades */\n`;
+                    fileContent += `\n  /* Tailwind Shades */\n`;
                     for(const [key, val] of Object.entries(generatedShades)) {
                         fileContent += `  --color-primary-${key}: ${val};\n`;
                     }
@@ -414,8 +450,7 @@
                 fileContent += `}\n`;
             } 
             else if(format === 'tailwind') {
-                fileExt = '.js';
-                mimeType = 'text/javascript';
+                fileExt = '.js'; mimeType = 'text/javascript';
                 fileContent += `/** @type {import('tailwindcss').Config} */\nmodule.exports = {\n  theme: {\n    extend: {\n      colors: {\n        brand: {\n`;
                 for(const [key, val] of Object.entries(generatedShades)) {
                     fileContent += `          '${key}': '${val}',\n`;
@@ -425,155 +460,71 @@
                 fileContent += `        ]\n      }\n    }\n  }\n}\n`;
             }
             else if(format === 'json') {
-                fileExt = '.json';
-                mimeType = 'application/json';
+                fileExt = '.json'; mimeType = 'application/json';
                 fileContent = JSON.stringify(allColors, null, 2);
             }
 
             const blob = new Blob([fileContent], { type: mimeType });
             const fileName = `MARK_Palette_${Date.now()}${fileExt}`;
             
-            // Bypass Direct Download Compliance
             if (typeof addToHistory === 'function') {
                 const historyId = await addToHistory('Color Palette', fileName, blob);
                 await downloadFromHistory(historyId);
-                showToast(`Palette Exported Successfully!`);
+                showToast(`Palette Exported!`);
             } else {
-                // Fallback if history.js is missing
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = url;
-                a.download = fileName;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                a.href = url; a.download = fileName;
+                document.body.appendChild(a); a.click(); a.remove();
                 URL.revokeObjectURL(url);
             }
         }
     </script>
 
-    <!-- ========================================== -->
-    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
-    <!-- ========================================== -->
-    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
+    <!-- INTERNAL LINKING -->
+    <section class="container mx-auto px-4 max-w-[1200px] mt-8 mb-12">
         <div class="flex items-center gap-3 mb-6">
-            <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our Design & UI Tools</h3>
-            <div class="h-px bg-slate-800 flex-grow"></div>
+            <div class="h-px bg-slate-200 dark:bg-darkBorder flex-grow"></div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Try Our Design & UI Tools</h3>
+            <div class="h-px bg-slate-200 dark:bg-darkBorder flex-grow"></div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-fuchsia-500 transition-all shadow-sm" href="css-gradient.html">
-                <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
-                    CSS
+            <a class="group flex items-center gap-4 bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm transition-all" href="css-gradient.html">
+                <div class="w-10 h-10 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">CSS Gradient Generator</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Create beautiful linear and radial gradients with exportable code.</p>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">CSS Gradient Generator</h4>
+                    <p class="text-[11px] text-slate-500 leading-tight">Create beautiful linear and radial gradients with exportable code.</p>
                 </div>
             </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-fuchsia-500 transition-all shadow-sm" href="compressor.html">
-                <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+            <a class="group flex items-center gap-4 bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm transition-all" href="compressor.html">
+                <div class="w-10 h-10 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Image Compressor</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Shrink large UI assets and photos without losing visual quality.</p>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">Image Compressor</h4>
+                    <p class="text-[11px] text-slate-500 leading-tight">Shrink large UI assets and photos without losing visual quality.</p>
                 </div>
             </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-fuchsia-500 transition-all shadow-sm" href="social-resizer.html">
-                <div class="w-12 h-12 bg-fuchsia-500/10 text-fuchsia-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
+            <a class="group flex items-center gap-4 bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-slate-300 dark:hover:border-slate-600 hover:shadow-sm transition-all" href="social-resizer.html">
+                <div class="w-10 h-10 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Social Media Resizer</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Auto-crop your graphic designs to fit all social media formats.</p>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">Social Media Resizer</h4>
+                    <p class="text-[11px] text-slate-500 leading-tight">Auto-crop your graphic designs to fit all social media formats.</p>
                 </div>
             </a>
         </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- CONTACT & BUG REPORT CTA                   -->
-    <!-- ========================================== -->
-    <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
-        <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-fuchsia-500/10 rounded-full blur-3xl group-hover:bg-fuchsia-500/20 transition-colors duration-500"></div>
-            
-            <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
-                <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
-                </div>
-                <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
-                </div>
-            </div>
-            
-            <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-fuchsia-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(217,70,239,0.15)]">
-                    <svg class="w-4 h-4 text-fuchsia-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Contact Developer
-                </a>
-            </div>
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-darkBg border-t border-slate-200 dark:border-darkBorder py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xs text-slate-500">&copy; 2024-2026 MARK_Tools Ecosystem. Handcrafted for a secure web.</p>
         </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING ZONE)            -->
-    <!-- ========================================== -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
-        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
-            
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">The Definitive Guide to Extracting Dominant Colors from Images</h2>
-            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                Every great brand identity and website design begins with a foundational color palette. Often, designers find inspiration in the real world—a breathtaking sunset, a vintage photograph, or a competitor's aesthetic mood board. However, manually using an eyedropper tool in standard editing software to guess which colors are mathematically dominant is tedious and inaccurate. 
-            </p>
-            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
-                The <strong>MARK_Tools Color Palette Generator</strong> automates this workflow. By uploading an image, our tool utilizes advanced algorithmic color quantization to group millions of pixels into their core dominant color clusters. Best of all, because this is an offline client-side tool, uploading your unreleased corporate branding assets or private photography is 100% secure.
-            </p>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-fuchsia-600">Advanced Canvas Eyedropper</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        While our artificial intelligence algorithms extract the broader theme automatically, sometimes you need granular control. We integrated an HTML5 Canvas-based eyedropper with a built-in magnifying loupe. You can hover precisely over a single pixel to capture its exact HEX value, bypassing the dominant extraction entirely.
-                    </p>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">Tailwind CSS Export Pipeline</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        Say goodbye to plain text files. Our engine processes the dominant colors and mathematically calculates a complete 50-900 shade spectrum. You can directly export the generated data as a standard CSS variable list or as a perfectly formatted Tailwind configuration Javascript object.
-                    </p>
-                </div>
-            </div>
-
-            <h3 class="text-2xl font-bold text-slate-800 mb-4">Why Color Theory Matters in UI/UX</h3>
-            <ul class="text-sm text-slate-600 space-y-3 list-none pl-0 mb-8">
-                <li class="flex items-start gap-3">
-                    <span class="text-fuchsia-500 font-bold">1.</span> 
-                    <span><strong>Visual Hierarchy:</strong> Extracted palettes usually consist of a dominant base color and several vibrant accent colors. You can use the dominant darks/lights for your backgrounds, and the vibrant contrasting extracted colors for your Call-to-Action (CTA) buttons.</span>
-                </li>
-                <li class="flex items-start gap-3">
-                    <span class="text-fuchsia-500 font-bold">2.</span> 
-                    <span><strong>Brand Cohesion:</strong> If a client gives you a hero image for their website banner, generating a UI color scheme directly from that image guarantees that the entire website will look harmoniously integrated with the photography.</span>
-                </li>
-            </ul>
-
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
-            <div class="space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Why does the generated palette ignore small bright details?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Dominant color extraction calculates algorithms based on the <em>volume</em> of pixels. If an image is 95% dark blue ocean with a tiny 5% bright red boat, the red might be mathematically omitted because its pixel count is too low compared to the blues and cyans dominating the canvas. Use our manual eyedropper tool for precise pinpointing.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Are my photos uploaded to your server to analyze the colors?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">No. Our Color Palette Generator relies on a strict Zero-Trust Privacy standard. The heavy mathematical lifting required to group the pixel colors happens strictly within your browser's local memory (RAM). We do not have servers storing or viewing your uploaded images.</p>
-                </div>
-            </div>
-
-        </div>
-    </section>
+    </footer>
 
 </body>
 </html>

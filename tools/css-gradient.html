@@ -1,271 +1,506 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Generator Gradient & Visual Builder</title>
-    <meta name="description" content="Free online CSS generator gradient tool. Design beautiful linear and radial backgrounds, preview instantly, and copy the CSS code for your next project.">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CSS Gradient Generator & Visual Builder | MARK_Tools</title>
+    <meta name="description" content="Free online CSS gradient generator. Design beautiful linear and radial backgrounds, preview instantly, and copy CSS or Tailwind code for your project.">
     <link rel="icon" type="image/png" href="../favicon.png">
     <link rel="apple-touch-icon" href="../favicon.png">
     <meta property="og:image" content="https://marktoolbox.com/favicon.png">
+    
+    <!-- Framework & Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../js/main.js"></script>
     <script src="../js/history.js?v=2.0"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap');
-        .font-mono { font-family: 'JetBrains Mono', monospace; }
-        .font-sans { font-family: 'Inter', sans-serif; }
-        .glass-dark { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
-        .term-input { background: #0f172a; border: 1px solid #334155; color: #a855f7; font-family: 'JetBrains Mono', monospace; outline: none; }
-    </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
-</head>
-<body class="bg-[#0b1120] text-slate-300 font-sans min-h-screen flex flex-col">
-
-    <nav class="bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-800">
-        <div class="container mx-auto px-6 h-16 flex justify-between items-center">
-            <a href="/" class="text-purple-500 font-black text-xl tracking-tighter">MARK_Tools | Dev Suite</a>
-            <a href="/" class="text-xs font-bold text-slate-400 hover:text-purple-400">BACK TO HOME</a>
-        </div>
-    </nav>
-
-    <main class="container mx-auto px-4 py-8 flex-grow flex flex-col lg:flex-row gap-6">
-        
-        <!-- KOLOM KIRI: CONTROLS -->
-        <div class="w-full lg:w-1/3 flex flex-col gap-6">
-            <div class="glass-dark p-6 rounded-3xl border-t-4 border-t-purple-500">
-                <h1 class="text-2xl font-bold text-white mb-2">CSS Gradient</h1>
-                <p class="text-[10px] text-slate-400 uppercase tracking-widest mb-6">Visual Builder</p>
-
-                <div class="space-y-4">
-                    <!-- Colors -->
-                    <div class="flex gap-4">
-                        <div class="w-1/2">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Color 1</label>
-                            <input type="color" id="color1" value="#3b82f6" class="w-full h-12 rounded cursor-pointer border-none bg-transparent" oninput="updateGradient()">
-                        </div>
-                        <div class="w-1/2">
-                            <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Color 2</label>
-                            <input type="color" id="color2" value="#8b5cf6" class="w-full h-12 rounded cursor-pointer border-none bg-transparent" oninput="updateGradient()">
-                        </div>
-                    </div>
-
-                    <!-- Type -->
-                    <div>
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Gradient Type</label>
-                        <select id="gradType" class="w-full p-3 rounded-lg term-input text-sm" onchange="updateGradient()">
-                            <option value="linear">Linear</option>
-                            <option value="radial">Radial</option>
-                        </select>
-                    </div>
-
-                    <!-- Direction/Angle -->
-                    <div id="directionControl">
-                        <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Angle: <span id="angleVal">135</span>°</label>
-                        <input type="range" id="gradAngle" min="0" max="360" value="135" class="w-full h-1 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-purple-500" oninput="updateGradient()">
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Randomizer & Export -->
-            <button onclick="randomizeGradient()" class="w-full bg-slate-800 hover:bg-slate-700 text-white py-3 rounded-xl font-bold text-sm tracking-widest transition">
-                🎲 Randomize
-            </button>
-            <div class="glass-dark p-4 rounded-xl">
-                <h4 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Histori Palet</h4>
-                <div id="historyList" class="space-y-2 max-h-40 overflow-y-auto pr-1"></div>
-            </div>
-        </div>
-
-        <!-- KOLOM KANAN: PREVIEW & CODE -->
-        <div class="w-full lg:w-2/3 glass-dark rounded-3xl p-6 md:p-10 flex flex-col">
-            
-            <!-- PREVIEW BOX -->
-            <div id="gradientPreview" class="w-full h-64 md:h-80 rounded-2xl shadow-2xl mb-8 border-4 border-slate-800 transition-all duration-300"></div>
-
-            <!-- CSS CODE -->
-            <div class="bg-[#020617] p-4 rounded-xl border border-slate-800 relative group">
-                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">CSS Code</p>
-                <code id="cssCode" class="text-purple-400 text-sm font-mono break-all block p-2">background: linear-gradient(135deg, #3b82f6, #8b5cf6);</code>
-                <button onclick="copyCSS()" class="absolute top-4 right-4 bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-xs font-bold transition opacity-0 group-hover:opacity-100">
-                    COPY CSS
-                </button>
-            </div>
-
-            <!-- Redirect Simulation -->
-            <button onclick="saveAndRedirect()" class="mt-8 w-full bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black uppercase tracking-widest transition shadow-lg shadow-purple-900/50">
-                Save to History & Continue
-            </button>
-        </div>
-    </main>
 
     <script>
-        window.onload = () => { updateGradient(); if(typeof renderHistoryUI === 'function') renderHistoryUI('CSS Gradient'); };
-
-        function updateGradient() {
-            const c1 = document.getElementById('color1').value;
-            const c2 = document.getElementById('color2').value;
-            const type = document.getElementById('gradType').value;
-            const angle = document.getElementById('gradAngle').value;
-            
-            document.getElementById('angleVal').innerText = angle;
-            document.getElementById('directionControl').style.display = type === 'linear' ? 'block' : 'none';
-
-            let cssValue = "";
-            if (type === 'linear') {
-                cssValue = `linear-gradient(${angle}deg, ${c1}, ${c2})`;
-            } else {
-                cssValue = `radial-gradient(circle, ${c1}, ${c2})`;
-            }
-
-            document.getElementById('gradientPreview').style.background = cssValue;
-            document.getElementById('cssCode').innerText = `background: ${cssValue};`;
-        }
-
-        function randomizeGradient() {
-            const randomColor = () => '#' + Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
-            document.getElementById('color1').value = randomColor();
-            document.getElementById('color2').value = randomColor();
-            document.getElementById('gradAngle').value = Math.floor(Math.random() * 360);
-            updateGradient();
-        }
-
-        function copyCSS() {
-            const code = document.getElementById('cssCode').innerText;
-            navigator.clipboard.writeText(code);
-            alert("CSS Copied to clipboard!");
-        }
-
-        async function saveAndRedirect() {
-            const code = document.getElementById('cssCode').innerText;
-            const blob = new Blob([code], { type: 'text/plain' });
-            const fileName = `Gradient_${Date.now()}.txt`;
-            
-            if (typeof addToHistory === 'function') {
-                const historyId = await addToHistory('CSS Gradient', fileName, blob);
-                await downloadFromHistory(historyId);
-            } else {
-                saveFile(URL.createObjectURL(blob), fileName);
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0a0a0a',     
+                        darkCard: '#111111',
+                        darkBorder: '#27272a'
+                    }
+                }
             }
         }
     </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else { document.documentElement.classList.remove('dark'); }
+    </script>
 
-    <!-- ========================================== -->
-    <!-- SUGGESTED TOOLS SECTION (INTERNAL LINKING) -->
-    <!-- ========================================== -->
-    <section class="container mx-auto px-4 max-w-7xl mt-8 mb-12">
-        <div class="flex items-center gap-3 mb-6">
-            <div class="h-px bg-slate-800 flex-grow"></div>
-            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">Try Our UI & Developer Tools</h3>
-            <div class="h-px bg-slate-800 flex-grow"></div>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="color-palette.html">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
-                </div>
-                <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Color Palette Extractor</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Extract HEX colors from photos to build your gradient scheme.</p>
-                </div>
-            </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="JSONformatter.html">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-mono font-bold text-lg">
-                    { }
-                </div>
-                <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">JSON Formatter</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Validate and beautify JSON config files locally.</p>
-                </div>
-            </a>
-            <a class="group flex items-center gap-4 bg-[#0f172a] p-4 rounded-2xl border border-slate-800 hover:border-emerald-500 transition-all shadow-sm" href="base64.html">
-                <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 font-black">
-                    B64
-                </div>
-                <div>
-                    <h4 class="text-sm font-bold text-slate-200 group-hover:text-white mb-1">Base64 Encoder</h4>
-                    <p class="text-[10px] text-slate-500 leading-tight">Encode small UI image assets directly into Base64 strings.</p>
-                </div>
-            </a>
-        </div>
-    </section>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+        
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+        
+        /* Clean Inputs */
+        .clinical-input {
+            width: 100%; border-radius: 0.5rem; outline: none; transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace; text-align: center;
+        }
 
-    <!-- ========================================== -->
-    <!-- CONTACT & BUG REPORT CTA                   -->
-    <!-- ========================================== -->
-    <section class="container mx-auto px-4 max-w-7xl mt-4 mb-12">
-        <div class="relative bg-[#020617] border border-slate-800 rounded-3xl p-6 md:p-8 overflow-hidden shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 group transition-colors hover:border-slate-700">
-            
-            <!-- Ornamen Background Subtle -->
-            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjEiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L3N2Zz4=')] opacity-50"></div>
-            <div class="absolute -left-20 -top-20 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-colors duration-500"></div>
-            
-            <!-- Teks Kiri -->
-            <div class="relative z-10 flex items-start sm:items-center gap-4 w-full md:w-auto">
-                <div class="w-12 h-12 bg-[#0f172a] border border-slate-700 text-slate-400 rounded-xl flex items-center justify-center shrink-0 shadow-inner">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+        /* Segmented Control Active State */
+        .tab-active { background-color: white; color: #0f172a; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .dark .tab-active { background-color: #27272a; color: white; }
+
+        /* Custom Range Slider */
+        .clinical-range { -webkit-appearance: none; background: transparent; width: 100%; }
+        .clinical-range::-webkit-slider-runnable-track { width: 100%; height: 6px; background: #e2e8f0; border-radius: 3px; }
+        .dark .clinical-range::-webkit-slider-runnable-track { background: #334155; }
+        .clinical-range::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 18px; width: 18px; border-radius: 50%;
+            background: #6366f1; margin-top: -6px; cursor: pointer; border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3); transition: transform 0.1s;
+        }
+        .dark .clinical-range::-webkit-slider-thumb { border-color: #111111; }
+        .clinical-range::-webkit-slider-thumb:active { transform: scale(1.15); }
+
+        /* Elegant Color Picker Wrapper */
+        .color-picker-wrapper { position: relative; width: 100%; height: 48px; border-radius: 0.5rem; overflow: hidden; cursor: pointer; border: 1px solid #e2e8f0; transition: border-color 0.2s;}
+        .dark .color-picker-wrapper { border-color: #27272a; }
+        .color-picker-wrapper:focus-within { border-color: #6366f1; }
+        input[type="color"] { position: absolute; top: -10px; left: -10px; width: calc(100% + 20px); height: calc(100% + 20px); cursor: pointer; border: none; padding: 0; }
+        
+        /* Direction Grid Buttons */
+        .dir-btn { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; background: transparent; color: #64748b; transition: all 0.2s;}
+        .dir-btn:hover { background: #f1f5f9; color: #0f172a; }
+        .dark .dir-btn:hover { background: #1e293b; color: white; }
+        .dir-btn.active { background: #6366f1; color: white; }
+        
+        /* Checkbox */
+        .cyber-checkbox { appearance: none; width: 16px; height: 16px; border: 2px solid #cbd5e1; border-radius: 4px; cursor: pointer; position: relative; transition: all 0.2s; }
+        .dark .cyber-checkbox { border-color: #475569; background: #0a0a0a; }
+        .cyber-checkbox:checked { background: #6366f1; border-color: #6366f1; }
+        .cyber-checkbox:checked::after { content: '✔'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 10px; font-weight: bold; }
+    </style>
+</head>
+<body class="bg-[#fafafa] dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col selection:bg-indigo-200 selection:text-indigo-900 dark:selection:bg-indigo-900 dark:selection:text-indigo-100">
+
+    <!-- Navbar -->
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder transition-colors">
+        <div class="container mx-auto px-4 h-14 flex justify-between items-center max-w-[1200px]">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-black dark:bg-white rounded-md flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white dark:text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
                 </div>
-                <div>
-                    <h3 class="text-lg md:text-xl font-black text-white tracking-tight mb-1">Found a bug? Or have a tool idea?</h3>
-                    <p class="text-xs text-slate-400 leading-relaxed">Help us improve MARK_Tools. Report an issue or request a new feature.</p>
-                </div>
+                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MARK_Tools</h1>
+            </a>
+            <div class="flex items-center gap-2">
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3 hidden sm:block" href="index.html">Back to Home</a>
+                <div class="w-px h-4 bg-slate-200 dark:bg-darkBorder mx-2"></div>
+                <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-darkCard text-slate-500 dark:text-slate-400 transition-colors focus:outline-none">
+                    <svg id="moon-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg id="sun-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
             </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 flex flex-col xl:flex-row gap-6 flex-grow min-h-0 max-w-[1200px]">
+        
+        <!-- LEFT COLUMN: BUILDER CONTROLS -->
+        <div class="w-full xl:w-80 flex flex-col gap-5 shrink-0 order-2 xl:order-1">
             
-            <!-- Tombol Kanan -->
-            <div class="relative z-10 w-full md:w-auto shrink-0">
-                <a href="../contact.html" class="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-[#0f172a] hover:bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500 px-6 py-3.5 rounded-xl font-bold uppercase text-[10px] tracking-widest transition-all shadow-md group-hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
-                    <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Contact Developer
+            <div class="bg-white dark:bg-darkCard rounded-2xl border border-slate-200 dark:border-darkBorder shadow-sm flex flex-col overflow-hidden p-6">
+                
+                <div class="mb-5 flex items-center justify-between">
+                    <div>
+                        <h1 class="text-xl font-bold text-slate-900 dark:text-white tracking-tight">CSS Gradient</h1>
+                        <p class="text-[11px] font-medium text-slate-500 mt-1">Visual UI Builder</p>
+                    </div>
+                    <button onclick="randomizeGradient()" class="bg-slate-100 dark:bg-[#1e293b] hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 p-2.5 rounded-lg transition-colors shadow-sm" title="Surprise Me (Aesthetic Palettes)">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Shape Selector (Linear / Radial) -->
+                <div class="flex p-1 bg-slate-100 dark:bg-[#0a0a0a] rounded-lg border border-slate-200 dark:border-slate-800 mb-6 shadow-inner">
+                    <button onclick="switchType('linear')" id="typeLinear" class="flex-1 py-1.5 text-xs font-semibold rounded-md tab-active transition-all">Linear</button>
+                    <button onclick="switchType('radial')" id="typeRadial" class="flex-1 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all">Radial</button>
+                </div>
+
+                <!-- Colors Configuration -->
+                <div class="space-y-4 mb-6">
+                    <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest border-b border-slate-100 dark:border-slate-800 pb-2">Color Stops</h3>
+                    
+                    <div class="flex items-center gap-3">
+                        <div class="color-picker-wrapper shrink-0 w-12 shadow-sm">
+                            <input type="color" id="color1" value="#4facfe" oninput="syncHex(); buildGradient()">
+                        </div>
+                        <input type="text" id="hex1" class="clinical-input p-3 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white uppercase text-xs font-bold" value="#4facfe" onchange="syncColor(); buildGradient()">
+                    </div>
+
+                    <!-- Optional Middle Color -->
+                    <div class="flex items-center gap-2">
+                        <label class="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-400 cursor-pointer w-full">
+                            <input type="checkbox" id="enableMid" class="cyber-checkbox" onchange="toggleMidColor()">
+                            Enable Middle Stop
+                        </label>
+                    </div>
+
+                    <div id="midColorContainer" class="hidden items-center gap-3 animate-fade-in">
+                        <div class="color-picker-wrapper shrink-0 w-12 shadow-sm">
+                            <input type="color" id="color2" value="#00f2fe" oninput="syncHex(); buildGradient()">
+                        </div>
+                        <input type="text" id="hex2" class="clinical-input p-3 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white uppercase text-xs font-bold" value="#00f2fe" onchange="syncColor(); buildGradient()">
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <div class="color-picker-wrapper shrink-0 w-12 shadow-sm">
+                            <input type="color" id="color3" value="#00f2fe" oninput="syncHex(); buildGradient()">
+                        </div>
+                        <input type="text" id="hex3" class="clinical-input p-3 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white uppercase text-xs font-bold" value="#00f2fe" onchange="syncColor(); buildGradient()">
+                    </div>
+                </div>
+
+                <!-- Angle / Direction Control -->
+                <div id="directionControl" class="space-y-4 animate-fade-in">
+                    <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-800 pb-2">
+                        <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Direction Angle</h3>
+                        <span class="text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400"><span id="angleVal">90</span>°</span>
+                    </div>
+                    
+                    <div class="flex items-center gap-6">
+                        <!-- Direction Pad -->
+                        <div class="grid grid-cols-3 gap-1 shrink-0 bg-slate-50 dark:bg-[#0a0a0a] p-2 rounded-xl border border-slate-200 dark:border-slate-800">
+                            <button class="dir-btn" onclick="setAngle(315)" id="btn315"><svg class="w-4 h-4 transform -rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            <button class="dir-btn" onclick="setAngle(0)" id="btn0"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            <button class="dir-btn" onclick="setAngle(45)" id="btn45"><svg class="w-4 h-4 transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            
+                            <button class="dir-btn" onclick="setAngle(270)" id="btn270"><svg class="w-4 h-4 transform -rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            <div class="w-7 h-7 flex items-center justify-center"><div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"></div></div>
+                            <button class="dir-btn active" onclick="setAngle(90)" id="btn90"><svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            
+                            <button class="dir-btn" onclick="setAngle(225)" id="btn225"><svg class="w-4 h-4 transform -rotate-[135deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            <button class="dir-btn" onclick="setAngle(180)" id="btn180"><svg class="w-4 h-4 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                            <button class="dir-btn" onclick="setAngle(135)" id="btn135"><svg class="w-4 h-4 transform rotate-[135deg]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+                        </div>
+                        <!-- Slider -->
+                        <div class="w-full">
+                            <input type="range" id="gradAngle" min="0" max="360" value="90" class="clinical-range" oninput="syncAngleSlider(); buildGradient()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex justify-between items-center text-[10px] text-slate-500 font-medium">
+                    <span>Export ready</span>
+                    <button onclick="reverseColors()" class="hover:text-indigo-500 transition-colors flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg> Flip Colors
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- NORDVPN SIDEBAR BANNER (AFFILIATE) -->
+            <div class="bg-white dark:bg-darkCard border border-slate-200 dark:border-darkBorder p-5 rounded-2xl shadow-sm relative overflow-hidden group hidden xl:block mt-1">
+                <div class="absolute -right-10 -top-10 w-24 h-24 bg-indigo-500/5 dark:bg-indigo-500/10 rounded-full blur-2xl"></div>
+                <h5 class="text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-2 flex items-center gap-1.5">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
+                    </span>
+                    Developer Privacy
+                </h5>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+                    Your UI designs are processed locally. Secure your live API connection from ISP tracking with <strong>NordVPN</strong>.
+                </p>
+                <a href="https://go.nordvpn.net/aff_c?offer_id=15&aff_id=148983&url_id=902" target="_blank" class="w-full text-center block bg-indigo-50 hover:bg-indigo-100 dark:bg-indigo-500/10 dark:hover:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/30 text-indigo-700 dark:text-indigo-400 py-2 rounded-lg font-semibold text-[10px] uppercase tracking-wide transition-colors">
+                    Activate Shield →
                 </a>
             </div>
 
         </div>
-    </section>
 
-    <!-- ========================================== -->
-    <!-- SEO CONTENT AREA (YAPPING MAX PRO) -->
-    <!-- ========================================== -->
-    <section class="py-16 bg-slate-50 border-t border-slate-200 text-slate-800 -mx-4 px-4 lg:mx-0 lg:px-0 lg:rounded-t-3xl z-10 relative">
-        <div class="container mx-auto px-4 max-w-4xl prose prose-slate">
+        <!-- RIGHT COLUMN: PREVIEW & CODE WORKSPACE -->
+        <div class="w-full xl:w-[calc(100%-21rem)] flex flex-col gap-5 order-1 xl:order-2">
             
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight">Elevate Your UI with Modern CSS Gradients</h2>
-            <p class="text-sm md:text-base text-slate-600 mb-6 leading-relaxed">
-                In the early days of web development, creating a beautiful gradient background meant designing a heavy JPEG file in Photoshop and forcing the browser to download it. This approach severely bloated page load times and harmed SEO rankings. Today, modern CSS3 allows developers to render stunning, mathematically perfect color transitions directly via the browser's rendering engine.
-            </p>
-            <p class="text-sm md:text-base text-slate-600 mb-10 leading-relaxed">
-                The <strong>MARK_Tools CSS Gradient Generator</strong> bridges the gap between visual design and raw code. Instead of guessing hex codes and CSS syntax, our interactive dashboard lets you mix colors, adjust angles, and swap between Linear and Radial modes visually. Once you are satisfied, one click instantly generates the cross-browser compatible CSS code required for your project.
-            </p>
+            <div class="bg-white dark:bg-darkCard rounded-2xl p-5 md:p-8 border border-slate-200 dark:border-darkBorder shadow-sm flex flex-col min-h-[500px]">
+                
+                <!-- PREVIEW BOX (Checkerboard Background to show transparency if any) -->
+                <div class="w-full h-64 md:h-80 rounded-2xl shadow-inner border border-slate-200 dark:border-slate-800 mb-8 relative overflow-hidden bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjFmNWY5IiAvPjxyZWN0IHg9IjEwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNmOGZhZmMiIC8+PHJlY3QgeT0iMTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2Y4ZmFmYyIgLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iI2YxZjVmOSIgLz48L3N2Zz4=')] dark:bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjMTkyOTNiIiAvPjxyZWN0IHg9IjEwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiMwZjE3MmEiIC8+PHJlY3QgeT0iMTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzBmMTcyYSIgLz48cmVjdCB4PSIxMCIgeT0iMTAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iIzE5MjkzYiIgLz48L3N2Zz4=')]">
+                    <div id="gradientPreview" class="absolute inset-0 w-full h-full transition-all duration-300 ease-out"></div>
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none mix-blend-overlay opacity-30">
+                        <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-widest drop-shadow-lg">PREVIEW</h2>
+                    </div>
+                </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3 text-emerald-600">Linear vs. Radial</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        A <strong>Linear Gradient</strong> flows colors along a straight axis (like left to right, or diagonally), perfect for modern hero sections and Call-to-Action (CTA) buttons. A <strong>Radial Gradient</strong> radiates outward from a central point, which is incredibly useful for creating glowing halo effects behind 3D product images or typography.
-                    </p>
+                <!-- EXPORT CODE AREA -->
+                <div class="flex-grow flex flex-col">
+                    <div class="flex items-center justify-between mb-4 border-b border-slate-200 dark:border-slate-800 pb-2">
+                        <div class="flex gap-4">
+                            <button onclick="switchCodeTab('css')" id="tabCss" class="text-xs font-bold text-slate-900 dark:text-white border-b-2 border-indigo-500 pb-2 transition-colors">Standard CSS</button>
+                            <button onclick="switchCodeTab('tailwind')" id="tabTw" class="text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white border-b-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 pb-2 transition-colors">Tailwind CSS</button>
+                        </div>
+                        <button onclick="copyCode()" class="text-[10px] font-bold text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 uppercase flex items-center gap-1 bg-indigo-50 dark:bg-indigo-900/20 px-2 py-1 rounded transition-colors mb-2">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg> Copy Code
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-slate-800 p-4 md:p-5 rounded-xl flex-grow shadow-inner relative group">
+                        <code id="codeOutput" class="text-slate-700 dark:text-slate-300 text-sm font-mono break-all leading-relaxed select-all">background: linear-gradient(90deg, #4facfe, #00f2fe);</code>
+                    </div>
                 </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
-                    <h3 class="text-xl font-bold text-slate-800 mb-3">Performance Optimization</h3>
-                    <p class="text-sm text-slate-600 leading-relaxed">
-                        Replacing image-based backgrounds with CSS gradients is a massive win for Core Web Vitals. A CSS gradient requires less than 100 bytes of code to execute, whereas an equivalent background image might cost 200 Kilobytes. Utilizing CSS drastically improves your Time to First Byte (TTFB) and overall site performance.
-                    </p>
-                </div>
+
             </div>
+        </div>
+    </main>
 
-            <h2 class="text-3xl font-black text-slate-900 mb-6 tracking-tight mt-12">Frequently Asked Questions (FAQ)</h2>
-            <div class="space-y-4">
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Is the generated code compatible with all browsers?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Yes. Modern browsers (Chrome, Edge, Safari, Firefox) natively support standard <code>linear-gradient</code> and <code>radial-gradient</code> CSS syntax. The code exported by our tool is ready to drop directly into production environments without needing vendor prefixes.</p>
-                </div>
-                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm transition hover:shadow-md">
-                    <h4 class="font-bold text-slate-800 mb-2">Can I use this code in Tailwind CSS?</h4>
-                    <p class="text-sm text-slate-600 leading-relaxed">Absolutely. While Tailwind has built-in utility classes for basic gradients, complex multi-color arrays often require custom CSS. You can easily paste our generated CSS into your global stylesheet or apply it directly via arbitrary values in your Tailwind markup.</p>
-                </div>
-            </div>
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-5 py-3 rounded-lg shadow-xl font-medium text-sm z-[100] transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2">
+        <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+        <span id="toastMsg">Code copied to clipboard!</span>
+    </div>
 
+    <!-- Script Logic -->
+    <script>
+        let currentType = 'linear';
+        let codeFormat = 'css'; // css or tailwind
+        const presets = [
+            ['#4facfe', '#00f2fe'], ['#43e97b', '#38f9d7'], ['#fa709a', '#fee140'],
+            ['#30cfd0', '#330867'], ['#a18cd1', '#fbc2eb'], ['#ff0844', '#ffb199'],
+            ['#00c6fb', '#005bea'], ['#f83600', '#f9d423'], ['#b224ef', '#7579ff'],
+            ['#16a085', '#f4d03f'], ['#ff9a9e', '#fecfef'], ['#667eea', '#764ba2']
+        ];
+
+        window.onload = () => { 
+            buildGradient(); 
+            if(typeof renderHistoryUI === 'function') renderHistoryUI('CSS Gradient'); 
+        };
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => { toast.classList.add('translate-y-20', 'opacity-0'); }, 2000);
+        }
+
+        // --- UI SWITCHERS ---
+        function switchType(type) {
+            currentType = type;
+            const btnLin = document.getElementById('typeLinear');
+            const btnRad = document.getElementById('typeRadial');
+            const dirCtrl = document.getElementById('directionControl');
+
+            if (type === 'linear') {
+                btnLin.className = "flex-1 py-1.5 text-xs font-semibold rounded-md tab-active transition-all";
+                btnRad.className = "flex-1 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all";
+                dirCtrl.classList.remove('hidden');
+                dirCtrl.classList.add('block');
+            } else {
+                btnRad.className = "flex-1 py-1.5 text-xs font-semibold rounded-md tab-active transition-all";
+                btnLin.className = "flex-1 py-1.5 text-xs font-semibold rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 transition-all";
+                dirCtrl.classList.add('hidden');
+                dirCtrl.classList.remove('block');
+            }
+            buildGradient();
+        }
+
+        function switchCodeTab(format) {
+            codeFormat = format;
+            const tCss = document.getElementById('tabCss');
+            const tTw = document.getElementById('tabTw');
+
+            if (format === 'css') {
+                tCss.className = "text-xs font-bold text-slate-900 dark:text-white border-b-2 border-indigo-500 pb-2 transition-colors";
+                tTw.className = "text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white border-b-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 pb-2 transition-colors";
+            } else {
+                tTw.className = "text-xs font-bold text-slate-900 dark:text-white border-b-2 border-indigo-500 pb-2 transition-colors";
+                tCss.className = "text-xs font-bold text-slate-500 hover:text-slate-900 dark:hover:text-white border-b-2 border-transparent hover:border-slate-300 dark:hover:border-slate-600 pb-2 transition-colors";
+            }
+            buildGradient();
+        }
+
+        function toggleMidColor() {
+            const isChecked = document.getElementById('enableMid').checked;
+            const midContainer = document.getElementById('midColorContainer');
+            if (isChecked) {
+                midContainer.classList.remove('hidden');
+                midContainer.classList.add('flex');
+            } else {
+                midContainer.classList.add('hidden');
+                midContainer.classList.remove('flex');
+            }
+            buildGradient();
+        }
+
+        // --- COLOR SYNC LOGIC ---
+        function syncHex() {
+            document.getElementById('hex1').value = document.getElementById('color1').value;
+            document.getElementById('hex2').value = document.getElementById('color2').value;
+            document.getElementById('hex3').value = document.getElementById('color3').value;
+        }
+
+        function syncColor() {
+            // Regex to validate basic hex
+            const hexRegex = /^#([0-9A-F]{3}){1,2}$/i;
+            const h1 = document.getElementById('hex1').value;
+            const h2 = document.getElementById('hex2').value;
+            const h3 = document.getElementById('hex3').value;
+            
+            if (hexRegex.test(h1)) document.getElementById('color1').value = h1;
+            if (hexRegex.test(h2)) document.getElementById('color2').value = h2;
+            if (hexRegex.test(h3)) document.getElementById('color3').value = h3;
+        }
+
+        function reverseColors() {
+            const c1 = document.getElementById('color1').value;
+            const c3 = document.getElementById('color3').value;
+            document.getElementById('color1').value = c3;
+            document.getElementById('color3').value = c1;
+            syncHex();
+            buildGradient();
+        }
+
+        // --- DIRECTION LOGIC ---
+        function syncAngleSlider() {
+            const val = document.getElementById('gradAngle').value;
+            document.getElementById('angleVal').innerText = val;
+            updateDirButtons(val);
+        }
+
+        function setAngle(deg) {
+            document.getElementById('gradAngle').value = deg;
+            document.getElementById('angleVal').innerText = deg;
+            updateDirButtons(deg);
+            buildGradient();
+        }
+
+        function updateDirButtons(deg) {
+            document.querySelectorAll('.dir-btn').forEach(btn => btn.classList.remove('active'));
+            const exactBtn = document.getElementById('btn' + deg);
+            if (exactBtn) exactBtn.classList.add('active');
+        }
+
+        // --- RANDOMIZER ---
+        function randomizeGradient() {
+            const palette = presets[Math.floor(Math.random() * presets.length)];
+            document.getElementById('color1').value = palette[0];
+            document.getElementById('color3').value = palette[1];
+            
+            // Randomize Middle if active
+            if(document.getElementById('enableMid').checked) {
+                const pastelColors = ['#ffecd2','#fcb69f','#cfd9df','#e2ebf0','#a1c4fd','#c2e9fb'];
+                document.getElementById('color2').value = pastelColors[Math.floor(Math.random() * pastelColors.length)];
+            }
+
+            setAngle(Math.floor(Math.random() * 360));
+            syncHex();
+            buildGradient();
+        }
+
+        // --- CORE BUILDER ---
+        function buildGradient() {
+            const c1 = document.getElementById('color1').value;
+            const c2 = document.getElementById('color2').value;
+            const c3 = document.getElementById('color3').value;
+            const angle = document.getElementById('gradAngle').value;
+            const hasMid = document.getElementById('enableMid').checked;
+
+            let cssString = "";
+            let tailwindStr = "";
+
+            if (currentType === 'linear') {
+                if (hasMid) {
+                    cssString = `linear-gradient(${angle}deg, ${c1} 0%, ${c2} 50%, ${c3} 100%)`;
+                    tailwindStr = `bg-[linear-gradient(${angle}deg,_${c1}_0%,_${c2}_50%,_${c3}_100%)]`;
+                } else {
+                    cssString = `linear-gradient(${angle}deg, ${c1} 0%, ${c3} 100%)`;
+                    tailwindStr = `bg-[linear-gradient(${angle}deg,_${c1}_0%,_${c3}_100%)]`;
+                }
+            } else {
+                if (hasMid) {
+                    cssString = `radial-gradient(circle, ${c1} 0%, ${c2} 50%, ${c3} 100%)`;
+                    tailwindStr = `bg-[radial-gradient(circle,_${c1}_0%,_${c2}_50%,_${c3}_100%)]`;
+                } else {
+                    cssString = `radial-gradient(circle, ${c1} 0%, ${c3} 100%)`;
+                    tailwindStr = `bg-[radial-gradient(circle,_${c1}_0%,_${c3}_100%)]`;
+                }
+            }
+
+            // Update UI Preview
+            document.getElementById('gradientPreview').style.background = cssString;
+
+            // Update Code Output
+            if (codeFormat === 'css') {
+                document.getElementById('codeOutput').innerHTML = `<span class="text-indigo-500">background</span>: ${cssString};<br><span class="text-slate-400 dark:text-slate-600">/* Fallback */</span><br><span class="text-indigo-500">background-color</span>: ${c1};`;
+            } else {
+                document.getElementById('codeOutput').innerHTML = `<span class="text-slate-400 dark:text-slate-500">&lt;div class="</span><span class="text-indigo-500">${tailwindStr}</span><span class="text-slate-400 dark:text-slate-500">"&gt;&lt;/div&gt;</span>`;
+            }
+        }
+
+        async function copyCode() {
+            const code = document.getElementById('codeOutput').innerText;
+            try {
+                await navigator.clipboard.writeText(code);
+                showToast();
+                
+                // Save to history silently
+                if (typeof addToHistory === 'function') {
+                    const blob = new Blob([code], { type: 'text/plain' });
+                    addToHistory('CSS Gradient', `Gradient_${Date.now()}.txt`, blob);
+                }
+            } catch (err) {
+                alert('Failed to copy. Please select and copy manually.');
+            }
+        }
+    </script>
+
+    <!-- INTERNAL LINKING -->
+    <section class="container mx-auto px-4 max-w-[1200px] mt-8 mb-12">
+        <div class="flex items-center gap-3 mb-6">
+            <div class="h-px bg-slate-200 dark:bg-darkBorder flex-grow"></div>
+            <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Try Our Developer Tools</h3>
+            <div class="h-px bg-slate-200 dark:bg-darkBorder flex-grow"></div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <a class="group flex items-center gap-4 bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-sm transition-all" href="color-palette.html">
+                <div class="w-10 h-10 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" /></svg>
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">Color Palette Extractor</h4>
+                    <p class="text-[11px] text-slate-500 leading-tight">Extract HEX colors from photos to build your gradient scheme.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-sm transition-all" href="JSONformatter.html">
+                <div class="w-10 h-10 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center shrink-0 font-mono font-bold text-sm">
+                    { }
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">JSON Formatter</h4>
+                    <p class="text-[11px] text-slate-500 leading-tight">Validate, beautify, and compress JSON payloads securely.</p>
+                </div>
+            </a>
+            <a class="group flex items-center gap-4 bg-white dark:bg-darkCard p-4 rounded-2xl border border-slate-200 dark:border-darkBorder hover:border-indigo-400 dark:hover:border-indigo-500 hover:shadow-sm transition-all" href="base64.html">
+                <div class="w-10 h-10 bg-slate-50 dark:bg-[#0a0a0a] border border-slate-100 dark:border-slate-800 text-slate-700 dark:text-slate-300 rounded-lg flex items-center justify-center shrink-0 font-mono font-bold text-[10px]">
+                    B64
+                </div>
+                <div>
+                    <h4 class="text-sm font-semibold text-slate-900 dark:text-white mb-0.5">Base64 Encoder</h4>
+                    <p class="text-[11px] text-slate-500 leading-tight">Encode small UI image assets directly into Base64 strings.</p>
+                </div>
+            </a>
         </div>
     </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-darkBg border-t border-slate-200 dark:border-darkBorder py-8 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xs text-slate-500">&copy; 2024-2026 MARK_Tools Ecosystem. Handcrafted for a secure web.</p>
+        </div>
+    </footer>
 
 </body>
 </html>

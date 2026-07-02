@@ -3,94 +3,104 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Contact Us - Report Bugs & Request Tools | MARK_Tools</title>
-    <meta name="description" content="Contact the developer of MARK_Tools to report a bug, request a new tool, or send general feedback. We are constantly improving our utility suite.">
+    <title>Contact Support | MARK_Tools</title>
+    <meta name="description" content="Contact the developer of MARK_Tools to report a bug, request a new tool, or send general feedback.">
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = { darkMode: 'class', theme: { extend: { colors: { darkBg: '#0f172a', darkCard: '#1e293b', darkBorder: '#334155' } } } }
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { document.documentElement.classList.add('dark'); } else { document.documentElement.classList.remove('dark'); }
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { extend: { colors: { darkBg: '#0a0a0a', darkCard: '#111111', darkBorder: '#27272a' } } }
+        }
+    </script>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else { document.documentElement.classList.remove('dark'); }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; transition: background-color 0.3s, color 0.3s; }
-        .gradient-bg { background: linear-gradient(135deg, #1e3a8a 0%, #6d28d9 100%); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; transition: background-color 0.2s, color 0.2s; }
     </style>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5016566217386822"
-     crossorigin="anonymous"></script>
 </head>
-<body class="bg-[#f8fafc] dark:bg-darkBg text-slate-900 dark:text-slate-300">
+<body class="bg-[#fafafa] dark:bg-darkBg text-slate-800 dark:text-slate-300 min-h-screen flex flex-col selection:bg-slate-200 selection:text-slate-900 dark:selection:bg-slate-800 dark:selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder shadow-sm">
-        <div class="container mx-auto px-4 h-16 flex justify-between items-center max-w-4xl">
-            <a href="/" class="flex items-center gap-2 group">
-                <div class="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-md">
-                    <span class="text-white font-black text-sm">M</span>
+    <nav class="bg-white/80 dark:bg-darkBg/80 backdrop-blur-md sticky top-0 z-50 border-b border-slate-200 dark:border-darkBorder transition-colors">
+        <div class="container mx-auto px-4 h-14 flex justify-between items-center max-w-[1200px]">
+            <a href="index.html" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-black dark:bg-white rounded-md flex items-center justify-center">
+                    <svg class="w-4 h-4 text-white dark:text-black" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V5l8 8 8-8v14"/></svg>
                 </div>
-                <h1 class="text-xl font-black tracking-tighter text-slate-800 dark:text-white">MARK<span class="text-blue-600 dark:text-blue-400">_Tools</span></h1>
+                <h1 class="text-lg font-bold tracking-tight text-slate-900 dark:text-white">MARK_Tools</h1>
             </a>
-            <a class="text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition" href="index.html">← Back to Home</a>
+            <div class="flex items-center gap-2">
+                <a class="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition px-3 hidden sm:block" href="index.html">Back to Home</a>
+                <div class="w-px h-4 bg-slate-200 dark:bg-darkBorder mx-2"></div>
+                <button onclick="toggleTheme()" class="p-2 rounded-md hover:bg-slate-100 dark:hover:bg-darkCard text-slate-500 dark:text-slate-400 transition-colors focus:outline-none">
+                    <svg id="moon-icon" class="w-4 h-4 hidden dark:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+                    <svg id="sun-icon" class="w-4 h-4 block dark:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-16 max-w-4xl">
-        <div class="text-center mb-12">
-            <h2 class="text-4xl md:text-5xl font-black mb-4 tracking-tight text-slate-800 dark:text-white">Get in <span class="text-blue-600 dark:text-blue-400">Touch</span></h2>
-            <p class="text-slate-500 dark:text-slate-400 text-lg max-w-2xl mx-auto">Help us build the perfect utility suite. Whether you found a bug or have a brilliant idea for a new tool, we want to hear from you!</p>
-        </div>
-
-        <div class="bg-white dark:bg-darkCard p-8 md:p-12 rounded-3xl shadow-xl border border-slate-200 dark:border-darkBorder relative overflow-hidden">
+    <main class="container mx-auto px-4 py-16 flex-grow flex justify-center items-center">
+        <div class="w-full max-w-xl">
             
-            <!-- Ornamen Estetika -->
-            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl -mr-10 -mt-10"></div>
+            <div class="text-center mb-10">
+                <h1 class="text-3xl font-bold text-slate-900 dark:text-white mb-2 tracking-tight">Contact Support</h1>
+                <p class="text-slate-500 dark:text-slate-400 text-sm">Help us build the perfect utility suite. We read every message.</p>
+            </div>
+
+            <div class="bg-white dark:bg-darkCard p-6 md:p-8 rounded-2xl border border-slate-200 dark:border-darkBorder shadow-sm">
+                <form action="https://formspree.io/f/mkoklbel" method="POST" class="space-y-5">
+                    
+                    <div class="grid md:grid-cols-2 gap-5">
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Name</label>
+                            <input type="text" name="name" required class="w-full p-3 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-darkBorder text-slate-900 dark:text-white focus:border-slate-500 dark:focus:border-slate-400 outline-none transition-colors text-sm" placeholder="John Doe">
+                        </div>
+                        <div class="flex flex-col gap-1.5">
+                            <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Email Address</label>
+                            <input type="email" name="email" required class="w-full p-3 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-darkBorder text-slate-900 dark:text-white focus:border-slate-500 dark:focus:border-slate-400 outline-none transition-colors text-sm" placeholder="john@example.com">
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Subject</label>
+                        <select name="subject" required class="w-full p-3 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-darkBorder text-slate-900 dark:text-white focus:border-slate-500 dark:focus:border-slate-400 outline-none transition-colors text-sm appearance-none cursor-pointer">
+                            <option value="Bug Report">Report an Issue / Bug</option>
+                            <option value="Feature Request">Request a New Feature</option>
+                            <option value="General Feedback">General Feedback</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-1.5">
+                        <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Message</label>
+                        <textarea name="message" required rows="5" class="w-full p-3 rounded-lg bg-slate-50 dark:bg-[#0a0a0a] border border-slate-200 dark:border-darkBorder text-slate-900 dark:text-white focus:border-slate-500 dark:focus:border-slate-400 outline-none transition-colors text-sm resize-none" placeholder="How can we help you?"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 py-3 rounded-lg font-semibold text-sm transition-colors mt-2">
+                        Send Message
+                    </button>
+                </form>
+            </div>
             
-            <!-- Form -->
-            <!-- GANTI 'YOUR_FORMSPREE_ENDPOINT' DENGAN LINK DARI FORMSPREE NANTI -->
-            <form action="https://formspree.io/f/mkoklbel" method="POST" class="relative z-10 space-y-6">
-                
-                <div class="grid md:grid-cols-2 gap-6">
-                    <!-- Nama -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Your Name</label>
-                        <input type="text" name="name" required class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="John Doe">
-                    </div>
-                    <!-- Email -->
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Your Email</label>
-                        <input type="email" name="email" required class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all" placeholder="john@example.com">
-                    </div>
-                </div>
-
-                <!-- Kategori / Subjek -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">What is this about?</label>
-                    <select name="subject" required class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all appearance-none cursor-pointer">
-                        <option value="Bug Report">🐛 Report a Bug / Error</option>
-                        <option value="Feature Request">💡 Request a New Tool / Feature</option>
-                        <option value="General Feedback">💬 General Feedback or Business</option>
-                    </select>
-                </div>
-
-                <!-- Pesan -->
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-2">Your Message</label>
-                    <textarea name="message" required rows="5" class="w-full p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none" placeholder="Please describe the bug or explain the tool you want us to build..."></textarea>
-                </div>
-
-                <!-- Tombol Submit -->
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-black uppercase tracking-widest transition-all shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" /></svg>
-                    Send Message
-                </button>
-            </form>
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-10 mt-auto text-center">
-        <p class="text-[10px] opacity-40 font-mono">MARK_Tools Utility Suite &copy; 2024-2026.</p>
+    <footer class="bg-white dark:bg-darkBg border-t border-slate-200 dark:border-darkBorder py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-xs text-slate-500">&copy; 2024-2026 MARK_Tools Ecosystem.</p>
+        </div>
     </footer>
+
+    <script>
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        }
+    </script>
 </body>
 </html>
